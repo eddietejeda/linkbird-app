@@ -17,7 +17,6 @@ GEM
     ffi-compiler (1.0.1)
       ffi (>= 1.0.0)
       rake
-    fscache (0.9.0)
     hashie (4.1.0)
     htmlentities (4.3.4)
     http (4.4.1)
@@ -124,7 +123,6 @@ DEPENDENCIES
   byebug (~> 11.1)
   curb (~> 0.9.10)
   dalli (~> 2.7)
-  fscache (~> 0.9.0)
   omniauth-twitter (~> 1.4)
   onebox (~> 2.0)
   puma (~> 4.3)
