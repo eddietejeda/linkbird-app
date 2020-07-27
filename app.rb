@@ -53,7 +53,7 @@ class App < Sinatra::Base
       end
       
       home_timeline ||=  settings.cache.fetch(session[:uid]) do
-        response = client.home_timeline
+        response = client.home_timeline({count: 50})
         settings.cache.set(session[:uid], response, 1200) # cache for 20 minutes
         response
       end
