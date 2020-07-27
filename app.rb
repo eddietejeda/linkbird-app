@@ -14,7 +14,9 @@ class App < Sinatra::Base
   configure do
     enable :sessions
 
-    set :cache, Dalli::Client.new
+    set :cache, Dalli::Client.new(ENV["MEMCACHIER_SERVERS"],
+                      {:username => ENV["MEMCACHIER_USERNAME"],
+                       :password => ENV["MEMCACHIER_PASSWORD"]})
     
     use OmniAuth::Builder do
       provider :twitter, ENV['CONSUMER_KEY'], ENV['CONSUMER_SECRET']
