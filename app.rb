@@ -52,9 +52,9 @@ class App < Sinatra::Base
         config.access_token_secret = session[:access_token_secret]  # ENV["ACCESS_TOKEN_SECRET"] # 
       end
       
-      home_timeline ||=  settings.cache.fetch(session["session_id"]) do
+      home_timeline ||=  settings.cache.fetch(session[:uid]) do
         response = client.home_timeline
-        settings.cache.set(session["session_id"], response, 600) # cache for 10 minutes
+        settings.cache.set(session[:uid], response, 1200) # cache for 20 minutes
         response
       end
 
