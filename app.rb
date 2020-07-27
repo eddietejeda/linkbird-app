@@ -36,7 +36,6 @@ class App < Sinatra::Base
 
 
 
-  filecache = FsCache.new(nil, 1, true)
   
   get '/' do
     @tweets = []
@@ -50,6 +49,8 @@ class App < Sinatra::Base
       end
 
 
+      filecache = FsCache.new(session["session_id"], 1, true)
+      
       home_timeline = filecache.fetch("tweets") do
         client.home_timeline
       end
