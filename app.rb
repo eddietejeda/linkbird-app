@@ -25,7 +25,6 @@ class App < Sinatra::Base
     end
 
     def expand_url(url)
-      byebug
       result = Curl::Easy.perform(url) do |curl|
         curl.head = true
         curl.follow_location = true
