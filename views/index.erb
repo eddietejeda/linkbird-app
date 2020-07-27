@@ -29,7 +29,13 @@
           <ul class="tweets">
             <% @tweets.each do |tweet| %>
               <li>
-                <%= tweet[:preview] %>
+                <% if tweet[:preview].length > 0 %>
+                  <%= tweet[:preview] %>
+                <% else %>
+                  <div class="onebox">
+                    <a href="<%=tweet[:url]%>"><%=tweet[:url]%></a>
+                  </div>
+                <% end %>                  
               </li>
             <% end %>
           </ul>

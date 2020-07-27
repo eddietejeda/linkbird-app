@@ -6,8 +6,9 @@ require "uri"
 require 'curb'
 require 'dalli'
 require 'omniauth-twitter'
-require 'sinatra/reloader' if development?
-require "byebug" if development?
+require 'sinatra/reloader' if settings.development?
+require "byebug" if settings.development?
+require "awesome_print" if settings.development?
 
 class App < Sinatra::Base
 
@@ -66,6 +67,7 @@ class App < Sinatra::Base
       end
     end
     
+    # byebug
     erb :index
   end
 
