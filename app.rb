@@ -3,6 +3,7 @@ require 'twitter'
 require 'twitter-text'
 require "onebox"
 require "uri"
+require 'net/http'
 require "fscache"
 require 'omniauth-twitter'
 require 'sinatra/reloader' if development?
@@ -22,6 +23,12 @@ class App < Sinatra::Base
     def current_user
       !session[:uid].nil?
     end
+
+    def expand_url(url)
+      res = Net::HTTP.get_response(URI(url))
+      res['location']      
+    end
+    
   end
 
 
@@ -35,8 +42,8 @@ class App < Sinatra::Base
       client = Twitter::REST::Client.new do |config|
         config.consumer_key        = ENV["CONSUMER_KEY"]
         config.consumer_secret     = ENV["CONSUMER_SECRET"]
-        config.access_token        = session[:access_token] 
-        config.access_token_secret = session[:access_token_secret] 
+        config.access_token        = session[:access_token] #ENV["ACCESS_TOKEN"] 
+        config.access_token_secret = session[:access_token_secret]  #ENV["ACCESS_TOKEN_SECRET"] 
       end
 
 
@@ -46,14 +53,9 @@ class App < Sinatra::Base
 
       # home_timeline = client.home_timeline
       home_timeline.each do |t|
-
-        # content = {}
-        # content[:text] = t.text
-        # content[:url] = Twitter::TwitterText::Extractor.extract_urls(t.text).first
-
         url = t&.urls&.first&.expanded_url.to_s
         if url.length && URI.parse(url).host != "twitter.com"
-          @tweets << { url: url, preview: Onebox.preview(url).to_s }
+          @tweets << { url: url, preview: Onebox.preview(expand_url(url)).to_s }
         end
       end
     end
@@ -61,6 +63,7 @@ class App < Sinatra::Base
     erb :index
   end
 
+  
   get '/auth/twitter/callback' do
     session[:uid] = env['omniauth.auth']['uid']    
     session[:access_token] = env['omniauth.auth']['credentials']['token']
