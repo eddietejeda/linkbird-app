@@ -2,6 +2,7 @@ require 'sinatra'
 require 'twitter'
 require 'twitter-text'
 require "onebox"
+require "uri"
 require "fscache"
 require 'omniauth-twitter'
 require 'sinatra/reloader' if development?
@@ -25,7 +26,7 @@ class App < Sinatra::Base
 
 
 
-  filecache = FsCache.new(nil, 0, true)
+  filecache = FsCache.new(nil, 1, true)
   
   get '/' do
     @tweets = []
@@ -34,8 +35,8 @@ class App < Sinatra::Base
       client = Twitter::REST::Client.new do |config|
         config.consumer_key        = ENV["CONSUMER_KEY"]
         config.consumer_secret     = ENV["CONSUMER_SECRET"]
-        config.access_token        = session[:access_token]
-        config.access_token_secret = session[:access_token_secret]
+        config.access_token        = session[:access_token] 
+        config.access_token_secret = session[:access_token_secret] 
       end
 
 
@@ -43,14 +44,20 @@ class App < Sinatra::Base
         client.home_timeline
       end
 
+      # home_timeline = client.home_timeline
       home_timeline.each do |t|
-        @tweets << t.text
-        # url = Twitter::TwitterText::Extractor.extract_urls(t.text)
-        # if url
-        #   @tweets << { preview: Onebox.preview(url).to_s }
-        # end
+
+        # content = {}
+        # content[:text] = t.text
+        # content[:url] = Twitter::TwitterText::Extractor.extract_urls(t.text).first
+
+        url = t&.urls&.first&.expanded_url.to_s
+        if url.length && URI.parse(url).host != "twitter.com"
+          @tweets << { url: url, preview: Onebox.preview(url).to_s }
+        end
       end
     end
+
     erb :index
   end
 
@@ -66,7 +73,7 @@ class App < Sinatra::Base
   end
   
   get '/auth/twitter/deauthorized' do
-    erb "#{params[:provider]} has deauthorized this app."
+    erb "Twitter has deauthorized this app."
   end
 
   get '/logout' do
