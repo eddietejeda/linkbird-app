@@ -15,32 +15,21 @@
 <body>
   <a class="github-fork-ribbon right-top" href="https://github.com/eddietejeda/twitter-timeline-links" data-ribbon="Fork me on GitHub" title="Fork me on GitHub">Fork me on GitHub</a>  
   <div class="wraper-content content">
-    <div class="profile">
-      <div class="side"> <img class="avatar" src="/images/twitter.svg"> </div>
-      <!--side-->
-    </div>
     <!--profile-->
     
     <section class="timeline">
       <div class="box-tweet">
-        <h2>Home</h2> </div>
-      <!--box-tweet-->
-      
-      
-      
+        <h2>Home</h2> 
+        <p><a href="/logout">Logout</a></p> 
+      </div>
+      <div class="clear" />
+      <!--box-tweet-->      
       <% if current_user %>
         <div class="list-tweets">
           <ul class="tweets">
             <% @tweets.each do |tweet| %>
               <li>
-                <div class="onebox">
-                  <p>
-                    <a href="<%= tweet[:url] %>"><%= tweet[:url] %></a>
-                  </p>
-                  <p>
-                    <%= tweet[:preview] %>
-                  </p>
-                </div>
+                <%= tweet[:preview] %>
               </li>
             <% end %>
           </ul>

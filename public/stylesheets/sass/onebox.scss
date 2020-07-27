@@ -1,9 +1,34 @@
 .onebox{
   background-color: white;
   width: 100% !important;
-  
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;  
 }
 
 .onebox-body{
-  padding: 5px;
+//  padding: 5px;
+}
+
+.source > a{
+  display: none;
+}
+
+.source > img{
+  float: right;
+}
+
+.box-tweet a{
+  float: right;
+  text-decoration: none;
+  color: white;
+  font-weight: bold;
+}
+
+.clear{
+  clear: both;
+}
+
+.login-button{
+  text-align: center;
 }
