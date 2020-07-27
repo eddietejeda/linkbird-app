@@ -1,0 +1,6 @@
+.sass-cache
+.byebug_history
+vendor
+tmp
+public/stylesheets/*.css
+public/stylesheets/*.map
