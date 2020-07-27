@@ -21,3 +21,5 @@ gem "awesome_print", "~> 1.8", :group => :development
 gem "omniauth-twitter", "~> 1.4"
 
 gem "curb", "~> 0.9.10"
+
+gem "dalli", "~> 2.7"

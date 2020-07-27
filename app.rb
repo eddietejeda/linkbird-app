@@ -4,7 +4,7 @@ require 'twitter-text'
 require "onebox"
 require "uri"
 require 'curb'
-require "fscache"
+require 'dalli'
 require 'omniauth-twitter'
 require 'sinatra/reloader' if development?
 require "byebug" if development?
@@ -14,6 +14,8 @@ class App < Sinatra::Base
   configure do
     enable :sessions
 
+    set :cache, Dalli::Client.new
+    
     use OmniAuth::Builder do
       provider :twitter, ENV['CONSUMER_KEY'], ENV['CONSUMER_SECRET']
     end
@@ -47,15 +49,13 @@ class App < Sinatra::Base
         config.access_token        = session[:access_token] # ENV["ACCESS_TOKEN"]  # 
         config.access_token_secret = session[:access_token_secret]  # ENV["ACCESS_TOKEN_SECRET"] # 
       end
-
-
-      filecache = FsCache.new(session["session_id"], 1, true)
       
-      home_timeline = filecache.fetch("tweets") do
-        client.home_timeline
+      home_timeline ||=  settings.cache.fetch(session["session_id"]) do
+        response = client.home_timeline
+        settings.cache.set(session["session_id"], response, 600) # cache for 10 minutes
+        response
       end
 
-      # home_timeline = client.home_timeline
       home_timeline.each do |t|
         url = t&.urls&.first&.expanded_url.to_s
         if url.start_with?("http") && URI.parse(url).host != "twitter.com"
