@@ -6,8 +6,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="stylesheets/twitter.css">
-  <link rel="stylesheet" href="stylesheets/onebox.css">
+  <link rel="stylesheet" href="stylesheets/twitter.css" />
+  <link rel="stylesheet" href="stylesheets/onebox.css" />
+  <link rel="stylesheet" href="stylesheets/gh-fork-ribbon.css" />
   <title>Twitter Timeline Links</title>
 </head>
 
@@ -33,9 +34,6 @@
             <% @tweets.each do |tweet| %>
               <li>
                 <div class="onebox">
-                  <p>
-                    <%= tweet[:url] %>
-                  </p>
                   <p>
                     <%= tweet[:preview] %>
                   </p>
