@@ -20,3 +20,5 @@ gem "awesome_print", "~> 1.8", :group => :development
 
 
 
+
+gem "link_thumbnailer", "~> 3.4"

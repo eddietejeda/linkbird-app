@@ -19,23 +19,36 @@
     
     <section class="timeline">
       <div class="box-tweet">
-        <h2>Home</h2> 
-        <p><a href="/logout">Logout</a></p> 
+        <div class="col-lg">
+          <h2>Home</h2> 
+        </div>
+        <div class="col-lg">
+          <!-- <p><a href="/logout">Logout</a></p>  -->
+        </div>
       </div>
-      <div class="clear" />
       <!--box-tweet-->      
       <% if current_user %>
         <div class="list-tweets">
           <ul class="tweets">
             <% @tweets.each do |tweet| %>
               <li>
-                <% if tweet[:preview].length > 0 %>
-                  <%= tweet[:preview] %>
-                <% else %>
-                  <div class="onebox">
-                    <a href="<%=tweet[:url]%>"><%=tweet[:url]%></a>
+                <a href="<%= tweet.url %>">
+                <div class="onebox">
+                  <h3><%= tweet.title %></h3>
+                  <div class="flex-grid">
+                    <div class="col-sm">
+                      <img class="fav" src="<%= tweet.favicon %>" />
+                    </div>
+                    <div class="col-lg">
+                      <p><%= tweet.description %></p>
+                    </div>
+                    <div class="col-sm">
+                      <img class="cropped" width="100px" src="<%= tweet.images.first.src.to_s %>" />
+                    </div>
                   </div>
-                <% end %>                  
+
+                </div>
+                
               </li>
             <% end %>
           </ul>

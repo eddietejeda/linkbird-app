@@ -2,6 +2,7 @@ require 'sinatra'
 require 'twitter'
 require 'twitter-text'
 require "onebox"
+require 'link_thumbnailer'
 require "uri"
 require 'curb'
 require 'dalli'
@@ -62,7 +63,12 @@ class App < Sinatra::Base
       home_timeline.each do |t|
         url = t&.urls&.first&.expanded_url.to_s
         if url.start_with?("http") && URI.parse(url).host != "twitter.com"
-          @tweets << { url: url, preview: Onebox.preview(expand_url(url)).to_s }
+
+          begin  
+            @tweets << LinkThumbnailer.generate(url)
+          rescue  
+            puts 'I am rescued.'  
+          end  
         end
       end
     end
