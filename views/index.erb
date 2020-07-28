@@ -43,7 +43,7 @@
                       <p><%= tweet.description %></p>
                     </div>
                     <div class="col-sm">
-                      <img class="cropped" width="100px" src="<%= tweet.images.first.src.to_s %>" />
+                      <img class="cropped" width="100px" src="<%= tweet.images.first&.src.to_s %>" />
                     </div>
                   </div>
 
