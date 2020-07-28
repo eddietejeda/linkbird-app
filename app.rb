@@ -67,13 +67,12 @@ class App < Sinatra::Base
           begin  
             @tweets << LinkThumbnailer.generate(url)
           rescue  
-            puts 'I am rescued.'  
+            puts 'Caught LinkThumbnailer.generate(url) error'  
           end  
         end
       end
     end
     
-    # byebug
     erb :index
   end
 

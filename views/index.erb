@@ -36,9 +36,12 @@
                 <div class="onebox">
                   <h3><%= tweet.title %></h3>
                   <div class="flex-grid">
-                    <div class="col-sm">
-                      <img class="fav" src="<%= tweet.favicon.to_s %>" />
-                    </div>
+                    
+                    <% if tweet.favicon.to_s.length > 0 %>
+                      <div class="col-sm">
+                        <img class="fav" src="<%= tweet.favicon.to_s %>" />
+                      </div>
+                    <% end %>
                     <div class="col-lg">
                       <p><%= tweet.description %></p>
                     </div>
