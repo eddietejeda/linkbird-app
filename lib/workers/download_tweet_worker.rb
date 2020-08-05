@@ -1,8 +1,9 @@
 class DownloadTweetWorker
 	include Sidekiq::Worker
-	def perform(user_id, token, secret)
-    puts "WORKER DOING BIZ"
-
+  sidekiq_options retry: 0
+	
+  def perform(user_id, token, secret)
+    
     tweets = []
     
     client = get_twitter_connection(token, secret )
@@ -22,7 +23,7 @@ class DownloadTweetWorker
     end
     
     
-    Tweet.insert_all(tweets)
+    Tweet.upsert_all(tweets, unique_by: { columns: [:tweet_id]})
 
 	end
 end
