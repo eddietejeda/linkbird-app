@@ -26,7 +26,7 @@ class App < Sinatra::Base
         cookies["key"] = SecureRandom.uuid
       end
       
-      user = User.where(" uid = :uid ", { uid: session[:uid] } ).first_or_create( cookie_key: cookies["key"] ) 
+      user = User.where(" uid = :uid ", { uid: session[:uid] } ).first_or_create( uid: session[:uid], cookie_key: cookies["key"] ) 
       
       if user
         @first_download = (user.tweets.length == 0)
