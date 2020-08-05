@@ -24,10 +24,7 @@ GEM
       descendants_tracker (~> 0.0.1)
     concurrent-ruby (1.1.6)
     connection_pool (2.2.3)
-    crass (1.0.6)
     curb (0.9.10)
-    daemons (1.3.1)
-    dalli (2.7.10)
     delayed_job (4.1.8)
       activesupport (>= 3.0, < 6.1)
     delayed_job_active_record (4.1.4)
@@ -45,7 +42,6 @@ GEM
       ffi (>= 1.0.0)
       rake
     hashie (4.1.0)
-    htmlentities (4.3.4)
     http (4.4.1)
       addressable (~> 2.3)
       http-cookie (~> 1.0)
@@ -80,7 +76,6 @@ GEM
     minitest (5.14.1)
     multi_json (1.15.0)
     multipart-post (2.1.1)
-    mustache (1.1.1)
     mustermann (1.1.1)
       ruby2_keywords (~> 0.0.1)
     naught (1.1.0)
@@ -90,8 +85,6 @@ GEM
     nio4r (2.5.2)
     nokogiri (1.10.10)
       mini_portile2 (~> 2.4.0)
-    nokogumbo (2.0.2)
-      nokogiri (~> 1.8, >= 1.8.4)
     oauth (0.5.4)
     oga (3.3)
       ast
@@ -105,13 +98,6 @@ GEM
     omniauth-twitter (1.4.0)
       omniauth-oauth (~> 1.1)
       rack
-    onebox (2.0.0)
-      addressable (~> 2.7.0)
-      htmlentities (~> 4.3)
-      multi_json (~> 1.11)
-      mustache
-      nokogiri (~> 1.7)
-      sanitize
     pg (1.2.3)
     public_suffix (4.0.5)
     puma (4.3.5)
@@ -128,16 +114,11 @@ GEM
       ansi
       ast
     ruby2_keywords (0.0.2)
-    sanitize (5.2.1)
-      crass (~> 1.0.2)
-      nokogiri (>= 1.8.0)
-      nokogumbo (~> 2.0)
     sass (3.7.4)
       sass-listen (~> 4.0.0)
     sass-listen (4.0.0)
       rb-fsevent (~> 0.9, >= 0.9.4)
       rb-inotify (~> 0.9, >= 0.9.7)
-    sequel (5.34.0)
     sidekiq (6.1.1)
       connection_pool (>= 2.2.2)
       rack (~> 2.0)
@@ -158,7 +139,6 @@ GEM
       rack-protection (= 2.0.8.1)
       sinatra (= 2.0.8.1)
       tilt (~> 2.0)
-    sqlite3 (1.4.2)
     symmetric-encryption (4.3.2)
       coercible (~> 1.0)
     thread_safe (0.3.6)
@@ -197,23 +177,18 @@ DEPENDENCIES
   awesome_print (~> 1.8)
   byebug (~> 11.1)
   curb (~> 0.9.10)
-  daemons
-  dalli (~> 2.7)
   delayed_job
   delayed_job_active_record
   link_thumbnailer (~> 3.4)
   omniauth-twitter (~> 1.4)
-  onebox (~> 2.0)
   pg
   puma (~> 4.3)
   rake (~> 13.0)
   sass (~> 3.7)
-  sequel (~> 5.34)
   sidekiq (~> 6.1)
   sinatra (~> 2.0)
   sinatra-activerecord (~> 2.0)
   sinatra-contrib (~> 2.0)
-  sqlite3 (~> 1.4)
   symmetric-encryption (~> 4.3)
   twitter (~> 7.0)
   twitter-text (~> 3.1)
