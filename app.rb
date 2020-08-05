@@ -21,18 +21,16 @@ class App < Sinatra::Base
 
     @tweets = []
     if current_user
-      #
-      # if cookies["user_keys"].nil?
-      #   cookies["user_keys"] = { uid: session[:uid], key: SecureRandom.uuid }
-      # end
+
+      if cookies["key"].nil?
+        cookies["key"] = SecureRandom.uuid
+      end
       
-      user = User.where(" uid = :uid ", { uid: session[:uid] } ).first_or_create( uid: session[:uid] ) 
+      user = User.where(" uid = :uid ", { uid: session[:uid] } ).first_or_create( cookie_key: cookies["key"] ) 
       
       if user
-        # byebug
         @first_download = (user.tweets.length == 0)
         DownloadTweetWorker.perform_async( user.id, session[:access_token], session[:access_token_secret] )
-
       end
       
       @tweets = user.tweets
