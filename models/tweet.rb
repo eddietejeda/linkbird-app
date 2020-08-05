@@ -1,5 +1,5 @@
 class Tweet < ActiveRecord::Base
   belongs_to :user
-  validates :twitter, uniqueness: true  
+  validates :tweet_id, uniqueness: true
   
 end

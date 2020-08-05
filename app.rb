@@ -30,7 +30,11 @@ class App < Sinatra::Base
       
       if user
         @first_download = (user.tweets.length == 0)
-        DownloadTweetWorker.perform_async( user.id, session[:access_token], session[:access_token_secret] )
+        if settings.development?
+          DownloadTweetWorker.new.perform( user.id, session[:access_token], session[:access_token_secret] )
+        else
+          DownloadTweetWorker.perform_async( user.id, session[:access_token], session[:access_token_secret] )
+        end
       end
       
       @tweets = user.tweets

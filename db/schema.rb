@@ -19,7 +19,7 @@ ActiveRecord::Schema.define(version: 2020_08_03_022852) do
     t.integer "user_id", null: false
     t.bigint "tweet_id", null: false
     t.jsonb "tweet", default: "{}", null: false
-    t.index ["tweet_id"], name: "index_tweets_on_tweet_id"
+    t.index ["tweet_id"], name: "index_tweets_on_tweet_id", unique: true
   end
 
   create_table "users", force: :cascade do |t|

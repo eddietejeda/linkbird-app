@@ -22,8 +22,7 @@ class DownloadTweetWorker
           
     end
     
-    
-    Tweet.upsert_all(tweets, unique_by: { columns: [:tweet_id]})
+    Tweet.insert_all(tweets, unique_by: :index_tweets_on_tweet_id)
 
 	end
 end
