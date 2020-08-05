@@ -19,6 +19,8 @@ ActiveRecord::Schema.define(version: 2020_08_03_022852) do
     t.integer "user_id", null: false
     t.bigint "tweet_id", null: false
     t.jsonb "tweet", default: "{}", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
     t.index ["tweet_id"], name: "index_tweets_on_tweet_id", unique: true
   end
 
@@ -26,6 +28,8 @@ ActiveRecord::Schema.define(version: 2020_08_03_022852) do
     t.integer "uid", null: false
     t.string "cookie_key", null: false
     t.jsonb "json", default: "{}", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
   end
 
 end

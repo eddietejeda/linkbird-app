@@ -13,10 +13,9 @@ class App < Sinatra::Base
     use OmniAuth::Builder do
       provider :twitter, ENV['CONSUMER_KEY'], ENV['CONSUMER_SECRET']
     end  
-    set :cookie_options, :expires => Time.new + 86_430 # Thirty days in seconds
+    set :cookie_options, :expires => Time.new + 30.days
   end
   
-
   get '/' do
 
     @tweets = []
@@ -27,14 +26,18 @@ class App < Sinatra::Base
       end
       
       user = User.where(" uid = :uid ", { uid: session[:uid] } ).first_or_create( uid: session[:uid], cookie_key: cookies["key"] ) 
+      @first_download = (user && user.tweets.length == 0)
       
-      if user
-        @first_download = (user.tweets.length == 0)
+      last_tweet = Tweet.order("created_at").last.created_at.getlocal("+00:00") || 20.minutes.ago
+      
+      if user && (last_tweet < 30.minutes.ago.getlocal("+00:00"))
         if settings.development?
           DownloadTweetWorker.new.perform( user.id, session[:access_token], session[:access_token_secret] )
-        else
+        else settings.production?
           DownloadTweetWorker.perform_async( user.id, session[:access_token], session[:access_token_secret] )
         end
+      else
+        puts "Skipping refresh... for now."
       end
       
       @tweets = user.tweets

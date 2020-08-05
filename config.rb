@@ -45,9 +45,15 @@ Dir["./models/*.rb", "./lib/**/*.rb"].each do |file|
   require file
 end
 
+logger = Logger.new(STDOUT)
 
 if settings.development?
   require 'sinatra/reloader' 
   require "byebug" 
   require "awesome_print" 
+
+  logger.level = Logger::INFO
 end
+
+
+logger.level = Logger::INFO

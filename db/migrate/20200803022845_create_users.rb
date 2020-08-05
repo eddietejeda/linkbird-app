@@ -4,6 +4,7 @@ class CreateUsers < ActiveRecord::Migration[6.0]
       t.integer   :uid,         null: false
       t.string    :cookie_key,  null: false
       t.jsonb     :json,        null: false,  default: '{}'
+      t.timestamps
     end
   end
 end
