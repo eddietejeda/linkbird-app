@@ -1,0 +1,11 @@
+default: &default
+  adapter: postgresql
+  encoding: unicode
+
+development:
+  <<: *default
+  database: twitter_timeline_links_dev
+
+production:
+  <<: *default
+  url:  <%= ENV["DATABASE_URL"] %>

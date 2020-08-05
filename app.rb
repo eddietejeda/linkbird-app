@@ -1,86 +1,50 @@
-require 'sinatra'
-require 'twitter'
-require 'twitter-text'
-require "onebox"
-require 'link_thumbnailer'
-require "uri"
-require 'curb'
-require 'dalli'
-require 'omniauth-twitter'
-require 'sinatra/reloader' if settings.development?
-require "byebug" if settings.development?
-require "awesome_print" if settings.development?
+# encoding: utf-8
+require './config'
+
 
 class App < Sinatra::Base
-
-  configure do
-    enable :sessions
-
-    set :cache, Dalli::Client.new(ENV["MEMCACHIER_SERVERS"],
-                      {:username => ENV["MEMCACHIER_USERNAME"],
-                       :password => ENV["MEMCACHIER_PASSWORD"]})
+  
+  # Set up environment
+  enable :sessions  
+  helpers Sinatra::Cookies
+  register Sinatra::ActiveRecordExtension
     
+  configure do
     use OmniAuth::Builder do
       provider :twitter, ENV['CONSUMER_KEY'], ENV['CONSUMER_SECRET']
-    end
+    end  
+    set :cookie_options, :expires => Time.new + 86_430 # Thirty days in seconds
   end
-
-  helpers do
-    def current_user
-      !session[:uid].nil?
-    end
-
-    def expand_url(url)
-      result = Curl::Easy.perform(url) do |curl|
-        curl.head = true
-        curl.follow_location = true
-      end
-      result.last_effective_url
-    end
-    
-  end
-
-
-
   
+
   get '/' do
+
     @tweets = []
-    
     if current_user
-      client = Twitter::REST::Client.new do |config|
-        config.consumer_key        = ENV["CONSUMER_KEY"]
-        config.consumer_secret     = ENV["CONSUMER_SECRET"]
-        config.access_token        = session[:access_token] # ENV["ACCESS_TOKEN"]  # 
-        config.access_token_secret = session[:access_token_secret]  # ENV["ACCESS_TOKEN_SECRET"] # 
+      #
+      # if cookies["user_keys"].nil?
+      #   cookies["user_keys"] = { uid: session[:uid], key: SecureRandom.uuid }
+      # end
+      
+      user = User.where(" uid = :uid ", { uid: session[:uid] } ).first_or_create( uid: session[:uid] ) 
+      
+      if user
+        # byebug
+        @first_download = (user.tweets.length == 0)
+        DownloadTweetWorker.perform_async( user.id, session[:access_token], session[:access_token_secret] )
+
       end
       
-      home_timeline ||=  settings.cache.fetch(session[:uid]) do
-        response = client.home_timeline({count: 50})
-        settings.cache.set(session[:uid], response, 1200) # cache for 20 minutes
-        response
-      end
-
-      home_timeline.each do |t|
-        url = t&.urls&.first&.expanded_url.to_s
-        if url.start_with?("http") && URI.parse(url).host != "twitter.com"
-
-          begin  
-            @tweets << LinkThumbnailer.generate(url)
-          rescue  
-            puts 'Caught LinkThumbnailer.generate(url) error'  
-          end  
-        end
-      end
+      @tweets = user.tweets
     end
-    
+
     erb :index
   end
-
   
   get '/auth/twitter/callback' do
-    session[:uid] = env['omniauth.auth']['uid']    
+    session[:uid] = env['omniauth.auth']['uid']
     session[:access_token] = env['omniauth.auth']['credentials']['token']
-    session[:access_token_secret] = env['omniauth.auth']['credentials']['secret']    
+    session[:access_token_secret] = env['omniauth.auth']['credentials']['secret']
     redirect to('/')
   end
   
@@ -91,7 +55,7 @@ class App < Sinatra::Base
   get '/auth/twitter/deauthorized' do
     erb "Twitter has deauthorized this app."
   end
-
+  
   get '/logout' do
     session[:authenticated] = false
     redirect '/'

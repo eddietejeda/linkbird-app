@@ -10,6 +10,11 @@
   <link rel="stylesheet" href="stylesheets/onebox.css" />
   <link rel="stylesheet" href="stylesheets/gh-fork-ribbon.css" />
   <title>Twitter Timeline Links</title>
+  
+  <% if @first_download %>
+    <meta http-equiv="refresh" content="5">  
+  <% end %>
+  
 </head>
 
 <body>
@@ -30,28 +35,34 @@
       <% if current_user %>
         <div class="list-tweets">
           <ul class="tweets">
-            <% @tweets.each do |tweet| %>
+            
+            <% if @first_download %>
+              <h3>Please wait. Setting up your account.</h3>
+            <% end %>
+            
+            
+            <% @tweets.each do |t| %>
               <li>
-                <a href="<%= tweet.url %>">
+                <a href="<%= t.tweet['url'] %>">
                 <div class="onebox">
-                  <h3><%= tweet.title %></h3>
+                  <h3><%= t.tweet['title'] %></h3>
                   <div class="flex-grid">
                     
-                    <% if tweet.favicon.to_s.length > 0 %>
+                    <% if t.tweet['favicon'].to_s.length > 0 %>
                       <div class="col-sm">
-                        <img class="fav" src="<%= tweet.favicon.to_s %>" />
+                        <img class="fav" src="<%= t.tweet['favicon'].to_s %>" />
                       </div>
                     <% end %>
+                    
                     <div class="col-lg">
-                      <p><%= tweet.description %></p>
+                      <p><%= t.tweet['description'] %></p>
                     </div>
                     <div class="col-sm">
-                      <img class="cropped" width="100px" src="<%= tweet.images.first&.src.to_s %>" />
+                      <img class="cropped" width="100px" src="<%= t.tweet['images'].first['src'].to_s %>" />
                     </div>
                   </div>
 
                 </div>
-                
               </li>
             <% end %>
           </ul>
