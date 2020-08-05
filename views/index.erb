@@ -58,7 +58,7 @@
                       <p><%= t.tweet['description'] %></p>
                     </div>
                     <div class="col-sm">
-                      <img class="cropped" width="100px" src="<%= t.tweet['images'].first['src'].to_s %>" />
+                      <img class="cropped" width="100px" src="<%= t.tweet.to_h['images'].first.to_h['src'].to_s %>" />
                     </div>
                   </div>
 
