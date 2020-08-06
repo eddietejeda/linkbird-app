@@ -25,7 +25,7 @@ ActiveRecord::Schema.define(version: 2020_08_03_022852) do
   end
 
   create_table "users", force: :cascade do |t|
-    t.integer "uid", null: false
+    t.bigint "uid", null: false
     t.string "cookie_key", null: false
     t.jsonb "json", default: "{}", null: false
     t.datetime "created_at", precision: 6, null: false
