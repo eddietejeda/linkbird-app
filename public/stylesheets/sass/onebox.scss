@@ -92,9 +92,19 @@ body {
 
 
 .title{
-  width: 500px;
+  max-width: 500px;
   margin: 0 auto;
   padding: 80px 0 50px;
   font-size: 200%;
   text-align:center;
+}
+
+@media only screen and (max-width: 600px) {
+  .title {
+    font-size: 180%;
+  }
+  
+  .small-image { 
+    display: none;
+  }
 }
