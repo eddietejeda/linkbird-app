@@ -39,8 +39,8 @@ body {
 
 
 .cropped {
-  width: 100px; /* width of container */
-  height: 100px; /* height of container */
+  width: 50px; /* width of container */
+  height: 50px; /* height of container */
   object-fit: cover;
   border-radius: 100%;
 }
@@ -73,12 +73,6 @@ body {
   color: black;
 }
 
-.box-tweet a{
-  float: right;
-  text-decoration: none;
-  color: white;
-  font-weight: bold;
-}
 
 .clear{
   clear: both;
@@ -94,10 +88,6 @@ body {
 }
 .col {
   flex: 1;
-}
-
-.tweets h3{
-  color: white;
 }
 
 

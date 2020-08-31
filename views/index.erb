@@ -15,6 +15,13 @@
     <meta http-equiv="refresh" content="5">  
   <% end %>
   
+  <script>
+    document.addEventListener("DOMContentLoaded", function(event) {
+       document.querySelectorAll('img').forEach(function(img){
+      	img.onerror = function(){this.style.display='none';};
+       })
+    });  
+  </script>
 </head>
 
 <body>
@@ -24,12 +31,9 @@
     
     <section class="timeline onebox">
       <% if current_user %>
-        <div class="box-tweet">
+        <div class="box-tweet flex-grid">
           <div class="col-lg">
-            <h2>Home</h2> 
-          </div>
-          <div class="col-lg">
-            <p><a href="/logout">Logout</a></p>
+            <h2>Home <a style="font-size: 50%" href="/logout">(Sign out)</a></h2> 
           </div>
         </div>
         <!--box-tweet-->      
@@ -46,7 +50,15 @@
               <li>
                 <a href="<%= t.tweet['url'] %>">
                 <div class="onebox">
-                  <h3><%= t.tweet['title'] %></h3>
+                  
+                  
+                  <% if t.tweet['title'].to_s.length > 0 %>
+                    <h3><%= t.tweet['title'] %></h3>
+                  <% else %>
+                    <h3><%= t.tweet['description'].to_s[0..20] %>...</h3>                  
+                  <% end %>
+                  
+                  
                   <div class="flex-grid">
                     
                     <% if t.tweet['favicon'].to_s.length > 0 %>
