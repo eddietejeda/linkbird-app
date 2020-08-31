@@ -157,7 +157,7 @@ div.wraper-content {
 
     .list-tweets {
       ul.tweets li {
-        border-bottom: 1px solid #38444d;
+        border-bottom: 0px solid #38444d;
         padding: 10px 15px;
         margin-top: 5px;
 //        display: flex;
@@ -257,7 +257,8 @@ div.wraper-content {
         display: flex;
         padding: 15px;
         justify-content: space-between;
-        border-bottom: 1px solid #38444d;
+        border-bottom: 0px solid #38444d;
+        list-style:none;
 
         .info {
           strong {
