@@ -1,11 +1,9 @@
 class DownloadTweetWorker
-	include Sidekiq::Worker
+  include Sidekiq::Worker
   sidekiq_options retry: 0
 	
   def perform(user_id, token, secret)
-    
     tweets = []
-    
     client = get_twitter_connection(token, secret )
         
     home_timeline = client.home_timeline({count: 50})
@@ -19,11 +17,9 @@ class DownloadTweetWorker
         rescue
           puts 'Caught LinkThumbnailer.generate(url) error'
         end
-      end  
-          
+      end        
     end
     
     Tweet.insert_all(tweets, unique_by: :index_tweets_on_tweet_id)
-
-	end
+  end
 end
