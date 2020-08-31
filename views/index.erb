@@ -22,17 +22,18 @@
   <div class="wraper-content content">
     <!--profile-->
     
-    <section class="timeline">
-      <div class="box-tweet">
-        <div class="col-lg">
-          <h2>Home</h2> 
-        </div>
-        <div class="col-lg">
-          <!-- <p><a href="/logout">Logout</a></p>  -->
-        </div>
-      </div>
-      <!--box-tweet-->      
+    <section class="timeline onebox">
       <% if current_user %>
+        <div class="box-tweet">
+          <div class="col-lg">
+            <h2>Home</h2> 
+          </div>
+          <div class="col-lg">
+            <p><a href="/logout">Logout</a></p>
+          </div>
+        </div>
+        <!--box-tweet-->      
+
         <div class="list-tweets">
           <ul class="tweets">
             
@@ -68,7 +69,21 @@
           </ul>
         </div>
       <% else %>
-        <div> <a href='/auth/twitter?use_authorize=true'><img src="/images/sign-in-with-twitter.png"></a> </div>
+        <div class="list-tweets">
+            <div class="col-sm ">
+              <h1 class="title">Filter out the chatter.<br>View your timeline's recent links.</h1>
+            </div>
+            
+            <div class="flex-grid">
+              <div class="col-sm">
+              </div>
+              <div class="col-md">
+                <div> <a href='/auth/twitter?use_authorize=true'><img src="/images/sign-in-with-twitter.png"></a> </div>
+              </div>
+              <div class="col-sm">
+              </div>
+            </div>
+        </div>
       <% end %>
       
       

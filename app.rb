@@ -63,7 +63,7 @@ class App < Sinatra::Base
   end
   
   get '/logout' do
-    session[:authenticated] = false
+    session.clear
     redirect '/'
   end
 
