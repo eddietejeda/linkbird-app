@@ -38,11 +38,11 @@ class App < Sinatra::Base
           DownloadTweetWorker.perform_async( user.id, session[:access_token], session[:access_token_secret] )
         end
       else
-        puts "Skipping refresh... for now."
+        puts "Using cached results."
       end
       # @page = params['page'].to_i || 0
       # @length = user.tweets.length
-      @tweets = user.tweets #.limit(10).order(created_at: :desc).limit(10).offset(@page * 10)
+      @tweets = user.tweets.order(tweet_date: :asc) #.limit(10).order(created_at: :desc).limit(10).offset(@page * 10)
     end
 
     erb :index

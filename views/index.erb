@@ -8,7 +8,7 @@
   <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="stylesheets/twitter.css" />
   <link rel="stylesheet" href="stylesheets/onebox.css" />
-  <title>Twitter Timeline Links</title>
+  <title>Twitter - Link Newsfeed</title>
   
   <% if @first_download %>
     <meta http-equiv="refresh" content="5">  
@@ -31,7 +31,7 @@
       <% if current_user %>
         <div class="box-tweet flex-grid">
           <div class="col-lg">
-            <h2>Home <a style="font-size: 50%" href="/logout">(Sign out)</a></h2> 
+            <h2>Twitter - Link Newsfeed <a style="font-size: 50%" href="/logout">(Sign out)</a></h2> 
           </div>
         </div>
         <!--box-tweet-->      
@@ -77,7 +77,8 @@
                   </div>
                   
 
-                  <div class="meta-data">By: <a href="https://twitter.com/<%= t.meta['screen_name'] %>"><%= t.meta["name"] %></a></div>
+                  <div class="meta-data">By: <a href="https://twitter.com/<%= t.meta['screen_name'] %>"><strong><%= t.meta["name"] %></strong></a> </div>
+                  <div class="meta-data"><div class="tweet_date"><%= t.tweet_date.strftime('%B %d, %Y') %></div></div>
                   <div class="meta-data"><div class="heart_count"><%= t.meta["favorite_count"] %></div></div>
                   <div class="meta-data"><div class="retweet_count"><%= t.meta["retweet_count"] %></div></div>
                   <div style="clear:both"></div>
@@ -90,7 +91,7 @@
       <% else %>
         <div class="list-tweets">
             <div class="col-sm">
-              <h1 class="title">Filter out the chatter.<br>Get the newsfeed from your timeline.</h1>
+              <h1 class="title">Filter out the chatter.<br>Get a newsfeed from your timeline.</h1>
             </div>
             
             <div class="flex-grid">
@@ -104,7 +105,7 @@
             </div>
             
             <div class="col-sm">
-              <p style="margin-top: 10%; font-size: 10pt; text-align:center">This app does not change your account settings and your authentication keys are deleted once you close the browser. <br>View <a href="https://github.com/eddietejeda/twitter-timeline-links">Source code</a> and learn about the <a href="https://eddietejeda.com/">creator here</a>
+              <p style="margin-top: 10%; font-size: 10pt; text-align:center">This app does not change your account settings and your authentication keys are deleted once you close your browser. <br>View <a href="https://github.com/eddietejeda/twitter-timeline-links">Source code</a> and learn about the <a href="https://eddietejeda.com/">creator here</a>
 </p>
             </div>
             
