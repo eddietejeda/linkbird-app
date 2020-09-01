@@ -26,7 +26,6 @@ class App < Sinatra::Base
       # end
       
       user = User.where(" uid = :uid ", { uid: session[:uid] } ).first_or_create( uid: session[:uid], cookie_key: cookies["key"] ) 
-      @first_download = (user && user.tweets.length == 0)
       
       last_tweet_created_at = (Tweet.order("created_at").last && Tweet.order("created_at").last.created_at.getlocal("+00:00")) || 30.minutes.ago.getlocal("+00:00")
       last_update_in_minutes = ((Time.now.getlocal("+00:00").to_i - last_tweet_created_at.to_i)) / 60
@@ -41,6 +40,7 @@ class App < Sinatra::Base
         puts "Using cached results."
       end
 
+      @first_download = (user && user.tweets.length == 0)
       @tweets = user.tweets.order(tweet_date: :asc).limit(100)
     end
 
