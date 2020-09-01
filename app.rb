@@ -28,7 +28,7 @@ class App < Sinatra::Base
       user = User.where(" uid = :uid ", { uid: session[:uid] } ).first_or_create( uid: session[:uid], cookie_key: cookies["key"] ) 
       @first_download = (user && user.tweets.length == 0)
       
-      last_tweet_created_at = Tweet.order("created_at").last && Tweet.order("created_at").last.created_at.getlocal("+00:00") || 30.minutes.ago.getlocal("+00:00")
+      last_tweet_created_at = (Tweet.order("created_at").last && Tweet.order("created_at").last.created_at.getlocal("+00:00")) || 30.minutes.ago.getlocal("+00:00")
       last_update_in_minutes = ((Time.now.getlocal("+00:00").to_i - last_tweet_created_at.to_i)) / 60
       
       if user && last_update_in_minutes > 20
