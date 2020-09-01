@@ -21,9 +21,9 @@ class App < Sinatra::Base
     @tweets = []
     if current_user
 
-      if cookies["key"].nil?
-        cookies["key"] = SecureRandom.uuid
-      end
+      # if cookies["key"].nil?
+      #   cookies["key"] = SecureRandom.uuid
+      # end
       
       user = User.where(" uid = :uid ", { uid: session[:uid] } ).first_or_create( uid: session[:uid], cookie_key: cookies["key"] ) 
       @first_download = (user && user.tweets.length == 0)
@@ -40,9 +40,8 @@ class App < Sinatra::Base
       else
         puts "Using cached results."
       end
-      # @page = params['page'].to_i || 0
-      # @length = user.tweets.length
-      @tweets = user.tweets.order(tweet_date: :asc).limit(100) #.limit(10).order(created_at: :desc).limit(10).offset(@page * 10)
+
+      @tweets = user.tweets.order(tweet_date: :asc).limit(100)
     end
 
     erb :index
