@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_08_03_022852) do
+ActiveRecord::Schema.define(version: 2020_08_31_213448) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -21,6 +21,7 @@ ActiveRecord::Schema.define(version: 2020_08_03_022852) do
     t.jsonb "tweet", default: "{}", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.jsonb "meta"
     t.index ["tweet_id"], name: "index_tweets_on_tweet_id", unique: true
   end
 

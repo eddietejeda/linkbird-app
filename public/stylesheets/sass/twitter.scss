@@ -91,6 +91,32 @@ div.wraper-content {
     border-left: 1px solid #38444d;
     border-right: 1px solid #38444d;
 
+    .meta-data{
+      font-size: 90%;
+      float: left;
+      line-height: 10px;
+    }
+    .heart_count {
+      background: url(/images/heart-solid.svg) no-repeat 10px;
+      padding: 0px 0px 0 31px;
+      margin-right: 0px;
+      text-align: left;
+      width: 50px;
+      font-size: 90%;
+      margin-top: 0px;
+    }
+    
+    .retweet_count {
+      background: url(/images/retweet-solid.svg) no-repeat 10px;
+      padding: 0px 0px 0 37px;
+      margin-right: 0px;
+      text-align: left;
+      width: 50px;
+      font-size: 90%;
+      margin-top: 0px;      
+    }
+    
+    
     .box-tweet {
             
       h2 {

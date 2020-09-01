@@ -50,6 +50,7 @@
                 <div class="onebox">
                   
                   
+                  
                   <% if t.tweet['title'].to_s.length > 0 %>
                     <h3><%= t.tweet['title'] %></h3>
                   <% else %>
@@ -72,11 +73,17 @@
                       <img class="cropped" width="100px" src="<%= t.tweet.to_h['images'].first.to_h['src'].to_s %>" />
                     </div>
                   </div>
+                  
 
+                  <div class="meta-data">By: <a href="https://twitter.com/<%= t.meta['screen_name'] %>"><%= t.meta["name"] %></a></div>
+                  <div class="meta-data"><div class="heart_count"><%= t.meta["favorite_count"] %></div></div>
+                  <div class="meta-data"><div class="retweet_count"><%= t.meta["retweet_count"] %></div></div>
+                  <div style="clear:both"></div>
                 </div>
               </li>
             <% end %>
           </ul>
+
         </div>
       <% else %>
         <div class="list-tweets">
