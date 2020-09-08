@@ -19,27 +19,29 @@ class App < Sinatra::Base
   get '/' do
 
     @tweets = []
+    # byebug
     if current_user
 
-      # if cookies["key"].nil?
-      #   cookies["key"] = SecureRandom.uuid
-      # end
+      update_frequency_in_minutes = 20
       
-      user = User.where(" uid = :uid ", { uid: session[:uid] } ).first_or_create( uid: session[:uid], cookie_key: cookies["key"] ) 
+      # byebug
+      user = User.where(" uid = :uid ", { uid: cookies[:uid] } ).first_or_create( uid: cookies[:uid], cookie_key: cookies[:cookie_key] )
       
       last_tweet_created_at = (Tweet.order("created_at").last && Tweet.order("created_at").last.created_at.getlocal("+00:00")) || 30.minutes.ago.getlocal("+00:00")
-      last_update_in_minutes = ((Time.now.getlocal("+00:00").to_i - last_tweet_created_at.to_i)) / 60
+      last_update_in_minutes = (Time.now.getlocal("+00:00").to_i - last_tweet_created_at.to_i) / 60
       
-      if (user && last_update_in_minutes > 20) || @first_download
+      if (user && last_update_in_minutes >= 20) || @first_download
+        # DownloadTweetWorker.perform_async( user.id, cookies[:access_token], cookies[:access_token_secret] )
         if settings.development?
-          DownloadTweetWorker.new.perform( user.id, session[:access_token], session[:access_token_secret] )
+          DownloadTweetWorker.new.perform( user.id, cookies[:access_token], cookies[:access_token_secret] )
         else settings.production?
-          DownloadTweetWorker.perform_async( user.id, session[:access_token], session[:access_token_secret] )
+          DownloadTweetWorker.perform_async( user.id, cookies[:access_token], cookies[:access_token_secret] )
         end
       else
         puts "Using cached results."
       end
 
+      @next_update_in_minutes =  [(update_frequency_in_minutes - last_update_in_minutes), 0].max
       @first_download = (user && user.tweets.length == 0)
       @tweets = user.tweets.order(tweet_date: :asc).limit(100)
     end
@@ -48,9 +50,11 @@ class App < Sinatra::Base
   end
   
   get '/auth/twitter/callback' do
-    session[:uid] = env['omniauth.auth']['uid']
-    session[:access_token] = env['omniauth.auth']['credentials']['token']
-    session[:access_token_secret] = env['omniauth.auth']['credentials']['secret']
+    cookies[:uid] = env['omniauth.auth']['uid']
+    cookies[:access_token] = env['omniauth.auth']['credentials']['token']
+    cookies[:access_token_secret] = env['omniauth.auth']['credentials']['secret']
+    cookies[:cookie_key] = SecureRandom.uuid
+    
     redirect to('/')
   end
   
@@ -63,7 +67,10 @@ class App < Sinatra::Base
   end
   
   get '/logout' do
-    session.clear
+    cookies[:uid] = nil
+    cookies[:access_token] = nil
+    cookies[:access_token_secret] = nil
+    cookies[:cookie_key] = nil
     redirect '/'
   end
 

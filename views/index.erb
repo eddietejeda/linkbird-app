@@ -35,7 +35,15 @@
         </div>
         
         <div class="col-lg right">
-          <h6 class="update-schedule">Updated every 20 minutes</h6>
+          <h6 class="update-schedule">
+            
+            <% if @next_update_in_minutes == 0 %>
+              Please wait. Refreshing links now.
+            <% else %>
+              Next update in <%= @next_update_in_minutes %> minutes
+            <% end %>
+          
+          </h6>
         </div>
         <!--box-tweet-->      
 
