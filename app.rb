@@ -19,19 +19,16 @@ class App < Sinatra::Base
   get '/' do
 
     @tweets = []
-    # byebug
     if current_user
 
       update_frequency_in_minutes = 20
       
-      # byebug
       user = User.where(" uid = :uid ", { uid: cookies[:uid] } ).first_or_create( uid: cookies[:uid], cookie_key: cookies[:cookie_key] )
       
       last_tweet_created_at = (Tweet.order("created_at").last && Tweet.order("created_at").last.created_at.getlocal("+00:00")) || 30.minutes.ago.getlocal("+00:00")
       last_update_in_minutes = (Time.now.getlocal("+00:00").to_i - last_tweet_created_at.to_i) / 60
       
       if (user && last_update_in_minutes >= 20) || @first_download
-        # DownloadTweetWorker.perform_async( user.id, cookies[:access_token], cookies[:access_token_secret] )
         if settings.development?
           DownloadTweetWorker.new.perform( user.id, cookies[:access_token], cookies[:access_token_secret] )
         else settings.production?
