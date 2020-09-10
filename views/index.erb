@@ -1,132 +1,94 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="stylesheets/style.css" />
-  <title>Twitter - Link Newsfeed</title>
-  
-  <% if @first_download %>
-    <meta http-equiv="refresh" content="5">  
-  <% end %>
-  
-  <script>
-    document.addEventListener("DOMContentLoaded", function(event) {
-       document.querySelectorAll('img').forEach(function(img){
-      	img.onerror = function(){this.style.display='none';};
-       })
-    });  
-  </script>
-</head>
-
-<body>
-  <div class="wraper-content content">
-    <!--profile-->
-    
-    <section class="timeline onebox">
-      <% if current_user %>
-        <div class="box-tweet flex-grid">
-          <div class="col-lg">
-            <h2>Twitter - Link Newsfeed <a style="font-size: 50%" href="/logout">(Sign out)</a></h2> 
-          </div>
-        </div>
-        
-        <div class="col-lg right">
-          <h6 class="update-schedule">
-            
-            <% if @next_update_in_minutes == 0 %>
-              Please wait. Refreshing links now.
-            <% else %>
-              Next update in <%= @next_update_in_minutes %> minutes
-            <% end %>
-          
-          </h6>
-        </div>
-        <!--box-tweet-->      
-
-        <div class="list-tweets">
-          <ul class="tweets">
-            
-            <% if @first_download %>
-              <div class="col-sm ">
-                <h1 class="title">Please wait... <br>Setting up your account. <br>This may take a minute the first time.</h1>
-              </div>
-            <% end %>
-            
-            
-            <% @tweets.each do |t| %>
-              <li>
-                <a href="<%= t.tweet['url'] %>">
-                <div class="onebox">
-                  
-                  
-                  
-                  <% if t.tweet['title'].to_s.length > 0 %>
-                    <h3><%= t.tweet['title'] %></h3>
-                  <% else %>
-                    <h3><%= t.tweet['description'].to_s[0..20] %>...</h3>                  
-                  <% end %>
-                  
-                  
-                  <div class="flex-grid">
-                    
-                    <% if t.tweet['favicon'].to_s.length > 0 %>
-                      <div class="col-sm">
-                        <img class="fav" src="<%= t.tweet['favicon'].to_s %>" />
-                      </div>
-                    <% end %>
-                    
-                    <div class="col-lg">
-                      <p><%= t.tweet['description'] %></p>
-                    </div>
-                    <div class="col-sm small-image">
-                      <img class="cropped" width="100px" src="<%= t.tweet.to_h['images'].first.to_h['src'].to_s %>" />
-                    </div>
-                  </div>
-                  
-
-                  <div class="meta-data">By: <a href="https://twitter.com/<%= t.meta['screen_name'] %>"><strong><%= t.meta["name"] %></strong></a> </div>
-                  <div class="meta-data"><div class="tweet_date"><%= t.tweet_date.strftime('%B %d, %Y') %></div></div>
-                  <div class="meta-data"><div class="heart_count"><%= t.meta["favorite_count"] %></div></div>
-                  <div class="meta-data"><div class="retweet_count"><%= t.meta["retweet_count"] %></div></div>
-                  <div style="clear:both"></div>
-                </div>
-              </li>
-            <% end %>
-          </ul>
-
-        </div>
+<!--profile-->
+<% if current_user %>
+  <div class="col-lg right">
+    <h6 class="update-schedule">
+      
+      <% if @next_update_in_minutes == 0 %>
+        Please wait. Refreshing links now.
       <% else %>
-        <div class="list-tweets">
-            <div class="col-sm">
-              <h1 class="title">Filter out the chatter.<br>Get a links newsfeed from your timeline.</h1>
-            </div>
-            
-            <div class="flex-grid">
-              <div class="col-sm">
-              </div>
-              <div class="col-md">
-                <div> <a href='/auth/twitter?use_authorize=true'><img src="/images/sign-in-with-twitter.png"></a> </div>
-              </div>
-              <div class="col-sm">
-              </div>
-            </div>
-            
-            <div class="col-sm">
-              <p style="margin-top: 10%; font-size: 10pt; text-align:center">This app does not alter your account. <br>View <a href="https://github.com/eddietejeda/twitter-timeline-links">Source code</a> and learn about the <a href="https://eddietejeda.com/">creator here</a>
-</p>
-            </div>
-            
-            
+        Next update in <%= @next_update_in_minutes %> minutes
+      <% end %>
+      | <a href="/logout">Sign out</a> |
+      <a href="/profile">Profile</a>
+    </h6>
+  </div>
+  <!--box-tweet-->      
+
+  <div class="list-tweets">
+    <ul class="tweets">
+      
+      <% if @first_download %>
+        <div class="col-sm ">
+          <h1 class="title">Please wait... <br>Setting up your account. <br>This may take a minute the first time.</h1>
         </div>
       <% end %>
       
-      
-      <!--list-tweets-->
-    </section>
+      <% @tweets.each do |t| %>
+        <li>
+          <a href="<%= t.tweet['url'] %>">
+          <div class="tweetbox">                  
+            <% if t.tweet['title'].to_s.length > 0 %>
+              <h3><%= t.tweet['title'] %></h3>
+            <% else %>
+              <h3><%= t.tweet['description'].to_s[0..20] %>...</h3>                  
+            <% end %>
+            
+            <div class="flex-grid">
+              <% if t.tweet['favicon'].to_s.length > 0 %>
+                <div class="col-sm">
+                  <img class="fav" src="<%= t.tweet['favicon'].to_s %>" />
+                </div>
+              <% end %>
+              
+              <div class="col-lg">
+                <p><%= t.tweet['description'] %></p>
+              </div>
+              <div class="col-sm small-image">
+                <img class="cropped" width="100px" src="<%= t.tweet.to_h['images'].first.to_h['src'].to_s %>" />
+              </div>
+            </div>
+            
+            <div class="meta-data">By: <a href="https://twitter.com/<%= t.meta['screen_name'] %>"><strong><%= t.meta["name"] %></strong></a> </div>
+            <div class="meta-data"><div class="tweet_date"><%= t.tweet_date.strftime('%b %-d, %Y') %></div></div>
+            <div class="meta-data"><div class="heart_count"><%= t.meta["favorite_count"] %></div></div>
+            <div class="meta-data"><div class="retweet_count"><%= t.meta["retweet_count"] %></div></div>
+            <div style="clear:both"></div>
+          </div>
+        </li>
+      <% end %>
+        
+      <% if @user.data['premium'] == true %>
+        <%= pagy_bulma_nav(@pagy) if @pagy.pages > 1 %>
+      <% else %>
+          <div class="tweetbox">
+            <section class="container basic-photo">
+              <div style="text-align: center; min-width: 300px; width: 32%; margin: 30px auto 0">
+                <h3>Free accounts are limited to 25 links. <br>Subscribe to save all links.</h3>
+                <button id="activate-premium-plan-btn">Activate Premium</button>
+                <br/>
+                <br/>
+                <p><a style="" href="/profile">Learn more</a></p>
+              </div>
+            </section>
+          </div>
+      <% end %>
+    </ul>
   </div>
-</body>
-</html>
+<% else %>
+  <div class="list-tweets">
+      <div class="col-sm">
+        <h2 class="title">
+          Filter out the chatter.<br>View links from your timeline.</h1>
+      </div>
+      
+      <div class="flex-grid">
+        <div class="col-sm"></div>
+        <div class="col-md">
+          <div> <a href='/auth/twitter?use_authorize=true'><img width="300px" src="/images/sign-in-with-twitter.png"></a> </div>
+        </div>
+        <div class="col-sm"></div>
+      </div>
+      
+  </div>
+<% end %>
+

@@ -1,5 +1,5 @@
 def current_user
-  cookies[:uid]
+  User.find_by(uid: cookies[:uid])
 end
 
 def expand_url(url)

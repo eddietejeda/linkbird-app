@@ -28,6 +28,9 @@ require 'twitter'
 require 'twitter-text'
 require 'omniauth-twitter'
 require 'link_thumbnailer'
+require 'pagy'
+require 'pagy/extras/bulma'
+
 
 require "uri"
 require 'curb'

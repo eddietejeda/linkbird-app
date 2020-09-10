@@ -98,6 +98,7 @@ GEM
     omniauth-twitter (1.4.0)
       omniauth-oauth (~> 1.1)
       rack
+    pagy (3.8.3)
     pg (1.2.3)
     public_suffix (4.0.5)
     puma (4.3.5)
@@ -139,6 +140,7 @@ GEM
       rack-protection (= 2.0.8.1)
       sinatra (= 2.0.8.1)
       tilt (~> 2.0)
+    stripe (5.25.0)
     symmetric-encryption (4.3.2)
       coercible (~> 1.0)
     thread_safe (0.3.6)
@@ -181,6 +183,7 @@ DEPENDENCIES
   delayed_job_active_record
   link_thumbnailer (~> 3.4)
   omniauth-twitter (~> 1.4)
+  pagy (~> 3.8)
   pg
   puma (~> 4.3)
   rake (~> 13.0)
@@ -189,6 +192,7 @@ DEPENDENCIES
   sinatra (~> 2.0)
   sinatra-activerecord (~> 2.0)
   sinatra-contrib (~> 2.0)
+  stripe (~> 5.25)
   symmetric-encryption (~> 4.3)
   twitter (~> 7.0)
   twitter-text (~> 3.1)
