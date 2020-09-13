@@ -18,7 +18,7 @@
     <% if @first_download %>
       <meta http-equiv="refresh" content="5">
     <% elsif @next_update_in_minutes == 0 %>
-      <!-- <meta http-equiv="refresh" content="60"> -->
+      <meta http-equiv="refresh" content="60">
     <% end %>
   </head>
 
@@ -29,7 +29,7 @@
         <div class="hero-body">
             <div class="container has-text-centered">
                 <div class="card">
-                  
+                    <br>
                     <a href="/">
                         <img width="50px" src="/images/linkbird.png">
                         <h1 class="title has-text-black <%= "not-logged-in" if !@user %>">LinkBird Newsfeed</h1>

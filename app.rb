@@ -39,7 +39,10 @@ class App < Sinatra::Base
 
       last_update_in_seconds = Time.now.getlocal("+00:00").to_i - last_tweet_created_at.to_i
       last_update_in_minutes = last_update_in_seconds / 60
-      
+
+      @first_download = user_tweets.length == 0
+    
+      # byebug
       if @first_download || (@user.present? && last_update_in_minutes >= 20)
         DownloadTweetWorker.perform_async( @user.id, cookies[:access_token], cookies[:access_token_secret] )
       else
@@ -48,8 +51,7 @@ class App < Sinatra::Base
 
       # For the template
       @next_update_in_minutes =  [(update_frequency_in_minutes - last_update_in_minutes), 0].max
-      @first_download = user_tweets.length == 0
-      @pagy, @tweets = pagy(Tweet)
+      @pagy, @tweets = pagy(user_tweets)
     end
 
     erb :index

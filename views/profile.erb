@@ -1,8 +1,7 @@
 <div class="card card-with-no-border">
   <div class="card-content">
     <div class="content">
-      <div class="tweetbox">
-        <section class="container basic-photo">
+        <section class="column is-6 is-offset-3">
           <% if @user.data['premium'] %>
             <button>Premium Subscription is Active</button>
 
@@ -17,17 +16,17 @@
             <button id="activate-premium-plan-btn">Activate Premium</button>
           <% end %>
           
-          <div class="col-sm">
-            <!-- <br>
+          <div class="column">
             <br>
-            <h3>What is Premium Subscription?</h3>
+            <br>
+            <h4>What is Premium Subscription?</h4>
 
-            <ul style="padding: 10px 50px; text-align: left">
-              <li>Store an archive of all your links</li>
-              <li><b>Coming soon</b>: Search links</li>
-              <li><b>Coming soon</b>: Save and delete links</li>
+            <ul style="text-align: left; list-style: inside; margin-left: 15%">
+              <li>No limits on how many timeline articles. </li>
+              <li><b>Coming soon</b>: Search timeline for articles.</li>
+              <li><b>Coming soon</b>: Bookmark articles</li>
             </ul>
-             -->
+
             <br/>
             <br/>
             <br/>
@@ -35,7 +34,6 @@
           </div>
 
         </section>
-      </div>
     </div>
   </div>
 </div>   

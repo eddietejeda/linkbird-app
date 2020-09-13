@@ -16,7 +16,7 @@
   <div class="col-lg right">
      <h6 class="update-schedule">
         <% if @next_update_in_minutes == 0 %>
-          Please wait. Refreshing links now.
+          Refreshing links now.
         <% else %>
           Next update in <%= @next_update_in_minutes %> minutes
         <% end %>
@@ -25,9 +25,18 @@
      </h6>
   </div>
   <% if @first_download %>
-    <div class="col-sm ">
-       <h1 class="title">Please wait... <br>Setting up your account. <br>This may take a minute the first time.</h1>
-    </div>
+  
+    <div class="card card-with-border">
+       <div class="card-content">
+          <div class="content">
+             <div class="tweetbox">
+                <section class="container basic-photo">
+                  <p><br>Setting up your account. <br>This may take a minute the first time.<br><br></p>
+                </section>
+             </div>
+          </div>
+       </div>
+    </div>  
   <% end %>
   
   <!-- Render Tweets -->
@@ -81,19 +90,19 @@
      <div class="card-content">
         <div class="content">
            <% if @user.data['premium'] == true %>
-           <%= pagy_bulma_nav(@pagy) if @pagy.pages > 1 %>
-           <% else %>
-           <div class="tweetbox">
-              <section class="container basic-photo">
-                 <div>
-                    <p>Free accounts only display 25 links. <br>Subscribe to view all articles.</p>
-                    <button id="activate-premium-plan-btn">Activate Premium</button>
-                    <br/>
-                    <br/>
-                    <p><a style="" href="/profile">Learn more</a></p>
-                 </div>
-              </section>
-           </div>
+             <%= pagy_bulma_nav(@pagy) if @pagy.pages > 1 %>
+           <% elsif !@first_download  %>
+             <div class="tweetbox">
+                <section class="container basic-photo">
+                   <div>
+                      <p>Free accounts only display 25 links. <br>Subscribe to view all articles.</p>
+                      <button id="activate-premium-plan-btn">Activate Premium</button>
+                      <br/>
+                      <br/>
+                      <p><a style="" href="/profile">Learn more</a></p>
+                   </div>
+                </section>
+             </div>
            <% end %>
         </div>
      </div>
