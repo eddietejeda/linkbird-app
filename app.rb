@@ -198,9 +198,16 @@ class App < Sinatra::Base
     cookies[:access_token_secret] = env['omniauth.auth']['credentials']['secret']
     cookies[:cookie_key] = SecureRandom.uuid
     
+    byebug
     user = User.find_by(uid: cookies[:uid])
-    user.cookie_key = cookies[:cookie_key]
-    user.save!
+    
+    if user.nil?
+      User.create(uid: cookies[:uid], cookie_key: cookies[:cookie_key])
+    else
+      user.cookie_key = cookies[:cookie_key]
+      user.save!      
+    end
+    
     
     user.set_subscription_status! if user.present?
 
