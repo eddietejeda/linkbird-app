@@ -23,7 +23,7 @@ class App < Sinatra::Base
   
   before do
     if settings.production?
-      redirect ENV['PRODUCTION_URL'] if request.host != ENV['PRODUCTION_URL']
+      redirect "https://#{ENV['PRODUCTION_URL']}" if request.host != ENV['PRODUCTION_URL']
     end
   end
   
