@@ -203,7 +203,10 @@ class App < Sinatra::Base
     cookies[:access_token] = env['omniauth.auth']['credentials']['token']
     cookies[:access_token_secret] = env['omniauth.auth']['credentials']['secret']
     cookies[:cookie_key] = SecureRandom.uuid
-    current_user.set_subscription_status!
+    
+    if current_user
+      current_user.set_subscription_status!
+    end
     
     redirect to('/')
   end
