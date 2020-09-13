@@ -1,3 +1,17 @@
+GIT
+  remote: https://github.com/gottfrois/link_thumbnailer
+  revision: 2ec9026aaaccf638207e6fa480f750bfdc5c9a80
+  ref: 2ec9026aaaccf638207e6fa480f750bfdc5c9a80
+  specs:
+    link_thumbnailer (3.4.0)
+      activesupport (>= 3.0)
+      image_info (~> 1.0, >= 1.2.0)
+      json (>= 1.7.7)
+      net-http-persistent (>= 2.9)
+      nokogiri (>= 1.6)
+      rake (>= 0.9)
+      video_info (>= 2.6)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -22,7 +36,7 @@ GEM
     byebug (11.1.3)
     coercible (1.0.0)
       descendants_tracker (~> 0.0.1)
-    concurrent-ruby (1.1.6)
+    concurrent-ruby (1.1.7)
     connection_pool (2.2.3)
     curb (0.9.10)
     delayed_job (4.1.8)
@@ -59,21 +73,13 @@ GEM
     image_info (1.2.0)
       image_size (~> 2.0)
       typhoeus (~> 1.0)
-    image_size (2.0.2)
+    image_size (2.1.0)
     iso8601 (0.9.1)
     json (2.3.1)
-    link_thumbnailer (3.4.0)
-      activesupport (>= 3.0)
-      image_info (~> 1.0, >= 1.2.0)
-      json (>= 1.7.7)
-      net-http-persistent (>= 2.9)
-      nokogiri (>= 1.6)
-      rake (>= 0.9)
-      video_info (>= 2.6)
     memoizable (0.4.2)
       thread_safe (~> 0.3, >= 0.3.1)
     mini_portile2 (2.4.0)
-    minitest (5.14.1)
+    minitest (5.14.2)
     multi_json (1.15.0)
     multipart-post (2.1.1)
     mustermann (1.1.1)
@@ -181,7 +187,7 @@ DEPENDENCIES
   curb (~> 0.9.10)
   delayed_job
   delayed_job_active_record
-  link_thumbnailer (~> 3.4)
+  link_thumbnailer!
   omniauth-twitter (~> 1.4)
   pagy (~> 3.8)
   pg

@@ -1,17 +1,26 @@
 <% if !current_user %>
+  
   <!--Not logged in -->
-  <h3 class="title has-text-black <%= "not-logged-in" if !@user %>">
-     Filter out the chatter.<br>View links from your timeline.
-  </h3>
+  <h4 class="title has-text-black <%= "not-logged-in" if !@user %>" style="font-size: 150%">
+     <br>Filter out the chatter.<br>Only articles from your timeline.<br><br>
+  </h4>
+  
   <!-- Login button -->
   <div class="flex-grid">
      <div class="col-sm"></div>
      <div class="col-md">
-        <div> <a href='/auth/twitter?use_authorize=true'><img width="300px" src="/images/sign-in-with-twitter.png"></a> </div>
+       <a href='/auth/twitter?use_authorize=true'><img width="300px" src="/images/sign-in-with-twitter.png"></a>
+       <br>
+       <br>
+       <br>
+       <br>
      </div>
      <div class="col-sm"></div>
   </div>
 <% else %>
+
+
+
   <!-- Logged in-->
   <div class="col-lg right">
      <h6 class="update-schedule">
@@ -24,9 +33,10 @@
         <a href="/profile">Profile</a>
      </h6>
   </div>
-  <% if @first_download %>
   
-    <div class="card card-with-border">
+  <!-- First download -->
+  <% if @first_download %>
+    <div class="card card-with-no-border">
        <div class="card-content">
           <div class="content">
              <div class="tweetbox">
@@ -86,7 +96,7 @@
   <% end %>
   
   <!--Pagination -->
-  <div class="card card-with-border">
+  <div class="card <%= @first_download ? 'card-with-no-border' : 'card-with-border' %>">
      <div class="card-content">
         <div class="content">
            <% if @user.data['premium'] == true %>
@@ -94,13 +104,11 @@
            <% elsif !@first_download  %>
              <div class="tweetbox">
                 <section class="container basic-photo">
-                   <div>
-                      <p>Free accounts only display 25 links. <br>Subscribe to view all articles.</p>
-                      <button id="activate-premium-plan-btn">Activate Premium</button>
-                      <br/>
-                      <br/>
-                      <p><a style="" href="/profile">Learn more</a></p>
-                   </div>
+               
+                  <p>You are viewing <%= @tweets.count %> out of 25.<br>Free accounts only display 25 links.</p>
+                  <button id="activate-premium-plan-btn">Activate Subcription</button>
+                  <br/>
+                  <div><br>Subscribe to remove limits<br><a style="" href="/profile">Learn more</a><br></div>
                 </section>
              </div>
            <% end %>

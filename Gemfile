@@ -17,7 +17,7 @@ gem "rake", "~> 13.0"
 gem "sass", "~> 3.7"
 gem "puma", "~> 4.3"
 gem "curb", "~> 0.9.10"
-gem "link_thumbnailer", "~> 3.4"
+gem "link_thumbnailer", github: 'gottfrois/link_thumbnailer', ref: '2ec9026aaaccf638207e6fa480f750bfdc5c9a80'
 gem "symmetric-encryption", "~> 4.3"
 
 gem 'pg'

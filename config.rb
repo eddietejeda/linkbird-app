@@ -1,22 +1,3 @@
-#  ActiveRecord looks for this object
-module Rails
-  extend self
-
-  def root
-    File.dirname(File.expand_path('..', __FILE__))
-  end
-
-  def logger
-    @logger ||= Logger.new $stdout
-  end
-  
-  def env
-    ENV.fetch("ENV") || "development"
-  end
-  
-end
-
-
 # Set up environment
 require 'sinatra'
 require "sinatra/base"
@@ -31,7 +12,6 @@ require 'link_thumbnailer'
 require 'pagy'
 require 'pagy/extras/bulma'
 
-
 require "uri"
 require 'curb'
 
@@ -44,6 +24,16 @@ require 'sidekiq'
 require 'sidekiq/api'
 require 'sidekiq/web'
 
+if settings.development?
+  require 'sidekiq/testing' 
+  # Sidekiq::Testing.fake! # fake is the default mode
+  Sidekiq::Testing.inline!
+end
+
+require 'stripe'
+Stripe.api_key = ENV['STRIPE_SECRET_KEY']
+
+
 Dir["./models/*.rb", "./lib/**/*.rb"].each do |file| 
   require file
 end
@@ -54,7 +44,6 @@ if settings.development?
   require 'sinatra/reloader' 
   require "byebug" 
   require "awesome_print" 
-
   logger.level = Logger::INFO
 end
 
