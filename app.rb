@@ -17,7 +17,7 @@ class App < Sinatra::Base
 
   configure do
     use OmniAuth::Builder do
-      provider :twitter, ENV['CONSUMER_KEY'], ENV['CONSUMER_SECRET']
+      provider :twitter, ENV['TWITTER_CONSUMER_KEY'], ENV['TWITTER_CONSUMER_SECRET']
     end  
     set :cookie_options, :expires => Time.new + 30.days
   end
@@ -53,7 +53,6 @@ class App < Sinatra::Base
       # For the template
       @next_update_in_minutes =  [(update_frequency_in_minutes - last_update_in_minutes), 0].max
       @first_download = (user && user_tweets.length == 0)
-      # @tweets = user_tweets.limit(user.feedlimit)
       @pagy, @tweets = pagy(Tweet)
     end
 
