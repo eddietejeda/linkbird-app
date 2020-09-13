@@ -4,6 +4,8 @@ html,body {
   font-weight: 300;
   text-rendering: optimizeLegibility !important;
   -webkit-font-smoothing: antialiased !important;
+  height: 100%;
+  background-color: #F2F6FA;
 }
 body{
   height: 100% !important;
@@ -90,7 +92,7 @@ h1{
 }
 
 .section{
-  background-color: #F2F6FA;
+//  background-color: #F2F6FA;
   padding: 0;
 }
 
@@ -108,6 +110,10 @@ button {
   font-weight: bold;
   height: 50px;
   background-color: #55acee;
+  
+  &:hover{
+    cursor: pointer;
+  }
 }
 
 .card-with-no-border{
@@ -139,6 +145,7 @@ button {
   margin-left: 5px;
   margin-right: 5px;
 }
+
 
 
 @media only screen and (max-width: 600px) {

@@ -5,7 +5,6 @@ require './config'
 class App < Sinatra::Base
   
   # Set up environment
-  
   enable :sessions  
   helpers Sinatra::Cookies
   register Sinatra::ActiveRecordExtension
@@ -17,7 +16,7 @@ class App < Sinatra::Base
 
   configure do
     use OmniAuth::Builder do
-      provider :twitter, ENV['TWITTER_CONSUMER_KEY'], ENV['TWITTER_CONSUMER_SECRET']
+      provider :twitter, ENV['TWITTER_API_CONSUMER_KEY'], ENV['TWITTER_API_CONSUMER_SECRET']
     end  
     set :cookie_options, :expires => Time.new + 30.days
   end
@@ -26,14 +25,11 @@ class App < Sinatra::Base
   get '/' do
     @tweets = []
     @user = current_user    
-    if @user
+    
+    if @user.present?
       update_frequency_in_minutes = 20
-      
-      user = User.where(" uid = :uid ", { uid: cookies[:uid] } )
-        .first_or_create( uid: cookies[:uid], cookie_key: cookies[:cookie_key] )
-      
-      
-      user_tweets = user.tweets.order(created_at: :desc)
+            
+      user_tweets = @user.tweets.order(created_at: :desc)
 
       if user_tweets.last
         last_tweet_created_at = user_tweets.last.created_at.getlocal("+00:00")
@@ -44,18 +40,17 @@ class App < Sinatra::Base
       last_update_in_seconds = Time.now.getlocal("+00:00").to_i - last_tweet_created_at.to_i
       last_update_in_minutes = last_update_in_seconds / 60
       
-      if @first_download || (user && last_update_in_minutes >= 20)
-        DownloadTweetWorker.perform_async( user.id, cookies[:access_token], cookies[:access_token_secret] )
+      if @first_download || (@user.present? && last_update_in_minutes >= 20)
+        DownloadTweetWorker.perform_async( @user.id, cookies[:access_token], cookies[:access_token_secret] )
       else
         puts "🔔 Using cached results."
       end
 
       # For the template
       @next_update_in_minutes =  [(update_frequency_in_minutes - last_update_in_minutes), 0].max
-      @first_download = (user && user_tweets.length == 0)
+      @first_download = user_tweets.length == 0
       @pagy, @tweets = pagy(Tweet)
     end
-
 
     erb :index
   end
@@ -203,10 +198,12 @@ class App < Sinatra::Base
     cookies[:access_token_secret] = env['omniauth.auth']['credentials']['secret']
     cookies[:cookie_key] = SecureRandom.uuid
     
-    if current_user
-      current_user.set_subscription_status!
-    end
+    user = User.find_by(uid: cookies[:uid])
+    user.cookie_key = cookies[:cookie_key]
+    user.save!
     
+    user.set_subscription_status! if user.present?
+
     redirect to('/')
   end
   

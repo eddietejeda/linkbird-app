@@ -1,5 +1,5 @@
 def current_user
-  User.find_by(uid: cookies[:uid])
+  User.find_by(uid: cookies[:uid], cookie_key: cookies[:cookie_key])
 end
 
 def expand_url(url)
@@ -12,8 +12,8 @@ end
 
 def get_twitter_connection(token, secret)
   Twitter::REST::Client.new do |config|
-    config.consumer_key        = ENV["CONSUMER_KEY"]
-    config.consumer_secret     = ENV["CONSUMER_SECRET"]
+    config.consumer_key        = ENV["TWITTER_API_CONSUMER_KEY"]
+    config.consumer_secret     = ENV["TWITTER_API_CONSUMER_SECRET"]
     config.access_token        = token 
     config.access_token_secret = secret
   end  
