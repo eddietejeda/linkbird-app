@@ -1,56 +1,80 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
-  <!-- <link rel="stylesheet" href="stylesheets/bulma.css" /> -->
-  <link rel="stylesheet" href="stylesheets/style.css" />
-  <title>LinkBird - Link Newsfeed</title>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="stylesheets/bulma.css" />
+    <link rel="stylesheet" href="stylesheets/style.css" />
+    <title>LinkBird - Link Newsfeed</title>
   
-  <!-- Load Stripe.js on your website. -->
-  <script src="https://js.stripe.com/v3/"></script>
-  <script src="./javascript/app.js" defer></script>  
-  <link rel="icon" type="image/png"  href="/images/linkbird.png">
+    <!-- Load Stripe.js on your website. -->
+    <script src="https://js.stripe.com/v3/"></script>
+    <script src="./javascript/app.js" defer></script>  
+    <link rel="icon" type="image/png" href="/images/linkbird.png">
         
-  <% if @first_download %>
-    <meta http-equiv="refresh" content="5">
-  <% elsif @next_update_in_minutes == 0 %>
-    <meta http-equiv="refresh" content="60">
-  <% end %>
-</head>
+    <% if @first_download %>
+      <meta http-equiv="refresh" content="5">
+    <% elsif @next_update_in_minutes == 0 %>
+      <!-- <meta http-equiv="refresh" content="60"> -->
+    <% end %>
+  </head>
 
-<body>
-  <div class="wraper-content content">
-    <section class="timeline tweetbox">
+  <body>
 
-      <div class="box-tweet flex-grid">
-        <div class="title col-lg <%= "not-logged-in" if !@user %>">
-          <a href="/"><img width="50px" src="/images/linkbird.png"></a>
-          <a href="/"><h1>LinkBird Newsfeed</h1></a>
+
+    <section class="is-success is-fullheight section">
+        <div class="hero-body">
+            <div class="container has-text-centered">
+                <div class="card">
+                  
+                    <a href="/">
+                        <img width="50px" src="/images/linkbird.png">
+                        <h1 class="title has-text-black <%= "not-logged-in" if !@user %>">LinkBird Newsfeed</h1>
+                    </a>
+
+                    <% if @alert  %>                    
+                      <hr class="login-hr">
+                      <p class="subtitle has-text-black"><%= @alert %></p>
+                      <div class="box">
+                    <% end  %>
+                    
+                    
+                    <%= yield %>
+
+
+                    <!-- <div class="columns"> -->
+                    <!-- </div> -->
+                </div>
+                
+                <div class="column is-10 is-offset-1 footer">
+                  <!-- <p class="has-text-grey">
+                      <a href="../">Sign Up</a> &nbsp;·&nbsp;
+                      <a href="../">Forgot Password</a> &nbsp;·&nbsp;
+                      <a href="../">Need Help?</a>
+                  </p> -->
+                  <div class="column is-10 is-offset-1">
+                    <p class="has-text-grey">
+                      © Visudo LLC <%= DateTime.now.strftime("%Y") %>. All Rights Reserved.
+                    </p>
+                  </div>
+                </div>
+            </div>
         </div>
-      </div>
-
-      <% if @alert  %>
-        <div class="">
-          <div class="level-right">
-            <%= @alert %>
-          </div>
-          <div id="error-message">
-            <pre></pre>
-          </div>
-        </div>
-      <% end  %>
-
-      <%= yield %>
-      
-      <div class="col-sm">
-        <p style="margin-top: 50px; margin-bottom: 20px; font-size: 10pt; text-align:center">© Visudo LLC <%= DateTime.now.strftime("%Y") %><br></p>
-      </div>
-
     </section>
-  </div>
-</body>
+
+
+  </body>
+    
 </html>
+
+
+
+
+
+
+
+
+    

@@ -1,21 +1,66 @@
-
-<div class="list-tweets container basic-photo">
-    <div id="error-message"></div>
-    <div class="flex-grid">
-      <div class="col-sm"></div>
-      <div class="col-sm">
-        <div> 
-          
+<div class="card card-with-no-border">
+  <div class="card-content">
+    <div class="content">
+      <div class="tweetbox">
+        <section class="container basic-photo">
           <% if @user.data['premium'] %>
-            <button>Premium Subscription</button>
-            
+            <button>Premium Subscription is Active</button>
+
             <form action="/cancel" method="POST" id="cancel-subscription-form">
               <p style="text-align: center;margin: 10px auto;">
                 <a id="cancel-subscription-link" style="text-decoration: none" href="#">Cancel Subscription</a>
               </p>
               <input type="submit" style="display:none">
             </form>
-            
+
+          <% else %>
+            <button id="activate-premium-plan-btn">Activate Premium</button>
+          <% end %>
+          
+          <div class="col-sm">
+            <!-- <br>
+            <br>
+            <h3>What is Premium Subscription?</h3>
+
+            <ul style="padding: 10px 50px; text-align: left">
+              <li>Store an archive of all your links</li>
+              <li><b>Coming soon</b>: Search links</li>
+              <li><b>Coming soon</b>: Save and delete links</li>
+            </ul>
+             -->
+            <br/>
+            <br/>
+            <br/>
+            <p style="text-align: center;margin: 0 auto;"><a style="text-decoration: none" href="/">Go home</a></p>
+          </div>
+
+        </section>
+      </div>
+    </div>
+  </div>
+</div>   
+
+
+<!--
+
+
+<div class="list-tweets container basic-photo">
+    <div id="error-message"></div>
+    <div class="flex-grid">
+      <div class="col-sm"></div>
+      <div class="col-sm">
+        <div>
+
+          <% if @user.data['premium'] %>
+            <button>Premium Subscription</button>
+
+            <form action="/cancel" method="POST" id="cancel-subscription-form">
+              <p style="text-align: center;margin: 10px auto;">
+                <a id="cancel-subscription-link" style="text-decoration: none" href="#">Cancel Subscription</a>
+              </p>
+              <input type="submit" style="display:none">
+            </form>
+
           <% else %>
             <button id="activate-premium-plan-btn">Activate Premium</button>
           <% end %>
@@ -23,7 +68,7 @@
             <br>
             <br>
             <h3>What is Premium?</h3>
-            
+
             <ul style="padding: 10px 50px">
               <li>Store an archive of all your links</li>
               <li><b>Coming soon</b>: Search links</li>
@@ -34,13 +79,12 @@
             <br/>
             <p style="text-align: center;margin: 0 auto;"><a style="text-decoration: none" href="/">Go back</a></p>
           </div>
-            
-          
         </div>
+
       </div>
       <div class="col-sm"></div>
     </div>
-    
+
 </div>
 
 <script>
@@ -59,4 +103,4 @@
   //     console.log('Error when fetching Checkout session', err);
   //   });
   // }
-</script>
+</script> -->

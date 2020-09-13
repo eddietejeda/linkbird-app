@@ -5,3 +5,6 @@ tmp
 public/stylesheets/*.css
 public/stylesheets/*.map
 config/symmetric-encryption.yml
+bin/
+public/stylesheets/sass/backup.scss
+

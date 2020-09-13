@@ -1,94 +1,104 @@
-<!--profile-->
-<% if current_user %>
-  <div class="col-lg right">
-    <h6 class="update-schedule">
-      
-      <% if @next_update_in_minutes == 0 %>
-        Please wait. Refreshing links now.
-      <% else %>
-        Next update in <%= @next_update_in_minutes %> minutes
-      <% end %>
-      | <a href="/logout">Sign out</a> |
-      <a href="/profile">Profile</a>
-    </h6>
-  </div>
-  <!--box-tweet-->      
-
-  <div class="list-tweets">
-    <ul class="tweets">
-      
-      <% if @first_download %>
-        <div class="col-sm ">
-          <h1 class="title">Please wait... <br>Setting up your account. <br>This may take a minute the first time.</h1>
-        </div>
-      <% end %>
-      
-      <% @tweets.each do |t| %>
-        <li>
-          <a href="<%= t.tweet['url'] %>">
-          <div class="tweetbox">                  
-            <% if t.tweet['title'].to_s.length > 0 %>
-              <h3><%= t.tweet['title'] %></h3>
-            <% else %>
-              <h3><%= t.tweet['description'].to_s[0..20] %>...</h3>                  
-            <% end %>
-            
-            <div class="flex-grid">
-              <% if t.tweet['favicon'].to_s.length > 0 %>
-                <div class="col-sm">
-                  <img class="fav" src="<%= t.tweet['favicon'].to_s %>" />
-                </div>
-              <% end %>
-              
-              <div class="col-lg">
-                <p><%= t.tweet['description'] %></p>
-              </div>
-              <div class="col-sm small-image">
-                <img class="cropped" width="100px" src="<%= t.tweet.to_h['images'].first.to_h['src'].to_s %>" />
-              </div>
-            </div>
-            
-            <div class="meta-data">By: <a href="https://twitter.com/<%= t.meta['screen_name'] %>"><strong><%= t.meta["name"] %></strong></a> </div>
-            <div class="meta-data"><div class="tweet_date"><%= t.tweet_date.strftime('%b %-d, %Y') %></div></div>
-            <div class="meta-data"><div class="heart_count"><%= t.meta["favorite_count"] %></div></div>
-            <div class="meta-data"><div class="retweet_count"><%= t.meta["retweet_count"] %></div></div>
-            <div style="clear:both"></div>
-          </div>
-        </li>
-      <% end %>
-        
-      <% if @user.data['premium'] == true %>
-        <%= pagy_bulma_nav(@pagy) if @pagy.pages > 1 %>
-      <% else %>
-          <div class="tweetbox">
-            <section class="container basic-photo">
-              <div style="text-align: center; min-width: 300px; width: 32%; margin: 30px auto 0">
-                <h3>Free accounts are limited to 25 links. <br>Subscribe to save all links.</h3>
-                <button id="activate-premium-plan-btn">Activate Premium</button>
-                <br/>
-                <br/>
-                <p><a style="" href="/profile">Learn more</a></p>
-              </div>
-            </section>
-          </div>
-      <% end %>
-    </ul>
+<% if !current_user %>
+  <!--Not logged in -->
+  <h3 class="title has-text-black <%= "not-logged-in" if !@user %>">
+     Filter out the chatter.<br>View links from your timeline.
+  </h3>
+  <!-- Login button -->
+  <div class="flex-grid">
+     <div class="col-sm"></div>
+     <div class="col-md">
+        <div> <a href='/auth/twitter?use_authorize=true'><img width="300px" src="/images/sign-in-with-twitter.png"></a> </div>
+     </div>
+     <div class="col-sm"></div>
   </div>
 <% else %>
-  <div class="list-tweets">
-      <div class="col-sm">
-        <h2 class="title">
-          Filter out the chatter.<br>View links from your timeline.</h1>
-      </div>
-      
-      <div class="flex-grid">
-        <div class="col-sm"></div>
-        <div class="col-md">
-          <div> <a href='/auth/twitter?use_authorize=true'><img width="300px" src="/images/sign-in-with-twitter.png"></a> </div>
-        </div>
-        <div class="col-sm"></div>
-      </div>
-      
+  <!-- Logged in-->
+  <div class="col-lg right">
+     <h6 class="update-schedule">
+        <% if @next_update_in_minutes == 0 %>
+          Please wait. Refreshing links now.
+        <% else %>
+          Next update in <%= @next_update_in_minutes %> minutes
+        <% end %>
+        | <a href="/logout">Sign out</a> |
+        <a href="/profile">Profile</a>
+     </h6>
   </div>
+  <% if @first_download %>
+    <div class="col-sm ">
+       <h1 class="title">Please wait... <br>Setting up your account. <br>This may take a minute the first time.</h1>
+    </div>
+  <% end %>
+  
+  <!-- Render Tweets -->
+  <% @tweets.each do |t| %>
+    <div class="card card-with-border article">
+       <div class="card-content">
+          <div class="media">
+             <% if t.tweet['favicon'].to_s.length > 0 %>
+               <div class="fav media-left px-4 is-inline-flex">
+                  <figure class="image is-48x48">
+                     <img src="<%= t.tweet['favicon'].to_s %>" />
+                  </figure>
+               </div>
+             <% end %>
+             
+             <div class="media-content px-2 ">
+                <a href="<%= t.tweet['url'] %>">
+                   <% if t.tweet['title'].to_s.length > 0 %>
+                     <h4 class="title is-4 is-size-5-mobile	has-text-black has-text-left"><%= t.tweet['title'] %></h3>
+                   <% else %>
+                     <h4 class="title is-4 is-size-5-mobile	has-text-black has-text-left"><%= t.tweet['description'].to_s[0..20] %>...</h3>
+                   <% end %>
+                   
+                   <div class="content has-text-black has-text-left">
+                      <%= t.tweet['description'] %>
+                      <br>                  
+                   </div>
+                </a>
+                
+                <div class="column is-6 px-0">
+                  <div class="heading has-text-black is-5 px-0">
+                     <div class="columns">
+                       <!-- <time datetime="2016-1-1">11:09 PM - 1 Jan 2016</time> -->                      
+                        <div class="column has-text-left has-text-black is-6">By: <a href="https://twitter.com/<%= t.meta['screen_name'] %>"><%= t.meta["name"] %></a></div>
+                        <div class="column has-text-left has-text-black is-10">
+                          <span class=""><%= t.tweet_date.strftime('%b %-d, %Y') %></span>
+                          <span class=""><img class="retweet-icon" src="/images/retweet-solid.svg"><%= t.meta["retweet_count"] %></span>
+                          <span class=""><img class="favorite-icon" src="/images/heart-solid.svg"><%= t.meta["favorite_count"] %></span>
+                        </div>
+                      </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+  <% end %>
+  
+  <!--Pagination -->
+  <div class="card card-with-border">
+     <div class="card-content">
+        <div class="content">
+           <% if @user.data['premium'] == true %>
+           <%= pagy_bulma_nav(@pagy) if @pagy.pages > 1 %>
+           <% else %>
+           <div class="tweetbox">
+              <section class="container basic-photo">
+                 <div>
+                    <p>Free accounts only display 25 links. <br>Subscribe to view all articles.</p>
+                    <button id="activate-premium-plan-btn">Activate Premium</button>
+                    <br/>
+                    <br/>
+                    <p><a style="" href="/profile">Learn more</a></p>
+                 </div>
+              </section>
+           </div>
+           <% end %>
+        </div>
+     </div>
+  </div>
+  
+  
+  
 <% end %>
-
