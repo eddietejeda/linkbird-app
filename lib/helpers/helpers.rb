@@ -10,6 +10,7 @@ def expand_url(url)
   result.last_effective_url
 end
 
+
 def get_twitter_connection(token, secret)
   Twitter::REST::Client.new do |config|
     config.consumer_key        = ENV["TWITTER_API_CONSUMER_KEY"]

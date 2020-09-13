@@ -21,8 +21,16 @@ class App < Sinatra::Base
     set :cookie_options, :expires => Time.new + 30.days
   end
   
+  before do
+    if settings.production?
+      redirect ENV['PRODUCTION_URL'] if request.host != ENV['PRODUCTION_URL']
+    end
+  end
+  
   # Home
   get '/' do
+    
+    
     @tweets = []
     @user = current_user    
     
@@ -37,6 +45,7 @@ class App < Sinatra::Base
         last_tweet_created_at = 30.minutes.ago.getlocal("+00:00")
       end
 
+      
       last_update_in_seconds = Time.now.getlocal("+00:00").to_i - last_tweet_created_at.to_i
       last_update_in_minutes = last_update_in_seconds / 60
 
@@ -241,5 +250,6 @@ class App < Sinatra::Base
       items: vars[:items] || 10
     }
   end
+
 
 end
