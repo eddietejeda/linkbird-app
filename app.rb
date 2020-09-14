@@ -114,23 +114,23 @@ class App < Sinatra::Base
   end
 
   # Fetch the Checkout Session to display the JSON result on the success page
-  # get '/checkout-session' do
-  #   content_type 'application/json'
-  #   session_id = params[:sessionId]
-  #
-  #   session = Stripe::Checkout::Session.retrieve(session_id)
-  #
-  #   @user = current_user
-  #
-  #   @user.data["stripe_customer"]     = session['customer']
-  #   @user.data["stripe_subscription"] = session['subscription']
-  #
-  #   @user.save!
-  #
-  #   @user.set_subscription_status!
-  #
-  #   session.to_json
-  # end
+  get '/checkout-session' do
+    content_type 'application/json'
+    session_id = params[:sessionId]
+
+    session = Stripe::Checkout::Session.retrieve(session_id)
+
+    @user = current_user
+
+    @user.data["stripe_customer"]     = session['customer']
+    @user.data["stripe_subscription"] = session['subscription']
+
+    @user.save!
+
+    # @user.set_subscription_status!
+
+    session.to_json
+  end
 
   get '/setup' do
     content_type 'application/json'
