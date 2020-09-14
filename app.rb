@@ -37,16 +37,15 @@ class App < Sinatra::Base
     if @user.present?
       update_frequency_in_minutes = 20
             
-      user_tweets = @user.tweets.order(created_at: :desc)
+      user_tweets = @user.tweets.order(created_at: :asc)
 
       if user_tweets.last
-        last_tweet_created_at = user_tweets.last.created_at.getlocal("+00:00")
+        last_tweet_created_at = user_tweets.last.created_at
       else
-        last_tweet_created_at = 30.minutes.ago.getlocal("+00:00")
+        last_tweet_created_at = 30.minutes.ago
       end
 
-      
-      last_update_in_seconds = DateTime.now.getlocal("+00:00").to_i - last_tweet_created_at.to_i
+      last_update_in_seconds = Time.current.getlocal("+00:00").to_i - last_tweet_created_at.getlocal("+00:00").to_i
       last_update_in_minutes = last_update_in_seconds / 60
 
       @first_download = user_tweets.length == 0
