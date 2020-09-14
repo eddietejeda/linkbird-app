@@ -113,24 +113,24 @@ class App < Sinatra::Base
     erb :profile
   end
 
-  # Fetch the Checkout Session to display the JSON result on the success page
-  get '/checkout-session' do
-    content_type 'application/json'
-    session_id = params[:sessionId]
-
-    session = Stripe::Checkout::Session.retrieve(session_id)
-
-    @user = current_user
-
-    @user.data["stripe_customer"]     = session['customer']
-    @user.data["stripe_subscription"] = session['subscription']
-
-    @user.save!
-
-    # @user.set_subscription_status!
-
-    session.to_json
-  end
+  # # Fetch the Checkout Session to display the JSON result on the success page
+  # get '/checkout-session' do
+  #   content_type 'application/json'
+  #   session_id = params[:sessionId]
+  #
+  #   session = Stripe::Checkout::Session.retrieve(session_id)
+  #
+  #   @user = current_user
+  #
+  #   @user.data["stripe_customer"]     = session['customer']
+  #   @user.data["stripe_subscription"] = session['subscription']
+  #
+  #   @user.save!
+  #
+  #   # @user.set_subscription_status!
+  #
+  #   session.to_json
+  # end
 
   get '/setup' do
     content_type 'application/json'
@@ -148,7 +148,7 @@ class App < Sinatra::Base
     # For full details see https:#stripe.com/docs/api/checkout/sessions/create
 
     # ?session_id={CHECKOUT_SESSION_ID} means the redirect will have the session ID set as a query param
-    root_domain = ENV['PRODUCTION_URL'] || "http://localhost:9292"
+    root_domain = "https://#{ENV['PRODUCTION_URL']}" || "http://localhost:9292"
     
     session = Stripe::Checkout::Session.create(
       success_url: "#{root_domain}/profile?session_id={CHECKOUT_SESSION_ID}",
