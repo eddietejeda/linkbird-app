@@ -37,10 +37,10 @@ class App < Sinatra::Base
     if @user.present?
       update_frequency_in_minutes = 20
             
-      user_tweets = @user.tweets.order(created_at: :asc)
+      user_tweets = @user.tweets.order(created_at: :desc)
 
-      if user_tweets.last
-        last_tweet_created_at = user_tweets.last.created_at
+      if user_tweets.first
+        last_tweet_created_at = user_tweets.first.created_at
       else
         last_tweet_created_at = 30.minutes.ago
       end
