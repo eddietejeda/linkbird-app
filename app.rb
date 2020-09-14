@@ -46,14 +46,17 @@ class App < Sinatra::Base
       end
 
       
-      last_update_in_seconds = Time.now.getlocal("+00:00").to_i - last_tweet_created_at.to_i
+      last_update_in_seconds = DateTime.now.getlocal("+00:00").to_i - last_tweet_created_at.to_i
       last_update_in_minutes = last_update_in_seconds / 60
 
       @first_download = user_tweets.length == 0
     
-      # byebug
       if @first_download || (@user.present? && last_update_in_minutes >= 20)
-        DownloadTweetWorker.perform_async( @user.id, cookies[:access_token], cookies[:access_token_secret] )
+        if settings.development?
+          DownloadTweetWorker.new.perform( @user.id, cookies[:access_token], cookies[:access_token_secret] )
+        else
+          DownloadTweetWorker.perform_async( @user.id, cookies[:access_token], cookies[:access_token_secret] )
+        end
       else
         puts "🔔 Using cached results."
       end

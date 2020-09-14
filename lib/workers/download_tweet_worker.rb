@@ -19,15 +19,22 @@ class DownloadTweetWorker
             tweet: LinkThumbnailer.generate(url), 
             tweet_date: t.created_at,
             meta: { screen_name: t.user.screen_name, name: t.user.name, retweet_count: t.retweet_count, favorite_count: t.favorite_count},
-            created_at: DateTime.now, 
-            updated_at: DateTime.now
+            created_at: DateTime.now.getlocal("+00:00"), 
+            updated_at: DateTime.now.getlocal("+00:00")
           }
+          puts "🔔 User: #{user_id} - #{url}."
+          
         rescue
-          puts 'Caught LinkThumbnailer.generate(url) error'
+          puts "🔔 Caught LinkThumbnailer.generate error - #{url}"
         end
       end
     end
     
-    Tweet.insert_all(tweets, unique_by: :index_tweets_on_tweet_id)
+    if tweets.count > 0
+      puts "🔔 Inserting #{tweets.count}"
+      Tweet.insert_all(tweets, unique_by: :index_tweets_on_tweet_id)
+    else
+      puts "🔔 No URLs to add"
+    end
   end
 end

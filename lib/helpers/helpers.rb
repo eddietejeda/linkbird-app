@@ -5,6 +5,8 @@ end
 def expand_url(url)
   result = Curl::Easy.perform(url) do |curl|
     curl.head = true
+    curl.headers["User-Agent"] = "Mozilla/5.0 (X11; Ubuntu; Linux i686; rv:80.0) Gecko/20100101 Firefox/80.0"
+    curl.verbose = true
     curl.follow_location = true
   end
   result.last_effective_url
