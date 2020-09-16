@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css" integrity="sha512-1PKOgIY59xJ8Co8+NE6FZ+LOAZKjy+KY8iq0G4B3CyeY6wYHN3yt9PW0XpSriVlkMXe40PTKnXrLnZ9+fkDaog==" crossorigin="anonymous" />
     <link rel="stylesheet" href="stylesheets/bulma.css" />
     <link rel="stylesheet" href="stylesheets/style.css" />
     <title>LinkBird - Link Newsfeed</title>
@@ -20,49 +20,45 @@
     <% elsif @next_update_in_minutes == 0 %>
       <meta http-equiv="refresh" content="60">
     <% end %>
+    
   </head>
 
   <body>
     <section class="is-success is-fullheight section">
-        <div class="hero-body">
-            <div class="container has-text-centered">
-                <div class="card">
-                    <br>
-                    <a href="/">
-                        <img width="50px" src="/images/linkbird.png">
-                        <h1 class="title has-text-black <%= "not-logged-in" if !@user %>">LinkBird Newsfeed</h1>
-                    </a>
+      <div class="hero-body">
+        <div class="container has-text-centered">
+          <div class="card">
+            <br>
+            <a href="/">
+              <img width="50px" src="/images/linkbird.png">
+              <h1 class="title has-text-black <%= "not-logged-in" if !@user %>">LinkBird Newsfeed</h1>
+            </a>
 
-                    <% if @alert  %>                    
-                      <hr class="login-hr">
-                      <p class="subtitle has-text-black"><%= @alert %></p>
-                      <div class="box">
-                    <% end  %>
+            <% if @alert  %>                    
+              <hr class="login-hr">
+              <p class="subtitle has-text-black"><%= @alert %></p>
+              <div class="box">
+            <% end  %>                    
+            
+            <%= yield %>
                     
-                    
-                    <%= yield %>
-
-
-                    <!-- <div class="columns"> -->
-                    <!-- </div> -->
-                </div>
+          </div>
                 
-                <div class="column is-10 is-offset-1 footer">
-                  <p class="has-text-grey">
-                      <a href="/privacy">Privacy</a> &nbsp;·&nbsp;
-                      <a href="/terms-of-service">Terms of Service</a> &nbsp;·&nbsp;
-                  </p>
-                  <div class="column is-10 is-offset-1">
-                    <p class="has-text-grey">
-                      © Visudo LLC <%= DateTime.now.strftime("%Y") %>. All Rights Reserved.
-                    </p>
-                  </div>
-                </div>
+          <div class="column is-10 is-offset-1 footer">
+            <p class="has-text-grey">
+              <a href="/privacy">Privacy</a> &nbsp;·&nbsp;
+              <a href="/terms-of-service">Terms of Service</a> &nbsp;
+            </p>
+            <div class="column is-10 is-offset-1">
+              <p class="has-text-grey">
+                © Visudo LLC <%= DateTime.now.strftime("%Y") %>. All Rights Reserved.
+              </p>
             </div>
+          </div>
         </div>
+      </div>
     </section>
-
-
+    
   </body>
     
 </html>

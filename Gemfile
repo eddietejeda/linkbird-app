@@ -31,7 +31,6 @@ group :development do
   gem "awesome_print", "~> 1.8"
 end
 
-
 gem "stripe", "~> 5.25"
 
 gem "pagy", "~> 3.8"

@@ -17,9 +17,11 @@
      </div>
      <div class="col-sm"></div>
   </div>
+  
+  
+
+  
 <% else %>
-
-
 
   <!-- Logged in-->
   <div class="col-lg right">
@@ -57,13 +59,20 @@
              <% if t.tweet['favicon'].to_s.length > 0 %>
                <div class="fav media-left px-4 is-inline-flex">
                   <figure class="image is-48x48">
-                     <img  onerror="this.style.display='none'" src="<%= t.tweet['favicon'].to_s %>" />
+                    
+                      <!-- <img src="<%= t.tweet['favicon'].to_s %>" onerror="this.onerror=null;console.log('loading backup');this.src='<%= t.tweet.to_h['images'].first.to_h['src'].to_s %>';" /> -->
+                    
+                     <img class="article-image" src="<%= t.tweet['favicon'].to_s %>" data-backup="<%= t.tweet.to_h['images'].first.to_h['src'].to_s %>" />
+                     
+                     <!-- <img class="cropped" width="100px" src="" /> -->
+                     
                   </figure>
                </div>
              <% end %>
              
              <div class="media-content px-2 ">
                 <a href="<%= t.tweet['url'] %>">
+                  
                    <% if t.tweet['title'].to_s.length > 0 %>
                      <h4 class="title is-4 is-size-5-mobile	has-text-black has-text-left"><%= t.tweet['title'] %></h3>
                    <% else %>
@@ -72,7 +81,7 @@
                    
                    <div class="content has-text-black has-text-left">
                       <%= t.tweet['description'] %>
-                      <br>                  
+                      <br>
                    </div>
                 </a>
                 
@@ -80,11 +89,16 @@
                   <div class="heading has-text-black is-5 px-0">
                      <div class="columns">
                        <!-- <time datetime="2016-1-1">11:09 PM - 1 Jan 2016</time> -->                      
-                        <div class="column has-text-left has-text-black is-6">By: <a href="https://twitter.com/<%= t.meta['screen_name'] %>"><%= t.meta["name"] %></a></div>
+                        <div class="column has-text-left has-text-black is-6">
+                          By: <a href="https://twitter.com/<%= t.meta['screen_name'] %>"><%= t.meta["name"] %></a></div>
                         <div class="column has-text-left has-text-black is-10">
-                          <span class=""><%= t.tweet_date.strftime('%b %-d, %Y') %></span>
-                          <span class=""><img class="retweet-icon" src="/images/retweet-solid.svg"><%= t.meta["retweet_count"] %></span>
-                          <span class=""><img class="favorite-icon" src="/images/heart-solid.svg"><%= t.meta["favorite_count"] %></span>
+                          <a target="_new" href="https://twitter.com/<%= t.meta['screen_name'] %>/status/<%= t.tweet_id %>">
+                            <span class=""><%= t.tweet_date.strftime('%b %-d, %Y') %></span>
+                            <span class=""><i class="fas fa-heart"></i>&nbsp;<%= t.meta["retweet_count"] %></span>
+                            <span class=""><i class="fas fa-heart"></i>&nbsp;<%= t.meta["favorite_count"] %></span>
+                            <!-- <span class=""><i class="fas fa-comment-alt"></i>&nbsp;<%= t.meta["comment_count"] %></span> -->
+                          </a>
+                          
                         </div>
                       </div>
                   </div>
@@ -104,7 +118,6 @@
            <% elsif !@first_download  %>
              <div class="tweetbox">
                 <section class="container basic-photo">
-               
                   <p>You are viewing <%= @tweets.count %> out of 25 links.<br>Free accounts only display 25 links.</p>
                   <button id="activate-premium-plan-btn">Activate Subcription</button>
                   <br/>

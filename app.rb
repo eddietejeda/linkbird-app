@@ -25,6 +25,7 @@ class App < Sinatra::Base
     if settings.production?
       redirect "https://#{ENV['PRODUCTION_URL']}" if request.host != ENV['PRODUCTION_URL']
     end
+    
   end
   
   # Home
@@ -50,15 +51,15 @@ class App < Sinatra::Base
 
       @first_download = user_tweets.length == 0
     
-      if @first_download || (@user.present? && last_update_in_minutes >= 20)
-        if settings.development?
-          DownloadTweetWorker.new.perform( @user.id, cookies[:access_token], cookies[:access_token_secret] )
-        else
-          DownloadTweetWorker.perform_async( @user.id, cookies[:access_token], cookies[:access_token_secret] )
-        end
-      else
-        puts "🔔 Using cached results."
-      end
+      # if @first_download || (@user.present? && last_update_in_minutes >= 20)
+      #   if settings.development?
+      #     DownloadTweetWorker.new.perform( @user.id, cookies[:access_token], cookies[:access_token_secret] )
+      #   else
+      #     DownloadTweetWorker.perform_async( @user.id, cookies[:access_token], cookies[:access_token_secret] )
+      #   end
+      # else
+      #   puts "🔔 Using cached results."
+      # end
 
       # For the template
       @next_update_in_minutes =  [(update_frequency_in_minutes - last_update_in_minutes), 0].max
@@ -68,7 +69,6 @@ class App < Sinatra::Base
     erb :index
   end
 
-
   post '/cancel' do
     if current_user
       current_user.cancel_subscription
@@ -77,6 +77,14 @@ class App < Sinatra::Base
     else
       redirect '/'      
     end
+  end
+
+  get '/privacy' do
+    erb :privacy
+  end
+  
+  get '/terms-of-service' do
+    erb :terms_of_service
   end
 
   #
@@ -147,7 +155,7 @@ class App < Sinatra::Base
     # For full details see https:#stripe.com/docs/api/checkout/sessions/create
 
     # ?session_id={CHECKOUT_SESSION_ID} means the redirect will have the session ID set as a query param
-    root_domain = "https://#{ENV['PRODUCTION_URL']}" || "http://localhost:9292"
+    root_domain = ENV['PRODUCTION_URL'] ? "https://#{ENV['PRODUCTION_URL']}" : "http://localhost:9292"
     
     session = Stripe::Checkout::Session.create(
       success_url: "#{root_domain}/profile?session_id={CHECKOUT_SESSION_ID}",
