@@ -21,6 +21,10 @@ class App < Sinatra::Base
     set :cookie_options, :expires => Time.new + 30.days
   end
   
+  configure :development do
+    register Sinatra::Reloader
+  end
+    
   before do
     if settings.production?
       redirect "https://#{ENV['PRODUCTION_URL']}" if request.host != ENV['PRODUCTION_URL']
@@ -78,10 +82,12 @@ class App < Sinatra::Base
   end
 
   get '/privacy' do
+    @hide_title = true
     erb :privacy
   end
   
   get '/terms-of-service' do
+    @hide_title = true
     erb :terms_of_service
   end
 
@@ -235,7 +241,7 @@ class App < Sinatra::Base
       {
         count: collection.count,
         page: params["page"],
-        items: vars[:items] || 10
+        items: vars[:items] || 25
       }
     end
 
