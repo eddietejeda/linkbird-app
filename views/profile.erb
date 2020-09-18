@@ -2,18 +2,22 @@
   <div class="card-content">
     <div class="content">
         <section class="column is-6 is-offset-3">
-          <% if @user.data['premium'] %>
+          <% if @user.data['stripe_subscription_status'] == 'active' && @user.data["stripe_subscription_end_date"] > DateTime.now %>
             <button>Premium Subscription is Active</button>
 
             <form action="/cancel" method="POST" id="cancel-subscription-form">
               <p style="text-align: center;margin: 10px auto;">
                 <a id="cancel-subscription-link" style="text-decoration: none" href="#">Cancel Subscription</a>
+                
+                (Renewal: <%= DateTime.parse( @user.data["stripe_subscription_end_date"] ).strftime("%B %d, %Y") %>  )
               </p>
               <input type="submit" style="display:none">
             </form>
 
+          <% elsif @user.data['stripe_subscription_status'] == 'inactive' && @user.data["stripe_subscription_end_date"] > Date.now %>
+            <p style="text-align: center;margin: 10px auto;">Subscription has been canceled but will remain active until <%= DateTime.parse( @user.data["stripe_subscription_end_date"] ).strftime("%B %d, %Y") %> </p>
           <% else %>
-            <button id="activate-premium-plan-btn">Activate Subcription</button>
+            <button id="activate-premium-plan-btn">Activate Subscription</button>
           <% end %>
           
           <div class="column">

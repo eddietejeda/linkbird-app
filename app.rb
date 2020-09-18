@@ -109,6 +109,7 @@ class App < Sinatra::Base
     session_id = params[:session_id]
     
     if session_id
+      # byebug
       session = Stripe::Checkout::Session.retrieve(session_id)
     
       @user.data["stripe_customer"]     = session['customer']

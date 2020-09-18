@@ -3,6 +3,15 @@ class User < ActiveRecord::Base
   
   def set_subscription_status!
     self.data['premium'] = subscribed?
+    
+    
+    if self.data["stripe_subscription"]
+      subscription = Stripe::Subscription.retrieve(self.data["stripe_subscription"])
+    
+      self.data["stripe_subscription_status"] = subscription.status
+      self.data["stripe_subscription_end_date"] = Time.at(subscription.current_period_end)
+    end
+    
     self.save!
   end
       
