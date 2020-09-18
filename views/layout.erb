@@ -28,11 +28,13 @@
       <div class="hero-body">
         <div class="container has-text-centered">
           <div class="card">
-            <br>
-            <a href="/">
-              <img width="50px" src="/images/linkbird.png">
-              <h1 class="title has-text-black <%= "not-logged-in" if !@user %>">LinkBird Newsfeed</h1>
-            </a>
+            <% if @hide_title != true %>
+              <br>
+              <a href="/">
+                <img width="50px" src="/images/linkbird.png">
+                <h1 class="title has-text-black <%= "not-logged-in" if !@user %>">LinkBird Newsfeed</h1>
+              </a>
+            <% end %>
 
             <% if @alert  %>                    
               <hr class="login-hr">
