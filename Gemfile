@@ -19,18 +19,17 @@ gem "puma", "~> 4.3"
 gem "curb", "~> 0.9.10"
 gem "link_thumbnailer", github: 'gottfrois/link_thumbnailer', ref: '2ec9026aaaccf638207e6fa480f750bfdc5c9a80'
 gem "symmetric-encryption", "~> 4.3"
+gem "stripe", "~> 5.25"
+gem "pagy", "~> 3.8"
 
 gem 'pg'
-gem 'delayed_job'
-gem 'delayed_job_active_record'
+# gem 'delayed_job'
+# gem 'delayed_job_active_record'
 gem "sidekiq", "~> 6.1"
-
+gem 'newrelic_rpm'
 
 group :development do
   gem "byebug", "~> 11.1"
   gem "awesome_print", "~> 1.8"
 end
 
-gem "stripe", "~> 5.25"
-
-gem "pagy", "~> 3.8"

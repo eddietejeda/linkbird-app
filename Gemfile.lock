@@ -39,11 +39,6 @@ GEM
     concurrent-ruby (1.1.7)
     connection_pool (2.2.3)
     curb (0.9.10)
-    delayed_job (4.1.8)
-      activesupport (>= 3.0, < 6.1)
-    delayed_job_active_record (4.1.4)
-      activerecord (>= 3.0, < 6.1)
-      delayed_job (>= 3.0, < 5)
     descendants_tracker (0.0.4)
       thread_safe (~> 0.3, >= 0.3.1)
     domain_name (0.5.20190701)
@@ -88,6 +83,7 @@ GEM
     net-http-persistent (4.0.0)
       connection_pool (~> 2.2)
     net_http_timeout_errors (0.3.5)
+    newrelic_rpm (6.13.0)
     nio4r (2.5.2)
     nokogiri (1.10.10)
       mini_portile2 (~> 2.4.0)
@@ -185,9 +181,8 @@ DEPENDENCIES
   awesome_print (~> 1.8)
   byebug (~> 11.1)
   curb (~> 0.9.10)
-  delayed_job
-  delayed_job_active_record
   link_thumbnailer!
+  newrelic_rpm
   omniauth-twitter (~> 1.4)
   pagy (~> 3.8)
   pg
