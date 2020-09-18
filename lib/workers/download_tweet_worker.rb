@@ -31,18 +31,18 @@ class DownloadTweetWorker
             created_at: Time.current.getlocal("+00:00"),
             updated_at: Time.current.getlocal("+00:00")
           }
-          puts "🔔 User: #{user_id} - #{url}."
+          logger.info "🔔 User: #{user_id} - #{url}."
         rescue => ex
-          puts "🔔 Caught LinkThumbnailer.generate error - #{url} Exception: #{ex}"
+          logger.error "🔔 Caught LinkThumbnailer.generate error - #{url} Exception: #{ex}"
         end
       end
     end
     
     if tweets.count > 0
-      puts "🔔 Inserting #{tweets.count}"
+      logger.info "🔔 Inserting #{tweets.count}"
       Tweet.insert_all(tweets, unique_by: :index_tweets_on_tweet_id)
     else
-      puts "🔔 No URLs to add"
+      logger.info "🔔 No URLs to add"
     end
   end
 end

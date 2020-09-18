@@ -14,7 +14,7 @@ class App < Sinatra::Base
     include Pagy::Frontend
   end
 
-  configure do
+  configure :production, :development do
     use OmniAuth::Builder do
       provider :twitter, ENV['TWITTER_API_CONSUMER_KEY'], ENV['TWITTER_API_CONSUMER_SECRET']
     end  
@@ -24,13 +24,11 @@ class App < Sinatra::Base
   before do
     if settings.production?
       redirect "https://#{ENV['PRODUCTION_URL']}" if request.host != ENV['PRODUCTION_URL']
-    end
-    
+    end    
   end
   
   # Home
   get '/' do
-    
     
     @tweets = []
     @user = current_user    
@@ -58,7 +56,7 @@ class App < Sinatra::Base
           DownloadTweetWorker.perform_async( @user.id, cookies[:access_token], cookies[:access_token_secret] )
         end
       else
-        puts "🔔 Using cached results."
+        logger.info "🔔 Using cached results."
       end
 
       # For the template
@@ -96,7 +94,6 @@ class App < Sinatra::Base
   #   erb :canceled
   # end
 
-
   get '/profile' do
     @user = current_user
     if !@user
@@ -119,25 +116,6 @@ class App < Sinatra::Base
 
     erb :profile
   end
-
-  # # Fetch the Checkout Session to display the JSON result on the success page
-  # get '/checkout-session' do
-  #   content_type 'application/json'
-  #   session_id = params[:sessionId]
-  #
-  #   session = Stripe::Checkout::Session.retrieve(session_id)
-  #
-  #   @user = current_user
-  #
-  #   @user.data["stripe_customer"]     = session['customer']
-  #   @user.data["stripe_subscription"] = session['subscription']
-  #
-  #   @user.save!
-  #
-  #   # @user.set_subscription_status!
-  #
-  #   session.to_json
-  # end
 
   get '/setup' do
     content_type 'application/json'
@@ -187,11 +165,12 @@ class App < Sinatra::Base
         )
       rescue JSON::ParserError => e
         # Invalid payload
+        logger.info '⚠️  JSON Parse error.'
         status 400
         return
       rescue Stripe::SignatureVerificationError => e
         # Invalid signature
-        puts '⚠️  Webhook signature verification failed.'
+        logger.info '⚠️  Webhook signature verification failed.'
         status 400
         return
       end
@@ -199,17 +178,17 @@ class App < Sinatra::Base
       data = JSON.parse(payload, symbolize_names: true)
       event = Stripe::Event.construct_from(data)
     end
+    
     # Get the type of webhook event sent - used to check the status of PaymentIntents.
     event_type = event['type']
     data = event['data']
     data_object = data['object']
 
-    puts '🔔  Payment succeeded!' if event_type == 'checkout.session.completed'
+    logger.info '🔔  Payment succeeded!' if event_type == 'checkout.session.completed'
 
     content_type 'application/json'
     { status: 'success' }.to_json
   end
-  
   
   
   # Twitter Auth
@@ -227,7 +206,6 @@ class App < Sinatra::Base
       user.cookie_key = cookies[:cookie_key]
       user.save!      
     end
-    
     
     user.set_subscription_status! if user.present?
 
@@ -253,13 +231,13 @@ class App < Sinatra::Base
   
   private
   
-  def pagy_get_vars(collection, vars)
-    {
-      count: collection.count,
-      page: params["page"],
-      items: vars[:items] || 10
-    }
-  end
+    def pagy_get_vars(collection, vars)
+      {
+        count: collection.count,
+        page: params["page"],
+        items: vars[:items] || 10
+      }
+    end
 
 
 end
