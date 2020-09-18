@@ -40,10 +40,10 @@ class App < Sinatra::Base
     if @user.present?
       update_frequency_in_minutes = 20
             
-      user_tweets = @user.tweets.order(created_at: :desc)
+      last_tweet = @user.tweets.order(created_at: :desc).first
 
-      if user_tweets.first
-        last_tweet_created_at = user_tweets.first.created_at
+      if last_tweet
+        last_tweet_created_at = last_tweet.created_at
       else
         last_tweet_created_at = 30.minutes.ago
       end
@@ -51,7 +51,7 @@ class App < Sinatra::Base
       last_update_in_seconds = Time.current.getlocal("+00:00").to_i - last_tweet_created_at.getlocal("+00:00").to_i
       last_update_in_minutes = last_update_in_seconds / 60
 
-      @first_download = user_tweets.length == 0
+      @first_download = !last_tweet
     
       if @first_download || (@user.present? && last_update_in_minutes >= 20)
         if settings.development?
@@ -65,7 +65,7 @@ class App < Sinatra::Base
 
       # For the template
       @next_update_in_minutes =  [(update_frequency_in_minutes - last_update_in_minutes), 0].max
-      @pagy, @tweets = pagy(user_tweets)
+      @pagy, @tweets = pagy(Tweet.where(user_id: @user.id), items: 25)
     end
 
     erb :index

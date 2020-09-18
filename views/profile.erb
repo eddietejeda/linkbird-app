@@ -3,12 +3,14 @@
     <div class="content">
         <section class="column is-6 is-offset-3">
           <% if @user.data['stripe_subscription_status'] == 'active' && @user.data["stripe_subscription_end_date"] > DateTime.now %>
-            <button>Premium Subscription is Active</button>
+            <p><strong>Premium Subscription is active</strong></p>
+            <p style="text-align: center;margin: 0 auto;"><a style="text-decoration: none" href="/">Return to timeline</a></p>
 
             <form action="/cancel" method="POST" id="cancel-subscription-form">
               <p style="text-align: center;margin: 10px auto;">
-                <a id="cancel-subscription-link" style="text-decoration: none" href="#">Cancel Subscription</a>
-                
+                <a id="cancel-subscription-link" style="font-size: 80%; text-decoration: none" href="#">Cancel Subscription</a>
+              </p>
+              <p>
                 (Renewal: <%= DateTime.parse( @user.data["stripe_subscription_end_date"] ).strftime("%B %d, %Y") %>  )
               </p>
               <input type="submit" style="display:none">
