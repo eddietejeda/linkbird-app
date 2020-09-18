@@ -51,15 +51,15 @@ class App < Sinatra::Base
 
       @first_download = user_tweets.length == 0
     
-      # if @first_download || (@user.present? && last_update_in_minutes >= 20)
-      #   if settings.development?
-      #     DownloadTweetWorker.new.perform( @user.id, cookies[:access_token], cookies[:access_token_secret] )
-      #   else
-      #     DownloadTweetWorker.perform_async( @user.id, cookies[:access_token], cookies[:access_token_secret] )
-      #   end
-      # else
-      #   puts "🔔 Using cached results."
-      # end
+      if @first_download || (@user.present? && last_update_in_minutes >= 20)
+        if settings.development?
+          DownloadTweetWorker.new.perform( @user.id, cookies[:access_token], cookies[:access_token_secret] )
+        else
+          DownloadTweetWorker.perform_async( @user.id, cookies[:access_token], cookies[:access_token_secret] )
+        end
+      else
+        puts "🔔 Using cached results."
+      end
 
       # For the template
       @next_update_in_minutes =  [(update_frequency_in_minutes - last_update_in_minutes), 0].max
