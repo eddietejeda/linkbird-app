@@ -35,3 +35,19 @@ def preferred_fav_icon(url)
     url
   end
 end
+
+
+def format_datetime(datetime, timezone)
+  
+  if valid_timezone(timezone)
+    datetime.getlocal(timezone).strftime('%b %-d, %Y %l:%M%P')
+  else
+    datetime.strftime('%b %-d, %Y')
+  end
+  
+end
+
+
+def valid_timezone(timezone)
+  timezone.match(/[\-\+]\d\d\:\d\d/)
+end

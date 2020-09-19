@@ -43,6 +43,7 @@ class App < Sinatra::Base
       minutes_since_last_update = @user.minutes_since_last_update
 
       # For the template
+      @user_timezone =  cookies['user_timezone'] 
       @first_download = !@user.tweets.first  
       @minutes_until_next_update = [(update_frequency_in_minutes - minutes_since_last_update), 0].max
       @pagy, @tweets = pagy(Tweet.where(user_id: @user.id).order(created_at: :desc), items: 25)
