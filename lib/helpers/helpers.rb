@@ -31,5 +31,5 @@ end
 
 def preferred_fav_icon(url)
   favicon = YAML.load_file 'config/preferred-fav-icon.yml' if File.exists? 'config/preferred-fav-icon.yml'
-  favicon.to_h['url'] ? favicon.to_h['url'] : url
+  favicon.to_h[url] ? favicon.to_h[url] : url
 end
