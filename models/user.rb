@@ -1,6 +1,7 @@
 class User < ActiveRecord::Base
+
   has_many :tweets
-  
+    
   def set_subscription_status!
     self.data['premium'] = subscribed?
     
@@ -15,6 +16,20 @@ class User < ActiveRecord::Base
     self.save!
   end
       
+  def minutes_since_last_update
+    last_tweet = self.tweets.order(created_at: :desc).first
+
+    if last_tweet
+      last_tweet_created_at = last_tweet.created_at
+    else
+      last_tweet_created_at = 30.minutes.ago
+    end
+
+    last_update_in_seconds = Time.current.getlocal("+00:00").to_i - last_tweet_created_at.getlocal("+00:00").to_i
+    last_update_in_minutes = last_update_in_seconds / 60
+    last_update_in_minutes
+  end
+  
   def subscribed?
     customer = self.data.to_h['stripe_customer']
     if customer

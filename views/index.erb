@@ -30,13 +30,9 @@
   <!-- Logged in-->
   <div class="col-lg right">
      <h6 class="update-schedule">
-        <% if @next_update_in_minutes == 0 %>
-          Refreshing links now.
-        <% else %>
-          Next update in <%= @next_update_in_minutes %> minutes
-        <% end %>
-        | <a href="/logout">Sign out</a> |
-        <a href="/profile">Profile</a>
+       <%= @minutes_until_next_update == 0 ? "Updating links now" :  "Next update in #{@minutes_until_next_update} minutes"   %>  |
+       <a href="/profile">Profile</a> |
+       <a href="/logout">Sign out</a> 
      </h6>
   </div>
   

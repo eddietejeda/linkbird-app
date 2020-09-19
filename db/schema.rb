@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_09_08_235341) do
+ActiveRecord::Schema.define(version: 2020_09_19_032921) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -29,11 +29,11 @@ ActiveRecord::Schema.define(version: 2020_09_08_235341) do
   create_table "users", force: :cascade do |t|
     t.bigint "uid", null: false
     t.string "cookie_key", null: false
-    t.jsonb "json", default: "{}", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.integer "feedlimit", default: 25
     t.json "data", default: {}
+    t.text "encrypted_data", default: ""
   end
 
 end

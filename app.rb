@@ -38,34 +38,25 @@ class App < Sinatra::Base
     @user = current_user    
     
     if @user.present?
-      update_frequency_in_minutes = 20
-            
-      last_tweet = @user.tweets.order(created_at: :desc).first
+      
+      user_secrets = JSON.parse(decrypt_data(@user.cookie_key, @user.encrypted_data))
+      update_frequency_in_minutes = 20          
+      minutes_since_last_update = @user.minutes_since_last_update
 
-      if last_tweet
-        last_tweet_created_at = last_tweet.created_at
-      else
-        last_tweet_created_at = 30.minutes.ago
-      end
-
-      last_update_in_seconds = Time.current.getlocal("+00:00").to_i - last_tweet_created_at.getlocal("+00:00").to_i
-      last_update_in_minutes = last_update_in_seconds / 60
-
-      @first_download = !last_tweet
-    
-      if @first_download || (@user.present? && last_update_in_minutes >= 20)
-        if settings.development?
-          TweetWorker.new.perform( @user.id, cookies[:access_token], cookies[:access_token_secret] )
-        else
-          TweetWorker.perform_async( @user.id, cookies[:access_token], cookies[:access_token_secret] )
-        end
-      else
-        logger.info "🔔 Using cached results."
-      end
-
+      @first_download = !@user.tweets.first
+  
       # For the template
-      @next_update_in_minutes =  [(update_frequency_in_minutes - last_update_in_minutes), 0].max
-      @pagy, @tweets = pagy(Tweet.where(user_id: @user.id), items: 25)
+      @minutes_until_next_update = [(update_frequency_in_minutes - minutes_since_last_update), 0].max
+
+      # WARNING: Lots of refreshes during the 1 minute mark may fill up queue 
+      TweetWorker.perform_async( 
+        @user.id, 
+        user_secrets['access_token'], 
+        user_secrets['access_token_secret'] 
+      ) if @minutes_until_next_update == 0 # Get a head state
+    
+
+      @pagy, @tweets = pagy(Tweet.where(user_id: @user.id).order(created_at: :desc), items: 25)
     end
 
     erb :index
@@ -91,15 +82,6 @@ class App < Sinatra::Base
     erb :terms_of_service
   end
 
-  #
-  # get '/canceled' do
-  #   @user = current_user
-  #   if !@user
-  #     redirect '/'
-  #   end
-  #   erb :canceled
-  # end
-
   get '/profile' do
     @user = current_user
     if !@user
@@ -116,7 +98,6 @@ class App < Sinatra::Base
       @user.data["stripe_subscription"] = session['subscription']
 
       @user.save!
-
       @user.set_subscription_status!
     end
 
@@ -201,18 +182,21 @@ class App < Sinatra::Base
   # Twitter Auth
   get '/auth/twitter/callback' do
     cookies[:uid] = env['omniauth.auth']['uid']
-    cookies[:access_token] = env['omniauth.auth']['credentials']['token']
-    cookies[:access_token_secret] = env['omniauth.auth']['credentials']['secret']
     cookies[:cookie_key] = SecureRandom.uuid
+
+    user_secrets = {}
+    user_secrets['access_token'] = env['omniauth.auth']['credentials']['token']
+    user_secrets['access_token_secret'] = env['omniauth.auth']['credentials']['secret']
     
     user = User.find_by(uid: cookies[:uid])
     
     if user.nil?
-      User.create(uid: cookies[:uid], cookie_key: cookies[:cookie_key])
-    else
-      user.cookie_key = cookies[:cookie_key]
-      user.save!      
+      user = User.create(uid: cookies[:uid], cookie_key: cookies[:cookie_key])
     end
+
+    user.cookie_key = cookies[:cookie_key]
+    user.encrypted_data = encrypt_data(cookies[:cookie_key], user_secrets.to_h.to_json.to_s)
+    user.save!      
     
     user.set_subscription_status! if user.present?
 

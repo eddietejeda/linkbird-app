@@ -16,25 +16,29 @@ class TweetWorker
           
           content = LinkThumbnailer.generate(url)
           
-          tweets << { 
-            user_id: user_id, 
-            tweet_id: t.id, 
-            tweet_date: t.created_at,
-            tweet: content, 
-            meta: { 
-              screen_name: t.user.screen_name, 
-              name: t.user.name, 
-              retweet_count: t.retweet_count, 
-              favorite_count: t.favorite_count,
-              followers_count: t.user.followers_count,
-              friends_count: t.user.friends_count,
-              listed_count: t.user.listed_count,
-              statuses_count: t.user.statuses_count
-            },
-            created_at: Time.current.getlocal("+00:00"),
-            updated_at: Time.current.getlocal("+00:00")
-          }
-          logger.info "🔔 User: #{user_id} - #{url}."
+          if content.description.length > 1
+            tweets << { 
+              user_id: user_id, 
+              tweet_id: t.id, 
+              tweet_date: t.created_at,
+              tweet: content, 
+              meta: { 
+                screen_name: t.user.screen_name, 
+                name: t.user.name, 
+                retweet_count: t.retweet_count, 
+                favorite_count: t.favorite_count,
+                followers_count: t.user.followers_count,
+                friends_count: t.user.friends_count,
+                listed_count: t.user.listed_count,
+                statuses_count: t.user.statuses_count
+              },
+              created_at: Time.current.getlocal("+00:00"),
+              updated_at: Time.current.getlocal("+00:00")
+            }
+            logger.info "🔔 User: #{user_id} - #{url}."
+          else            
+            logger.info "🔔 User: #{user_id} - #{url} - Skipping. No content"
+          end
         rescue => ex
           logger.error "🔔 Caught LinkThumbnailer.generate error - #{url} Exception: #{ex}"
         end

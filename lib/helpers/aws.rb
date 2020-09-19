@@ -1,17 +1,21 @@
 require 'aws-sdk'
 
-if ENV.fetch('AWS_ACCESS_KEY_ID') && ENV.fetch('AWS_SECRET_ACCESS_KEY')
-  # Get an instance of the S3 interface.
-  s3 = Aws::S3::Client.new(region: 'us-east-1')
+
+
+def get_aws_connection
+  if ENV.fetch('AWS_ACCESS_KEY_ID') && ENV.fetch('AWS_SECRET_ACCESS_KEY')
+    # Get an instance of the S3 interface.
+    Aws::S3::Client.new(region: 'us-east-1')
+  end
 end
 
-def get_buckets()
-  resp = s3.list_buckets()
+def list_buckets()
+  resp = get_aws_connection.list_buckets()
   resp.data.buckets
 end
   
 def create_bucket(bucket_name)
-  if get_buckets.select { |b| b.name == bucket_name }.length == 0
+  if list_buckets.select { |b| b.name == bucket_name }.length == 0
     puts 'creating bucket'
     s3.create_bucket(bucket: bucket_name)
   end

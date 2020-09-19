@@ -1,3 +1,6 @@
+require 'uri'
+# logger = Logger.new(STDOUT)
+
 def current_user
   User.find_by(uid: cookies[:uid], cookie_key: cookies[:cookie_key])
 end
@@ -13,23 +16,22 @@ def expand_url(url)
 end
 
 
-def get_twitter_connection(token, secret)
-  Twitter::REST::Client.new do |config|
-    config.consumer_key        = ENV["TWITTER_API_CONSUMER_KEY"]
-    config.consumer_secret     = ENV["TWITTER_API_CONSUMER_SECRET"]
-    config.access_token        = token 
-    config.access_token_secret = secret
-  end  
-end
-
-
 def reload!
-  logger.info "Reloading #{ENV.fetch('ENV')} environment"
+  puts "Reloading #{ENV.fetch('ENV')} environment"
   load './config.rb'
 end
 
 
 def preferred_fav_icon(url)
   favicon = YAML.load_file 'config/preferred-fav-icon.yml' if File.exists? 'config/preferred-fav-icon.yml'
-  favicon.to_h[url] ? favicon.to_h[url] : url
+  hostname = URI.parse(url).host.gsub("www.", "")
+  second_hostname  =  URI.parse(url).host.split(".").drop(1).join(".")
+  
+  if hostname && favicon.to_h[hostname] 
+    favicon.to_h[hostname] 
+  elsif second_hostname && favicon.to_h[second_hostname] 
+    favicon.to_h[second_hostname] 
+  else
+    url
+  end
 end

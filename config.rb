@@ -22,13 +22,6 @@ require 'pg'
 
 require 'sidekiq'
 require 'sidekiq/api'
-require 'sidekiq/web'
-
-if settings.development?
-  # require 'sidekiq/testing'
-  # Sidekiq::Testing.fake! # fake is the default mode
-  # Sidekiq::Testing.inline!
-end
 
 require 'stripe'
 Stripe.api_key = ENV['STRIPE_SECRET_KEY']
