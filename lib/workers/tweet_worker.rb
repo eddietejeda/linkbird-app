@@ -1,4 +1,4 @@
-class DownloadTweetWorker
+class TweetWorker
   include Sidekiq::Worker
   sidekiq_options retry: 0
 	
@@ -13,11 +13,14 @@ class DownloadTweetWorker
 
       if url.start_with?("http") && URI.parse(url).host != "twitter.com"
         begin
+          
+          content = LinkThumbnailer.generate(url)
+          
           tweets << { 
             user_id: user_id, 
             tweet_id: t.id, 
             tweet_date: t.created_at,
-            tweet: LinkThumbnailer.generate(url), 
+            tweet: content, 
             meta: { 
               screen_name: t.user.screen_name, 
               name: t.user.name, 

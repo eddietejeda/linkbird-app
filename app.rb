@@ -5,7 +5,7 @@ require './config'
 class App < Sinatra::Base
   
   # Set up environment
-  enable :sessions  
+  enable :sessions
   helpers Sinatra::Cookies
   register Sinatra::ActiveRecordExtension
       
@@ -55,9 +55,9 @@ class App < Sinatra::Base
     
       if @first_download || (@user.present? && last_update_in_minutes >= 20)
         if settings.development?
-          DownloadTweetWorker.new.perform( @user.id, cookies[:access_token], cookies[:access_token_secret] )
+          TweetWorker.new.perform( @user.id, cookies[:access_token], cookies[:access_token_secret] )
         else
-          DownloadTweetWorker.perform_async( @user.id, cookies[:access_token], cookies[:access_token_secret] )
+          TweetWorker.perform_async( @user.id, cookies[:access_token], cookies[:access_token_secret] )
         end
       else
         logger.info "🔔 Using cached results."
