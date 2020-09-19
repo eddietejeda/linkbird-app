@@ -26,8 +26,7 @@ class User < ActiveRecord::Base
     end
 
     last_update_in_seconds = Time.current.getlocal("+00:00").to_i - last_tweet_created_at.getlocal("+00:00").to_i
-    last_update_in_minutes = last_update_in_seconds / 60
-    last_update_in_minutes
+    last_update_in_seconds / 60
   end
   
   def subscribed?
