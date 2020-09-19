@@ -21,6 +21,10 @@
   
 
   
+  
+  
+  
+  
 <% else %>
 
   <!-- Logged in-->
@@ -57,20 +61,14 @@
        <div class="card-content">
           <div class="media">
              <% if t.tweet['favicon'].to_s.length > 0 %>
-               <div class="fav media-left px-4 is-inline-flex">
+               <div class="fav media-left px-4 is-inline-flex" >
                   <figure class="image is-48x48">
-                    
-                      <!-- <img src="<%= t.tweet['favicon'].to_s %>" onerror="this.onerror=null;console.log('loading backup');this.src='<%= t.tweet.to_h['images'].first.to_h['src'].to_s %>';" /> -->
-                    
-                     <img class="article-image" src="<%= t.tweet['favicon'].to_s %>" data-backup="<%= t.tweet.to_h['images'].first.to_h['src'].to_s %>" />
-                     
-                     <!-- <img class="cropped" width="100px" src="" /> -->
-                     
+                     <img class="article-image" src="<%= preferred_fav_icon(t.tweet['favicon'].to_s) %>" data-backup="<%= t.tweet.to_h['images'].first.to_h['src'].to_s %>" />                     
                   </figure>
                </div>
              <% end %>
              
-             <div class="media-content px-2 ">
+             <div class="media-content px-2 " style="overflow: hidden;">
                 <a href="<%= t.tweet['url'] %>">
                   
                    <% if t.tweet['title'].to_s.length > 0 %>
@@ -79,10 +77,10 @@
                      <h4 class="title is-4 is-size-5-mobile	has-text-black has-text-left"><%= t.tweet['description'].to_s[0..20] %>...</h3>
                    <% end %>
                    
-                   <div class="content has-text-black has-text-left">
+                   <p class="content has-text-black has-text-left tweet-content">
                       <%= t.tweet['description'] %>
                       <br>
-                   </div>
+                   </p>
                 </a>
                 
                 <div class="column is-6 px-0">
@@ -93,12 +91,10 @@
                           By: <a href="https://twitter.com/<%= t.meta['screen_name'] %>"><%= t.meta["name"] %></a></div>
                         <div class="column has-text-left has-text-black is-10">
                           <a target="_new" href="https://twitter.com/<%= t.meta['screen_name'] %>/status/<%= t.tweet_id %>">
-                            <span class=""><%= t.tweet_date.strftime('%b %-d, %Y') %></span>
-                            <span class=""><i class="fas fa-heart"></i>&nbsp;<%= t.meta["retweet_count"] %></span>
-                            <span class=""><i class="fas fa-heart"></i>&nbsp;<%= t.meta["favorite_count"] %></span>
-                            <!-- <span class=""><i class="fas fa-comment-alt"></i>&nbsp;<%= t.meta["comment_count"] %></span> -->
+                            <span class=""><%= t.tweet_date.strftime('%b %-d, %Y') %>&nbsp;</span>
+                            <span class=""><i class="fas fa-heart"></i>&nbsp;<%= t.meta["retweet_count"] %>&nbsp;</span>
+                            <span class=""><i class="fas fa-heart"></i>&nbsp;<%= t.meta["favorite_count"] %>&nbsp;</span>
                           </a>
-                          
                         </div>
                       </div>
                   </div>
@@ -110,25 +106,25 @@
   <% end %>
   
   <!--Pagination -->
-  <div class="card <%= @first_download ? 'card-with-no-border' : 'card-with-border' %>">
-     <div class="card-content">
-        <div class="content">
-           <% if @user.data['premium'] == true %>
-             <%= pagy_bulma_nav(@pagy) if @pagy.pages > 1 %>
-           <% elsif !@first_download  %>
-             <div class="tweetbox">
-                <section class="container basic-photo">
-                  <p>You are viewing <%= @tweets.count %> out of 25 links.<br>Free accounts only display 25 links.</p>
-                  <button id="activate-premium-plan-btn">Activate Subcription</button>
-                  <br/>
-                  <div><br>Subscribe to remove limits<br><a style="" href="/profile">Learn more</a><br></div>
-                </section>
-             </div>
-           <% end %>
-        </div>
-     </div>
-  </div>
-  
-  
+  <% if @user.data['premium'] == true || !@first_download %>
+    <div class="card <%= @first_download ? 'card-with-no-border' : 'card-with-border' %>">
+       <div class="card-content">
+          <div class="content">
+             <% if @user.data['premium'] == true %>
+               <%= pagy_bulma_nav(@pagy) if @pagy.pages > 1 %>
+             <% elsif !@first_download  %>
+               <div class="tweetbox">
+                  <section class="container basic-photo">
+                    <p>You are viewing <%= @tweets.count %> out of 25 links.<br>Free accounts only display 25 links.</p>
+                    <button id="activate-premium-plan-btn">Activate Subcription</button>
+                    <br/>
+                    <div><br>Subscribe to remove limits<br><a style="" href="/profile">Learn more</a><br></div>
+                  </section>
+               </div>
+             <% end %>
+          </div>
+       </div>
+    </div>
+  <% end %>
   
 <% end %>

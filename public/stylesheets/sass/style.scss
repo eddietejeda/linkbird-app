@@ -81,6 +81,12 @@ h1{
   list-style: none;
 }
 
+.tweet-content{
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 5;
+  -webkit-box-orient: vertical;  
+}
 .footer{
 //  margin-top: 50px;
   background-color: transparent;
