@@ -38,25 +38,15 @@ class App < Sinatra::Base
     @user = current_user    
     
     if @user.present?
-      
-      user_secrets = JSON.parse(decrypt_data(@user.cookie_key, @user.encrypted_data))
+            
       update_frequency_in_minutes = 20          
       minutes_since_last_update = @user.minutes_since_last_update
 
-      @first_download = !@user.tweets.first
-  
       # For the template
+      @first_download = !@user.tweets.first  
       @minutes_until_next_update = [(update_frequency_in_minutes - minutes_since_last_update), 0].max
-
-      # WARNING: Lots of refreshes during the 1 minute mark may fill up queue 
-      TweetWorker.perform_async( 
-        @user.id, 
-        user_secrets['access_token'], 
-        user_secrets['access_token_secret'] 
-      ) if @minutes_until_next_update == 0 # Get a head state
-    
-
       @pagy, @tweets = pagy(Tweet.where(user_id: @user.id).order(created_at: :desc), items: 25)
+
     end
 
     erb :index
