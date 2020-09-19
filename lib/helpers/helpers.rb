@@ -49,5 +49,5 @@ end
 
 
 def valid_timezone(timezone)
-  timezone.match(/[\-\+]\d\d\:\d\d/)
+  timezone.to_s.match(/[\-\+]\d\d\:\d\d/)
 end
