@@ -21,3 +21,15 @@ def get_twitter_connection(token, secret)
     config.access_token_secret = secret
   end  
 end
+
+
+def reload!
+  logger.info "Reloading #{ENV.fetch('ENV')} environment"
+  load './config.rb'
+end
+
+
+def preferred_fav_icon(url)
+  favicon = YAML.load_file 'config/preferred-fav-icon.yml' if File.exists? 'config/preferred-fav-icon.yml'
+  favicon.to_h['url'] ? favicon.to_h['url'] : url
+end
