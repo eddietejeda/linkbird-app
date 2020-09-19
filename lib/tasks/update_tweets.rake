@@ -6,6 +6,10 @@ namespace :db do
   
     User.all.each do |user|
     
+      if !user.cookie_key
+        next
+      end
+      
       user_secrets = JSON.parse(decrypt_data(user.cookie_key, user.encrypted_data))
         
       minutes_since_update = user.minutes_since_update
