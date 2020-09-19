@@ -33,3 +33,7 @@ group :development do
   gem "awesome_print", "~> 1.8"
 end
 
+
+gem "aws-sdk-s3", "~> 1.81"
+
+gem "aws-sdk", "~> 3.0"
