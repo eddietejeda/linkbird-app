@@ -6,12 +6,14 @@ namespace :db do
   
     User.all.each do |user|
     
+      puts "Current user #{user.id}"
+      
       if user.cookie_key.empty? || user.encrypted_data.empty?
         puts "🔔 keys and encrypted data empty."
         next
       end
       
-      user_secrets = JSON.parse(decrypt_data(user.cookie_key, user.encrypted_data))
+      user_secrets = user.private_data
         
       minutes_since_last_update = user.minutes_since_last_update
 
