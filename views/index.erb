@@ -57,13 +57,13 @@
     <div class="card card-with-border article">
        <div class="card-content">
           <div class="media">
-             <% if t.tweet['favicon'].to_s.length > 0 %>
                <div class="fav media-left px-4 is-inline-flex" >
                   <figure class="image is-48x48">
-                     <img class="article-image" src="<%= preferred_fav_icon(t.tweet['favicon'].to_s) %>" data-backup="<%= t.tweet.to_h['images'].first.to_h['src'].to_s %>" />                     
+                    <% if t.tweet['favicon'].to_s.length > 0 %>
+                      <img class="article-image" src="<%= preferred_fav_icon(t.tweet['favicon'].to_s) %>" data-backup="<%= t.tweet.to_h['images'].first.to_h['src'].to_s %>" />                     
+                    <% end %>
                   </figure>
                </div>
-             <% end %>
              
              <div class="media-content px-2 " style="overflow: hidden;">
                 <a href="<%= t.tweet['url'] %>">

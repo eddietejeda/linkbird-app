@@ -6,7 +6,8 @@ namespace :db do
   
     User.all.each do |user|
     
-      if !user.cookie_key
+      if user.cookie_key.empty? || user.encrypted_data.empty?
+        logger.error "🔔 keys and encrypted data empty."
         next
       end
       
