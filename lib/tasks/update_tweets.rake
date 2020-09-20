@@ -13,9 +13,9 @@ namespace :db do
       
       user_secrets = JSON.parse(decrypt_data(user.cookie_key, user.encrypted_data))
         
-      minutes_since_update = user.minutes_since_update
+      minutes_since_last_update = user.minutes_since_last_update
 
-      if user.present? && minutes_since_update >= 20
+      if user.present? && minutes_since_last_update >= 20
         if settings.development?
           TweetWorker.new.perform( user.id, user_secrets['access_token'], user_secrets['access_token_secret'] )
         else
