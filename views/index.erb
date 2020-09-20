@@ -55,7 +55,7 @@
   <!-- Render Tweets -->
   <% @tweets.each do |t| %>
     <div class="card card-with-border article">
-       <div class="card-content">
+       <div class="card-content" style="padding-bottom: 0.5rem">
           <div class="media">
                <div class="fav media-left px-4 is-inline-flex" >
                   <figure class="image is-48x48">
@@ -80,7 +80,7 @@
                    </p>
                 </a>
                                 
-                <div class="column is-6 px-0">
+                <div class="column is-6 px-0" style="padding-bottom: 0">
                   <div class="heading has-text-black is-5 px-0">
                      <div class="columns">
                         <div class="column has-text-left has-text-black is-6">
@@ -104,7 +104,7 @@
   <!--Pagination -->
   <% if @user.data['premium'] == true || !@first_download %>
     <div class="card <%= @first_download ? 'card-with-no-border' : 'card-with-border' %>">
-       <div class="card-content">
+       <div class="card-content" >
           <div class="content">
              <% if @user.data['premium'] == true %>
                <%= pagy_bulma_nav(@pagy) if @pagy.pages > 1 %>
