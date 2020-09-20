@@ -7,10 +7,10 @@ def get_encryption_key
   ENV.fetch('APP_ENCRYPTION_KEY')
 end
 
-def encrypt_data(key:, plaintext:)
+def encrypt_data(key, plaintext)
   assert_app_encryption_keys_are_set!
   
-  return "" if ciphertext.empty?
+  return "" if plaintext.empty?
   
   cipher = OpenSSL::Cipher::AES256.new :CBC
   cipher.encrypt  # set cipher to be encryption mode
@@ -23,7 +23,7 @@ def encrypt_data(key:, plaintext:)
   Base64.encode64(encrypted).gsub(/\n/, '')
 end
 
-def decrypt_data(key:, ciphertext:)
+def decrypt_data(key, ciphertext)
   assert_app_encryption_keys_are_set!
   
   return "" if ciphertext.empty?

@@ -196,7 +196,7 @@ class App < Sinatra::Base
     end
 
     user.cookie_key = cookies[:cookie_key]
-    user.encrypted_data = encrypt_data(key: cookies[:cookie_key], plaintext: user_secrets.to_h.to_json.to_s)
+    user.encrypted_data = encrypt_data(cookies[:cookie_key], user_secrets.to_h.to_json.to_s)
     user.save!      
     
     user.set_subscription_status! if user.present?
