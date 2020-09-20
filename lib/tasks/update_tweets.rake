@@ -13,19 +13,9 @@ namespace :db do
         next
       end
       
-      user_secrets = user.private_data
-        
-      minutes_since_last_update = user.minutes_since_last_update
+      user_secrets = user.private_data        
 
-      if user.present? && minutes_since_last_update >= 20
-        if settings.development?
-          TweetWorker.new.perform( user.id, user_secrets['access_token'], user_secrets['access_token_secret'] )
-        else
-          TweetWorker.perform_async( user.id, user_secrets['access_token'], user_secrets['access_token_secret'] )
-        end
-      else
-        puts "🔔 Using cached results."
-      end
+      TweetWorker.perform_async( user.id, user_secrets['access_token'], user_secrets['access_token_secret'] )
   end
   
     puts "done."

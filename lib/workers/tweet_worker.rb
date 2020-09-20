@@ -6,7 +6,7 @@ class TweetWorker
     tweets = []
     client = get_twitter_connection(token, secret)
         
-    home_timeline = client.home_timeline({count: 50})
+    home_timeline = client.home_timeline({count: 10})
 
     home_timeline.each do |t|
       url = t&.urls&.first&.expanded_url.to_s
