@@ -1,6 +1,4 @@
 # encoding: utf-8
-require './config'
-
 
 class App < Sinatra::Base
   
@@ -47,8 +45,8 @@ class App < Sinatra::Base
       @first_download = !@user.tweets.first  
       
       if @first_download
-        user_secrets = @user.private_data
-        TweetWorker.perform_async( @user.id, user_secrets['access_token'], user_secrets['access_token_secret'] )        
+        user_secrets = @user.secret_data
+        TweetWorker.perform_async( @user.id, user_secrets['access_token'], user_secrets['access_token_secret'], 50 )
       end
       
       @minutes_until_next_update = [(update_frequency_in_minutes - minutes_since_last_update), 0].max
@@ -69,15 +67,22 @@ class App < Sinatra::Base
   end
 
   get '/privacy' do
-    @hide_title = true
     erb :privacy
   end
   
   get '/terms-of-service' do
-    @hide_title = true
     erb :terms_of_service
   end
 
+  get '/refresh' do
+    @user = current_user    
+    if @user
+      puts "User #{@user.id} manually refreshing"
+      user_secrets = @user.secret_data
+      TweetWorker.perform_async( @user.id, user_secrets['access_token'], user_secrets['access_token_secret'], 5 )
+    end
+    redirect '/'
+  end
   get '/profile' do
     @user = current_user
     if !@user
@@ -191,7 +196,7 @@ class App < Sinatra::Base
     end
 
     user.cookie_key = cookies[:cookie_key]
-    user.encrypted_data = encrypt_data(cookies[:cookie_key], user_secrets.to_h.to_json.to_s)
+    user.encrypted_data = encrypt_data(key: cookies[:cookie_key], plaintext: user_secrets.to_h.to_json.to_s)
     user.save!      
     
     user.set_subscription_status! if user.present?
@@ -200,7 +205,11 @@ class App < Sinatra::Base
   end
   
   get '/auth/failure' do
-    erb "<h1>Authentication Failed:</h1><h3>message:<h3> <pre>#{params}</pre>"
+    erb "
+      <h1>Authentication Failed:</h1>
+      <h3>message:<h3>
+      <pre>#{params}</pre>
+    "
   end
   
   get '/auth/twitter/deauthorized' do
