@@ -7,7 +7,7 @@ namespace :db do
     User.all.each do |user|
     
       if user.cookie_key.empty? || user.encrypted_data.empty?
-        logger.error "🔔 keys and encrypted data empty."
+        puts "🔔 keys and encrypted data empty."
         next
       end
       
@@ -22,7 +22,7 @@ namespace :db do
           TweetWorker.perform_async( user.id, user_secrets['access_token'], user_secrets['access_token_secret'] )
         end
       else
-        logger.info "🔔 Using cached results."
+        puts "🔔 Using cached results."
       end
   end
   
