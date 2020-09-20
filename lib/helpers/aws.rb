@@ -9,7 +9,7 @@ def get_aws_connection
   end
 end
 
-def list_buckets()
+def list_buckets
   resp = get_aws_connection.list_buckets()
   resp.data.buckets
 end

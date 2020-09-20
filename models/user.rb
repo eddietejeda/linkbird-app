@@ -16,11 +16,10 @@ class User < ActiveRecord::Base
     self.save!
   end
   
-  def private_data
-    
+  def secret_data
     data = "{}"
     if self.cookie_key.present? && self.encrypted_data.present?
-      data = decrypt_data(self.cookie_key, self.encrypted_data)
+      data = decrypt_data(key: self.cookie_key, ciphertext: self.encrypted_data)
     end
     JSON.parse(data)
   end

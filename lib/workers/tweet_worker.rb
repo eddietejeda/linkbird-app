@@ -2,11 +2,11 @@ class TweetWorker
   include Sidekiq::Worker
   sidekiq_options retry: 0
 	
-  def perform(user_id, token, secret)
+  def perform(user_id, token, secret, items=25)
     tweets = []
     client = get_twitter_connection(token, secret)
-        
-    home_timeline = client.home_timeline({count: 25})
+
+    home_timeline = client.home_timeline({count: items})
     
     puts "home_timeline count #{home_timeline.count}"
 
@@ -38,7 +38,7 @@ class TweetWorker
               updated_at: Time.current.getlocal("+00:00")
             }
             logger.info "🔔 User: #{user_id} - #{url}."
-          else            
+          else
             logger.info "🔔 User: #{user_id} - #{url} - Skipping. No content"
           end
         rescue => ex

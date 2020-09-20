@@ -4,20 +4,18 @@ require 'openssl'
 
 
 def get_encryption_key
-  ENV['APP_ENCRYPTION_KEY']
+  ENV.fetch('APP_ENCRYPTION_KEY')
 end
 
-def encrypt_data(iv, plaintext)
+def encrypt_data(key:, plaintext:)
   assert_app_encryption_keys_are_set!
   
-  if plaintext.empty?
-    return ""
-  end
+  return "" if ciphertext.empty?
   
   cipher = OpenSSL::Cipher::AES256.new :CBC
   cipher.encrypt  # set cipher to be encryption mode
   cipher.key = Digest::SHA256.hexdigest(get_encryption_key)[0..31]
-  cipher.iv  = Digest::SHA256.hexdigest(iv)[0..15]
+  cipher.iv  = Digest::SHA256.hexdigest(key)[0..15]
 
   encrypted = ''
   encrypted << cipher.update(plaintext)
@@ -25,17 +23,15 @@ def encrypt_data(iv, plaintext)
   Base64.encode64(encrypted).gsub(/\n/, '')
 end
 
-def decrypt_data(iv, ciphertext)
+def decrypt_data(key:, ciphertext:)
   assert_app_encryption_keys_are_set!
   
-  if ciphertext.empty?
-    return ""
-  end
+  return "" if ciphertext.empty?
   
   decipher = OpenSSL::Cipher::AES256.new :CBC
   decipher.decrypt
   decipher.key = Digest::SHA256.hexdigest(get_encryption_key)[0..31]
-  decipher.iv = Digest::SHA256.hexdigest(iv)[0..15]
+  decipher.iv = Digest::SHA256.hexdigest(key)[0..15]
 
   secretdata = Base64::decode64(ciphertext)
   decipher.update(secretdata) + decipher.final

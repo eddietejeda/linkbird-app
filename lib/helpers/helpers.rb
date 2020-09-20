@@ -18,12 +18,12 @@ end
 
 def reload!
   puts "Reloading #{ENV.fetch('ENV')} environment"
-  load './config.rb'
+  load './bootup.rb'
 end
 
 
-def preferred_fav_icon(url)
-  favicon = YAML.load_file 'config/preferred-fav-icon.yml' if File.exists? 'config/preferred-fav-icon.yml'
+def preferred_fav_icon(url, filepath: "config/preferred-fav-icon.yml")
+  favicon = YAML.load_file filepath if File.exists? filepath
   hostname = URI.parse(url).host.gsub("www.", "")
   second_hostname  =  URI.parse(url).host.split(".").drop(1).join(".")
   
@@ -38,13 +38,11 @@ end
 
 
 def format_datetime(datetime, timezone)
-  
   if valid_timezone(timezone)
     datetime.getlocal(timezone).strftime('%b %-d, %Y %l:%M%P')
   else
     datetime.strftime('%b %-d, %Y')
   end
-  
 end
 
 
