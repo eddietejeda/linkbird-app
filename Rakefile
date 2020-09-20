@@ -1,6 +1,6 @@
 # Rakefile
 require "sinatra/activerecord/rake"
-require "./app"
+require "./bootup"
 
 
 namespace :db do

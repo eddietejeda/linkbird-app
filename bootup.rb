@@ -37,8 +37,9 @@ if settings.development?
   require 'sinatra/reloader' 
   require "byebug" 
   require "awesome_print" 
-  logger.level = Logger::INFO
+  require 'sidekiq/web'    
+  logger.level = Logger::DEBUG
 end
 
 
-logger.level = Logger::INFO
+require './app'
