@@ -10,6 +10,10 @@ end
 def encrypt_data(iv, plaintext)
   assert_app_encryption_keys_are_set!
   
+  if plaintext.empty?
+    return ""
+  end
+  
   cipher = OpenSSL::Cipher::AES256.new :CBC
   cipher.encrypt  # set cipher to be encryption mode
   cipher.key = Digest::SHA256.hexdigest(get_encryption_key)[0..31]
@@ -23,6 +27,10 @@ end
 
 def decrypt_data(iv, ciphertext)
   assert_app_encryption_keys_are_set!
+  
+  if ciphertext.empty?
+    return ""
+  end
   
   decipher = OpenSSL::Cipher::AES256.new :CBC
   decipher.decrypt
