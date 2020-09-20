@@ -1,6 +1,7 @@
 ---
 # Original : Replacement
 "cnbc.com"            : "https://linkbird-app.s3.amazonaws.com/cnbc.ico"
+"nbcnews.com"         : "https://linkbird-app.s3.amazonaws.com/cnbc.ico"
 "nypost.com"          : "https://linkbird-app.s3.amazonaws.com/new-york-post.png"
 "economist.com"       : "https://linkbird-app.s3.amazonaws.com/economist.ico"
 "bloomberg.com"       : "https://linkbird-app.s3.amazonaws.com/bloomberg.jpg"
