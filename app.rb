@@ -45,9 +45,14 @@ class App < Sinatra::Base
       # For the template
       @user_timezone =  cookies['user_timezone'] 
       @first_download = !@user.tweets.first  
+      
+      if @first_download
+        user_secrets = @user.private_data
+        TweetWorker.perform_async( @user.id, user_secrets['access_token'], user_secrets['access_token_secret'] )        
+      end
+      
       @minutes_until_next_update = [(update_frequency_in_minutes - minutes_since_last_update), 0].max
       @pagy, @tweets = pagy(Tweet.where(user_id: @user.id).order(created_at: :desc), items: 25)
-
     end
 
     erb :index
