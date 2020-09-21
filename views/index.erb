@@ -83,13 +83,13 @@
                 <div class="column is-6 px-0" style="padding-bottom: 0">
                   <div class="heading has-text-black is-5 px-0">
                      <div class="columns">
-                        <div class="column has-text-left has-text-black is-6">
-                          By: <a href="https://twitter.com/<%= t.meta['screen_name'] %>"><%= t.meta["name"] %></a></div>
-                        <div class="column has-text-left has-text-black is-10">
+                        <div class="column has-text-left has-text-black is-12">
+                          Shared By: <a href="https://twitter.com/<%= t.meta['screen_name'] %>"><%= t.meta["name"] %></a></div>
+                        <div class="column has-text-right has-text-black is-12">
                           <a target="_new" href="https://twitter.com/<%= t.meta['screen_name'] %>/status/<%= t.tweet_id %>">
-                            <span class=""><%= format_datetime t.tweet_date, @user_timezone %>&nbsp;</span>
                             <span class=""><i class="fas fa-heart"></i>&nbsp;<%= t.meta["retweet_count"] %>&nbsp;</span>
                             <span class=""><i class="fas fa-heart"></i>&nbsp;<%= t.meta["favorite_count"] %>&nbsp;</span>
+                            <span class=""><%= format_datetime t.tweet_date, @user_timezone %>&nbsp;</span>
                           </a>
                         </div>
                       </div>
