@@ -36,6 +36,7 @@ class App < Sinatra::Base
     @user = current_user    
     
     if @user.present?
+      @show_loading_bar = true
             
       update_frequency_in_minutes = 20          
       minutes_since_last_update = @user.minutes_since_last_update

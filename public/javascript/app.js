@@ -2,59 +2,49 @@
 // https://dev.to/vijitail/pull-to-refresh-animation-with-vanilla-javascript-17oc
 const pStart = { x: 0, y: 0 };
 const pCurrent = { x: 0, y: 0 };
-const main = document.querySelector("body > .loading-container");
+const loading = document.querySelector("body > .loading-container");
 
-function loading() {  
-  main.style.display = 'flex';
-}
-
-function swipeStart(e) {
-  if (typeof e["targetTouches"] !== "undefined") {
-    let touch = e.targetTouches[0];
-    pStart.x = touch.screenX;
-    pStart.y = touch.screenY;
-  } 
-  else {
-    pStart.x = e.screenX;
-    pStart.y = e.screenY;
-  }
-}
-
-function swipeEnd(e) {
-  
-  fetch('/refresh');    
-  setTimeout(() => {
-    main.style.display = 'none';
-    window.location = '/';
-  }, 2000);
-  
-}
-
-function swipe(e) {
-  if (typeof e["changedTouches"] !== "undefined") {
-    let touch = e.changedTouches[0];
-    pCurrent.x = touch.screenX;
-    pCurrent.y = touch.screenY;
-  } 
-  else {
-    pCurrent.x = e.screenX;
-    pCurrent.y = e.screenY;
-  }
-  
-  let changeY = pStart.y < pCurrent.y ? Math.abs(pStart.y - pCurrent.y) : 0;
-  if (document.body.scrollTop === 0) {
-    if (changeY > 100) {
-      loading();
+if (loading){
+  function swipeStart(e) {
+    if (typeof e["targetTouches"] !== "undefined") {
+      let touch = e.targetTouches[0];
+      pStart.x = touch.screenX;
+      pStart.y = touch.screenY;
+    } 
+    else {
+      pStart.x = e.screenX;
+      pStart.y = e.screenY;
     }
   }
+
+  function swipe(e) {
+    if (typeof e["changedTouches"] !== "undefined") {
+      let touch = e.changedTouches[0];
+      pCurrent.x = touch.screenX;
+      pCurrent.y = touch.screenY;
+    } 
+    else {
+      pCurrent.x = e.screenX;
+      pCurrent.y = e.screenY;
+    }
+  
+    let changeY = pStart.y < pCurrent.y ? Math.abs(pStart.y - pCurrent.y) : 0;
+    if (document.body.scrollTop === 0) {
+      if (changeY > 100) {
+        loading.style.display = 'flex';
+      
+        fetch('/refresh');
+        setTimeout(() => {
+          loading.style.display = 'none';
+          window.location = '/';
+        }, 2000);
+      }
+    }
+  }
+
+  document.addEventListener("touchstart", e => swipeStart(e), false);
+  document.addEventListener("touchmove", e => swipe(e), false);
 }
-
-
-document.addEventListener("touchstart", e => swipeStart(e), false);
-document.addEventListener("touchmove", e => swipe(e), false);
-document.addEventListener("touchend", e => swipeEnd(e), false);
-
-
 
 // Create a Checkout Session with the selected plan ID
 var createCheckoutSession = function(priceId) {

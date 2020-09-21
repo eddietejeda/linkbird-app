@@ -28,32 +28,28 @@
   </head>
 
   <body>
-    
-    <div class="loading-container">
-      <div class="loading"></div>
-    </div>
+  
+    <% if @show_loading_bar == true %>
+      <div class="loading-container">
+        <div class="loading"></div>
+      </div>
+    <% end %>
   
     <section class="is-success is-fullheight section">
       <div class="hero-body">
         <div class="container has-text-centered">
           <div class="wrapper">
-            <% if @hide_title != true %>
 
-              <div class="column is-12">
-                <br/>
-                
-                  
-                  <a href="/">                  
-                  <h1   style="display:inline-flex; width: 175px;" class="title has-text-black <%= "not-logged-in" if !@user %>">
-                      <div style="background: url('/images/linkbird.png') no-repeat; height: 35px; width: 50px;background-size: 40px;display: table;"></div>
-                      LinkBird
-                  </h1>
-                  </a>
-                  
+            <div class="column is-12">
+              <br/>
+                <a href="/">                  
+                <h1   style="display:inline-flex; width: 175px;" class="title has-text-black <%= "not-logged-in" if !@user %>">
+                    <div style="background: url('/images/linkbird.png') no-repeat; height: 35px; width: 50px;background-size: 40px;display: table;"></div>
+                    LinkBird
+                </h1>
                 </a>
-              </div>
-
-            <% end %>
+              </a>
+            </div>
 
             <% if @alert  %>                    
               <hr class="login-hr">
