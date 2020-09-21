@@ -5,10 +5,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="stylesheets/loading.css" />
     <link rel="stylesheet" href="stylesheets/font-awesome.css" />
     <link rel="stylesheet" href="stylesheets/bulma.css" />
     <link rel="stylesheet" href="stylesheets/style.css" />
-    <title>LinkBird - Article Newsfeed</title>
+    <title>LinkBird</title>
   
     <!-- Load Stripe.js on your website. -->
     <script src="https://js.stripe.com/v3/"></script>
@@ -27,16 +28,31 @@
   </head>
 
   <body>
+    
+    <div class="loading-container">
+      <div class="loading"></div>
+    </div>
+  
     <section class="is-success is-fullheight section">
       <div class="hero-body">
         <div class="container has-text-centered">
-          <div class="card">
+          <div class="wrapper">
             <% if @hide_title != true %>
-              <br>
-              <a href="/">
-                <img width="50px" src="/images/linkbird.png">
-                <h1 class="title has-text-black <%= "not-logged-in" if !@user %>">LinkBird</h1>
-              </a>
+
+              <div class="column is-12">
+                <br/>
+                
+                  
+                  <a href="/">                  
+                  <h1   style="display:inline-flex; width: 175px;" class="title has-text-black <%= "not-logged-in" if !@user %>">
+                      <div style="background: url('/images/linkbird.png') no-repeat; height: 35px; width: 50px;background-size: 40px;display: table;"></div>
+                      LinkBird
+                  </h1>
+                  </a>
+                  
+                </a>
+              </div>
+
             <% end %>
 
             <% if @alert  %>                    

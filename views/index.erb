@@ -1,10 +1,12 @@
 <% if !current_user %>
   
   <!--Not logged in -->
-  <h4 class="title has-text-black <%= "not-logged-in" if !@user %>" style="font-size: 150%">
-     <br>Filter out the chatter.<br>See only articles from your timeline.<br><br>
+  <h4 class="title has-text-black <%= "not-logged-in" if !@user %>" style="font-size: 150%;padding: 0px 50px;">
+     <br><br>Your distraction-free Twitter feed.<br><br>
   </h4>
   
+  <p>Get a personalized newsfeed from your network.</p>
+  <br>
   <!-- Login button -->
   <div class="flex-grid">
      <div class="col-sm"></div>
@@ -102,7 +104,7 @@
   <% end %>
   
   <!--Pagination -->
-  <% if @user.data['premium'] == true || !@first_download %>
+  <% if @user.data['premium'] == true || @tweets.count > 15 %>
     <div class="card <%= @first_download ? 'card-with-no-border' : 'card-with-border' %>">
        <div class="card-content" >
           <div class="content">
@@ -111,10 +113,10 @@
              <% elsif !@first_download  %>
                <div class="tweetbox">
                   <section class="container basic-photo">
-                    <p>You are viewing <%= @tweets.count %> out of 25 links.<br>Free accounts only display 25 links.</p>
+                    <p>You are viewing <%= @tweets.count %> out of 25 articles.<br>Subscribe to view up to 1000 articles</p>
                     <button id="activate-premium-plan-btn">Activate Subcription</button>
                     <br/>
-                    <div><br>Subscribe to remove limits<br><a style="" href="/profile">Learn more</a><br></div>
+                    <div><a href="/profile">Learn more</a><br></div>
                   </section>
                </div>
              <% end %>

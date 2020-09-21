@@ -182,15 +182,17 @@ class App < Sinatra::Base
   
   # Twitter Auth
   get '/auth/twitter/callback' do
+
     cookies[:uid] = env['omniauth.auth']['uid']
     cookies[:cookie_key] = SecureRandom.uuid
+
 
     user_secrets = {}
     user_secrets['access_token'] = env['omniauth.auth']['credentials']['token']
     user_secrets['access_token_secret'] = env['omniauth.auth']['credentials']['secret']
-    
+
     user = User.find_by(uid: cookies[:uid])
-    
+
     if user.nil?
       user = User.create(uid: cookies[:uid], cookie_key: cookies[:cookie_key])
     end
@@ -198,22 +200,21 @@ class App < Sinatra::Base
     user.cookie_key = cookies[:cookie_key]
     user.encrypted_data = encrypt_data(cookies[:cookie_key], user_secrets.to_h.to_json.to_s)
     user.save!      
-    
+
     user.set_subscription_status! if user.present?
 
-    redirect to('/')
+    redirect to('/')    
   end
   
   get '/auth/failure' do
-    erb "
-      <h1>Authentication Failed:</h1>
-      <h3>message:<h3>
-      <pre>#{params}</pre>
-    "
+    @alert = "<h1>Authentication Failed</h1><h3>message:<h3><pre>#{params}</pre>"
+    erb :index
+    
   end
   
-  get '/auth/twitter/deauthorized' do
-    erb "Twitter has deauthorized this app."
+  get '/auth/twitter/deauthorized' do    
+    @alert = "Twitter has deauthorized this app."
+    erb :index
   end
   
   get '/logout' do
