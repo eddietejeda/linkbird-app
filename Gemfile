@@ -24,12 +24,19 @@ gem "pagy", "~> 3.8"
 gem 'pg'
 gem "sidekiq", "~> 6.1"
 gem 'newrelic_rpm'
+gem "aws-sdk", "~> 3.0"
+gem "aws-sdk-s3", "~> 1.81"
 
-group :development do
+group :development, :test do
   gem "byebug", "~> 11.1"
   gem "awesome_print", "~> 1.8"
+  gem "rspec"
+  gem "capybara", "~> 3.33"  
+  gem "selenium-webdriver", "~> 3.142"
+  gem "apparition", "~> 0.6.0"
+
+
 end
 
 
-gem "aws-sdk", "~> 3.0"
-gem "aws-sdk-s3", "~> 1.81"
+
