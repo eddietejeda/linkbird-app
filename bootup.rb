@@ -41,5 +41,4 @@ if settings.development?
   logger.level = Logger::DEBUG
 end
 
-require 'newrelic_rpm'
 require './app'
