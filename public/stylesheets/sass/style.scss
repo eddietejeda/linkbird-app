@@ -164,3 +164,15 @@ button {
     padding-right: 0   !important;
   }
 }
+
+
+
+
+@media only screen and (max-width: 768px) {
+  .mobile-align-left {
+    text-align: left !important;
+    padding-top: 0;
+
+  }
+}
+
