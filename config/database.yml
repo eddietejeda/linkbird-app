@@ -6,6 +6,12 @@ development:
   <<: *default
   database: twitter_timeline_links_dev
 
+
+test:
+  <<: *default
+  database: twitter_timeline_links_test
+
+
 production:
   <<: *default
   url:  <%= ENV["DATABASE_URL"] %>
