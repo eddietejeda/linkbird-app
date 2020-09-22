@@ -5,31 +5,43 @@
 # This workflow will download a prebuilt Ruby version, install dependencies and run tests with Rake
 # For more information see: https://github.com/marketplace/actions/setup-ruby-jruby-and-truffleruby
 
-name: Ruby
+name: Continuous Deployment
+
 
 on:
   push:
-    branches: [ master ]
-  pull_request:
-    branches: [ master ]
+    branches:
+    - master
 
 jobs:
   test:
-
     runs-on: ubuntu-latest
 
+    # services:
+    #   postgres:
+    #     image: postgres:12
+    #     env:
+    #       POSTGRES_USER: postgres
+    #       POSTGRES_DB: test
+    #       POSTGRES_PASSWORD: postgres
+    #     ports:
+    #       - "5432:5432"
+    #     options: >-
+    #       --health-cmd pg_isready
+    #       --health-interval 10s
+    #       --health-timeout 5s
+    #       --health-retries 5
+          
     steps:
+    - name: Clone code repo      
     - uses: actions/checkout@v2
-    - name: Set up Ruby
-    # To automatically get bug fixes and new Ruby versions for ruby/setup-ruby,
-    # change this to (see https://github.com/ruby/setup-ruby#versioning):
-    # uses: ruby/setup-ruby@v1
-      uses: ruby/setup-ruby@ec106b438a1ff6ff109590de34ddc62c540232e0
-      with:
-        ruby-version: 2.6
-    - name: Install dependencies
-      run: bundle install
-    - name: Run tests
-      run: bundle exec rspec spec
-    - name: Deploy to Heroku
-      uses: AkhileshNS/heroku-deploy@v3.5.6
+    
+    - name: Buildpack CI
+      uses: buildpack-ci/run-tests@v1-beta1
+
+    - name: Install Bundler, Gems, and then run rspec
+      run: |
+        gem install bundler
+        bundle config path vendor/bundle
+        bundle install
+        bundle exec rspec spec/

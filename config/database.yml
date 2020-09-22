@@ -4,12 +4,12 @@ default: &default
 
 development:
   <<: *default
-  database: twitter_timeline_links_dev
+  database: linkbird_dev
 
 
 test:
   <<: *default
-  database: twitter_timeline_links_test
+  database: linkbird_test
 
 
 production:
