@@ -10,8 +10,8 @@
             <% if @user.data['stripe_subscription_status'] != 'active' %>
               <div class="column has-text-left">
                 <h4>What do I get with a subscription?</h4>
-                <p><li>Archive up to 1000 articles in your timeline. </li></p>
-                <!-- <p><li>Automatically updates every 10 minutes. </li></p> -->
+                <p><li>View up to 1000 articles in your timeline instead of 25.</li></p>
+                <p><li>Automatically updates links every 10 minutes. </li></p>
                 <p><li><b>Coming soon</b>: Bookmark your articles.</li></p>
                 <!-- Can we limit number of refreshes?-->
               </div>              
@@ -28,8 +28,8 @@
                   <p><small>(Renewal: <%= DateTime.parse( @user.data["stripe_subscription_end_date"] ).strftime("%B %d, %Y") %>  )</small></p>                    
                   <input type="submit" style="display:none">
                 </form>
-                <% elsif @user.data['stripe_subscription_status'] == 'inactive' && @user.data["stripe_subscription_end_date"] > Date.now %>
-                  <p style="">Subscription has been canceled but will remain active until <%= DateTime.parse( @user.data["stripe_subscription_end_date"] ).strftime("%B %d, %Y") %> </p>
+                <% elsif @user.data['stripe_subscription_status'] != 'active' && @user.data["stripe_subscription_end_date"] > DateTime.now %>
+                  <p style="margin-top: 50px">Subscription has been canceled but premium features will <br>remain active until <%= DateTime.parse( @user.data["stripe_subscription_end_date"] ).strftime("%B %d, %Y") %> </p>
                 <% else %>
                   <button id="activate-premium-plan-btn">Activate Subscription</button>
                 <% end %>
