@@ -68,7 +68,10 @@
             </p>
             <div class="column is-10 is-offset-1">
               <p class="has-text-grey">
-                © Visudo LLC <%= DateTime.now.strftime("%Y") %>. All Rights Reserved. <%= ENV.to_h['HEROKU_RELEASE_VERSION'] %>
+                © Visudo LLC <%= DateTime.now.strftime("%Y") %>. All Rights Reserved. 
+              </p>
+              <p>
+                <%= ENV.to_h['HEROKU_RELEASE_VERSION'] %>
               </p>
             </div>
           </div>

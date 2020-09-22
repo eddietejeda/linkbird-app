@@ -33,12 +33,12 @@ class App < Sinatra::Base
   get '/' do
     
     @tweets = []
-    @user = current_user    
+    @user = current_user
     
     if @user.present?
       @show_loading_bar = true
             
-      update_frequency_in_minutes = 20          
+      update_frequency_in_minutes = 20
       minutes_since_last_update = @user.minutes_since_last_update
 
       # For the template
@@ -63,7 +63,7 @@ class App < Sinatra::Base
       current_user.set_subscription_status!
       redirect '/profile'      
     else
-      redirect '/'      
+      redirect '/'
     end
   end
 
@@ -186,7 +186,6 @@ class App < Sinatra::Base
 
     cookies[:uid] = env['omniauth.auth']['uid']
     cookies[:cookie_key] = SecureRandom.uuid
-
 
     user_secrets = {}
     user_secrets['access_token'] = env['omniauth.auth']['credentials']['token']

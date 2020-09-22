@@ -1,0 +1,19 @@
+<!--Not logged in -->
+<h4 class="title has-text-black <%= "not-logged-in" if !@user %>" style="font-size: 150%;padding: 0px 50px;">
+   <br><br>Your distraction-free Twitter feed.<br><br>
+</h4>
+
+<p>Get a personalized newsfeed from your network.</p>
+<br>
+<!-- Login button -->
+<div class="flex-grid">
+   <div class="col-sm"></div>
+   <div class="col-md">
+     <a id="login-button" href='/auth/twitter?use_authorize=true'><img width="300px" src="/images/sign-in-with-twitter.png"></a>
+     <br>
+     <br>
+     <br>
+     <br>
+   </div>
+   <div class="col-sm"></div>
+</div>
