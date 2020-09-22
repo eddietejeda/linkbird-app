@@ -3,10 +3,9 @@
 <div class="card card-with-no-border">
   <div class="card-content">
     <div class="content">
-        <section class="column is-offset-4 is-4  px-0">
-          <div class="column has-text-center  ">
-            
-
+        <section class="column has-text-left">
+          <div class="column px-0">
+            <div style="text-align:center">
             <!-- Not subscribed -->
             <% if @user.data['stripe_subscription_status'] != 'active' %>
               <div class="column has-text-left">
