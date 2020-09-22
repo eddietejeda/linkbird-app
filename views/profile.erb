@@ -22,7 +22,7 @@
                   <p><small>(Renewal: <%= DateTime.parse( @user.data["stripe_subscription_end_date"] ).strftime("%B %d, %Y") %>  )</small></p>                    
                   <input type="submit" style="display:none">
                 </form>
-                <% elsif @user.data['stripe_subscription_status'] != 'active' && @user.data["stripe_subscription_end_date"] > DateTime.now %>
+                <% elsif @user.data['stripe_subscription_status'] != 'active' && @user.data["stripe_subscription_end_date"].to_date > DateTime.now %>
                   <p style="margin-top: 50px">Subscription has been canceled but premium features will <br>remain active until <%= DateTime.parse( @user.data["stripe_subscription_end_date"] ).strftime("%B %d, %Y") %> </p>
                 <% else %>
                   <button id="activate-premium-plan-btn">Activate Subscription</button>
