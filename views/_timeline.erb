@@ -66,7 +66,7 @@
 <% end %>
 
 <!--Pagination -->
-<% if @user.data['premium'] == true || @tweets.count > @page_limit %>
+<% if @user.data['premium'] == true || @tweets.count > (@page_limit-1) %>
   <div class="card <%= @first_download ? 'card-with-no-border' : 'card-with-border' %>">
      <div class="card-content" >
         <div class="content">
