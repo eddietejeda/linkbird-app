@@ -6,7 +6,8 @@
 "economist.com"       : "https://linkbird-app.s3.amazonaws.com/economist.ico"
 "bloomberg.com"       : "https://linkbird-app.s3.amazonaws.com/bloomberg.jpg"
 "washingtonpost.com"  : "https://linkbird-app.s3.amazonaws.com/washingtonpost.ico"
-# "wsj.com"             : "https://linkbird-app.s3.amazonaws.com/bloomberg.jpg"
+"https://assets.bwbx.io/s3/javelin/public/javelin/images/favicon-black-63fe5249d3.png" : "https://linkbird-app.s3.amazonaws.com/bloomberg.jpg"
+
 # "news.bbc.co.uk"      : "https://linkbird-app.s3.amazonaws.com/bloomberg.jpg"
 # "economist.com"       : "https://linkbird-app.s3.amazonaws.com/bloomberg.jpg"
 # "nytimes.com"         : "https://linkbird-app.s3.amazonaws.com/bloomberg.jpg"
