@@ -184,3 +184,9 @@ button {
   }
 }
 
+
+.hero-body {
+  flex-grow: 1;
+  flex-shrink: 0;
+  padding: 0rem 1rem !important;
+}

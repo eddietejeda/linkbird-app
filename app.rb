@@ -29,6 +29,8 @@ class App < Sinatra::Base
     end    
   end
   
+  @@page_limit = 5
+  
   # Home
   get '/' do
     
@@ -50,8 +52,9 @@ class App < Sinatra::Base
         TweetWorker.perform_async( @user.id, user_secrets['access_token'], user_secrets['access_token_secret'], 50 )
       end
       
+      @page_limit = @@page_limit
       @minutes_until_next_update = [(update_frequency_in_minutes - minutes_since_last_update), 0].max
-      @pagy, @tweets = pagy(Tweet.where(user_id: @user.id).order(created_at: :desc), items: 25)
+      @pagy, @tweets = pagy(Tweet.where(user_id: @user.id).order(created_at: :desc), items: @@page_limit)
     end
 
     erb :index
@@ -232,7 +235,7 @@ class App < Sinatra::Base
       {
         count: collection.count,
         page: params["page"],
-        items: vars[:items] || 25
+        items: vars[:items] || @@page_limit
       }
     end
 
