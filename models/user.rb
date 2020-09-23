@@ -36,6 +36,7 @@ class User < ActiveRecord::Base
     last_update_in_seconds = Time.current.getlocal("+00:00").to_i - last_tweet_created_at.getlocal("+00:00").to_i
     last_update_in_seconds / 60
   end
+    
   
   def subscribed?
     customer = self.data.to_h['stripe_customer']

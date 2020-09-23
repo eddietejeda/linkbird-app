@@ -3,6 +3,7 @@
 const pStart = { x: 0, y: 0 };
 const pCurrent = { x: 0, y: 0 };
 const loading = document.querySelector("body > .loading-container");
+var isLoading = false; // Yeah, yeah. Using a global.
 
 if (loading){
   function swipeStart(e) {
@@ -15,6 +16,14 @@ if (loading){
       pStart.x = e.screenX;
       pStart.y = e.screenY;
     }
+  }
+  
+  
+  function swipeEnd(e) {
+    // if (document.body.scrollTop === 0 && !isLoading) {
+    //   for (const card of cards) card.style.transform = `rotateX(0deg)`;
+    // }
+    isLoading=false;
   }
 
   function swipe(e) {
@@ -30,14 +39,14 @@ if (loading){
   
     let changeY = pStart.y < pCurrent.y ? Math.abs(pStart.y - pCurrent.y) : 0;
     if (document.body.scrollTop === 0) {
-      if (changeY > 100) {
+      if (changeY > 100 && isLoading == false) {
         loading.style.display = 'flex';
-      
+        isLoading = true;
         fetch('/refresh');
         setTimeout(() => {
           loading.style.display = 'none';
           window.location = '/';
-        }, 2000);
+        }, 3000);
       }
     }
   }

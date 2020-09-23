@@ -79,12 +79,18 @@ class App < Sinatra::Base
   end
 
   get '/refresh' do
-    @user = current_user    
-    if @user
-      puts "User #{@user.id} manually refreshing"
+    @user = current_user        
+    now = DateTime.now    
+        
+    if @user && @user.minutes_since_last_update > 2 # minutes
+      puts "SUCCESS / User #{@user.id} manually refreshing"
       user_secrets = @user.secret_data
-      TweetWorker.perform_async( @user.id, user_secrets['access_token'], user_secrets['access_token_secret'], 5 )
+      TweetWorker.perform_async( @user.id, user_secrets['access_token'], user_secrets['access_token_secret'], 5 )      
+    else
+      puts "RATE LIMIT / User #{@user.id} manually refreshing"
     end
+    
+    
     redirect '/'
   end
   get '/profile' do
