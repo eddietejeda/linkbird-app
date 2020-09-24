@@ -29,7 +29,7 @@ class App < Sinatra::Base
     end    
   end
   
-  @@page_limit = 5
+  @@page_limit = 10
   
   # Home
   get '/' do
