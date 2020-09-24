@@ -4,7 +4,6 @@ class App < Sinatra::Base
   
   # Set up environment
   enable :sessions
-  
   helpers Sinatra::Cookies
   register Sinatra::ActiveRecordExtension
       
@@ -13,21 +12,23 @@ class App < Sinatra::Base
     include Pagy::Frontend
   end
 
+
   configure :development do
     register Sinatra::Reloader
   end
-    
+
   configure :production do
     # set :sessions, :domain => 'foo.com'
   end
-    
+
   configure :production, :development do
     use OmniAuth::Builder do
       provider :twitter, ENV['TWITTER_API_CONSUMER_KEY'], ENV['TWITTER_API_CONSUMER_SECRET']
     end  
     set :cookie_options, :expires => Time.new + 30.days
   end
-  
+
+    
   before do
     if settings.production?
       redirect "https://#{ENV['PRODUCTION_URL']}" if request.host != ENV['PRODUCTION_URL']
@@ -65,7 +66,6 @@ class App < Sinatra::Base
     erb :index
   end
 
-
   # Weekly
   get '/weekly' do
     
@@ -96,13 +96,20 @@ class App < Sinatra::Base
     @page_limit = @@page_limit
     
     if @user.present?
-      # @tweets = Tweet.where(user_id: @user.id).where("created_at > current_date - interval '5' day").group(:id).order(total: :desc).limit(10)
+      @tweets = Tweet.find_by_sql ["SELECT *, SUM((meta->>'favorite_count')::int + (meta->>'retweet_count')::int) AS total 
+        FROM tweets 
+        WHERE 
+        	user_id = 5 AND
+        	created_at > current_date - interval '10' day
+        GROUP BY id 
+        ORDER BY total 
+        DESC LIMIT 10"]
     end
     
     erb :index
   end
   
-  
+
   post '/cancel' do
     if current_user
       current_user.cancel_subscription
