@@ -5,10 +5,22 @@ class TweetWorker
   def perform(user_id, token, secret, items=25)
     tweets = []
     client = get_twitter_connection(token, secret)
+    
+    
+    # This is temporary as I find a better place to set user name
+    u = User.find(user_id)
+    new_data = u.data
+    if new_data.to_h['twitter_screen_name'].empty?
+      new_data['twitter_screen_name'] = client.user.screen_name
+      u.data = new_data
+      u.save!
+    end
+    # end
+    
 
     home_timeline = client.home_timeline({count: items})
     
-    puts "home_timeline count #{home_timeline.count}"
+    logger.info "home_timeline count #{home_timeline.count}"
 
     home_timeline.each do |t|
       url = t&.urls&.first&.expanded_url.to_s
@@ -37,7 +49,7 @@ class TweetWorker
               created_at: Time.current.getlocal("+00:00"),
               updated_at: Time.current.getlocal("+00:00")
             }
-            logger.info "🔔 User: #{user_id} - #{url}."
+            logger.info "🔔 User: #{user_id} - #{url} - Added content"
           else
             logger.info "🔔 User: #{user_id} - #{url} - Skipping. No content"
           end

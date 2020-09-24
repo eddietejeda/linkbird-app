@@ -39,6 +39,7 @@ class User < ActiveRecord::Base
     
   
   def subscribed?
+    # Needs research. There should be a simpler API call for this. 
     customer = self.data.to_h['stripe_customer']
     if customer
       Stripe::Customer.retrieve(customer).subscriptions.map{|s| 

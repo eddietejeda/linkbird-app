@@ -5,12 +5,12 @@ namespace :db do
     puts "Updating Tweets"
   
     User.all.each do |user|
-    
-      puts "Current user #{user.id}"
       
       if user.cookie_key.empty? || user.encrypted_data.empty?
-        puts "🔔 Keys and Encrypted data empty."
+        puts "🔔 Updating Tweets - Current user #{user.id} - Keys empty."
         next
+      else
+        puts "🔔 Updating Tweets - Current user #{user.id} - Keys found"        
       end
       
       user_secrets = user.secret_data
@@ -19,5 +19,31 @@ namespace :db do
   
     puts "Done."
   end
+  
+  
+  
+  desc "This task is called by the Heroku scheduler add-on"
+  task :delete_old_tweets => :environment do
+    puts "Deleting old tweets"
+  
+    User.all.each do |user|
+    end
+  
+    puts "Done."
+  end
+  
+  
+  
+  desc "This task is called by the Heroku scheduler add-on"
+  task :delete_old_tweets => :environment do
+    puts "Rotating keys"
+  
+    User.all.each do |user|
+    end
+  
+    puts "Done."
+  end
+  
+  
   
 end
