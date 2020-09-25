@@ -97,7 +97,7 @@ class App < Sinatra::Base
     @public_page = true
     @user_is_public = false
     
-    if @user.data['public'] == 'true' 
+    if @user && @user.data['public'] == 'true' 
       @user_is_public = true
       @pagy, @tweets = pagy(Tweet.where(user_id: @user.id).order(created_at: :desc), items: @page_limit)      
     end
