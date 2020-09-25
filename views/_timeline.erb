@@ -16,7 +16,32 @@
   </div>  
 <% end %>
 
-<!-- Render Tweets -->
+<!-- Public Tweets -->
+<% if @public_page && @user_is_public %>
+  <div class="card card-with-no-border">
+     <div class="card-content">
+        <div class="content">
+           <div class="tweetbox has-text-centered">
+             <h3>@<%= @user.screen_name %> Newsfeed</h3>
+           </div>
+        </div>
+     </div>
+  </div>  
+<% elsif @user_is_public == false %>
+  <div class="card card-with-no-border">
+     <div class="card-content">
+        <div class="content">
+           <div class="tweetbox has-text-centered">
+             <h3>Account is private</h3>
+           </div>
+        </div>
+     </div>
+  </div>    
+<% end %>
+
+
+
+
 <% @tweets.each do |t| %>
   <div class="card card-with-border article">
      <div class="card-content" style="padding-bottom: 0.5rem">

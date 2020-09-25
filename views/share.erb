@@ -1,0 +1,37 @@
+<%= erb(:_navigation) %>
+
+<div class="card card-with-no-border">
+  <div class="card-content">
+    <div class="content">
+        <section class=" has-text-centered">
+
+          <div class="column is-12 has-text-centered">
+
+            <h3>Unlock Profile</h3>
+            
+          </div>
+          
+          <div class="columns">
+            <div class="column is-3 is-offset-1 has-text-left">
+              <div class="buttons has-addons">
+                <button value="true" class="unlock-button button  <%= "is-success is-selected" if @user_is_public == true %>">Yes</button>
+                <button value="false"  class="unlock-button button <%= "is-selected is-danger" if @user_is_public == false %>">No</button>
+              </div>
+            </div>
+            <div class="column is-7 is-px-0">
+          
+              <input type="text" <%= "disabled" if @user_is_public == false %> style="<%= "color: #ccc" if @user_is_public == false %>; width:100%; font-size: 15pt; padding: 15px" value="<%= @user_url %>">
+            
+              <br>
+              <br>
+              <p>When you unlock your account, your friends can see your newsfeed. <a href="<%= @user_url %>">Preview here</a>.</p>
+            
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+  </div> 
+
+
+

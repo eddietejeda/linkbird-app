@@ -35,7 +35,7 @@ class App < Sinatra::Base
     end    
   end
   
-  @@page_limit = 5
+  @@page_limit = 10
   
   # Home
   get '/' do
@@ -77,44 +77,72 @@ class App < Sinatra::Base
       @tweets = Tweet.find_by_sql ["SELECT *, SUM((meta->>'favorite_count')::int + (meta->>'retweet_count')::int) AS total 
         FROM tweets 
         WHERE 
-        	user_id = 5 AND
+        	user_id = :user_id AND
         	created_at > current_date - interval '5' day
         GROUP BY id 
         ORDER BY total 
-        DESC LIMIT 10"]
+        DESC LIMIT 10", {user_id: @user.id}]
     end
     
-    erb :index
+    erb :_weekly
   end
   
   
   # Friend Tweets
-  get '/@:username' do
+  get '/@:screen_name' do
     
-    @user = current_user
+    @user = find_user params['screen_name'] # regexp ^@?(\w){1,15}$
     @tweets = []
     @page_limit = @@page_limit
+    @public_page = true
+    @user_is_public = false
     
-    if @user.present?
-      @tweets = Tweet.find_by_sql ["SELECT *, SUM((meta->>'favorite_count')::int + (meta->>'retweet_count')::int) AS total 
-        FROM tweets 
-        WHERE 
-        	user_id = 5 AND
-        	created_at > current_date - interval '10' day
-        GROUP BY id 
-        ORDER BY total 
-        DESC LIMIT 10"]
+    if @user.data['public'] == 'true' 
+      @user_is_public = true
+      @pagy, @tweets = pagy(Tweet.where(user_id: @user.id).order(created_at: :desc), items: @page_limit)      
     end
+
     
     erb :index
   end
   
+  post '/public_profile' do
+    data = JSON.parse request.body.read
+    
+    @user = current_user    
+    @user.data['public'] = (data['public']=='true')
+    @user.save!
+    
+    content_type 'application/json'
+    { status: 'success' }.to_json      
+  end
+  
+    
+  get '/share' do
+    
+    @user = current_user
+
+    if @user.screen_name.empty?
+      user_secrets = @user.secret_data
+      client = get_twitter_connection(user_secrets['access_token'], user_secrets['access_token_secret'])      
+      @user.screen_name = client.user.screen_name
+      @user.save!
+    end
+    
+    @user_url = "#{root_domain}/@#{@user.screen_name}"
+    @user_is_public = (@user.data.to_h['public'] == true)
+
+    erb :share
+  end
+  
+  
+
 
   post '/cancel' do
     if current_user
       current_user.cancel_subscription
       current_user.set_subscription_status!
-      redirect '/profile'      
+      redirect '/subscription'      
     else
       redirect '/'
     end
@@ -143,8 +171,9 @@ class App < Sinatra::Base
     
     redirect '/'
   end
-  get '/profile' do
+  get '/subscription' do
     @user = current_user
+    @page_limits = @@page_limit
     if !@user
       redirect '/'      
     end
@@ -161,9 +190,10 @@ class App < Sinatra::Base
       @user.save!
       @user.set_subscription_status!
     end
+    
+    
 
-
-    erb :profile
+    erb :subscription
   end
 
   get '/setup' do
@@ -182,11 +212,11 @@ class App < Sinatra::Base
     # For full details see https:#stripe.com/docs/api/checkout/sessions/create
 
     # ?session_id={CHECKOUT_SESSION_ID} means the redirect will have the session ID set as a query param
-    root_domain = ENV['PRODUCTION_URL'] ? "https://#{ENV['PRODUCTION_URL']}" : "http://localhost:9292"
+    # root_domain = ENV['PRODUCTION_URL'] ? "https://#{ENV['PRODUCTION_URL']}" : "http://localhost:9292"
     
     session = Stripe::Checkout::Session.create(
-      success_url: "#{root_domain}/profile?session_id={CHECKOUT_SESSION_ID}",
-      cancel_url: "#{root_domain}/profile?cancel=1",
+      success_url: "#{root_domain}/subscription?session_id={CHECKOUT_SESSION_ID}",
+      cancel_url: "#{root_domain}/subscription?cancel=1",
       payment_method_types: ['card'],
       mode: 'subscription',
       line_items: [{
@@ -287,6 +317,10 @@ class App < Sinatra::Base
   
   private
   
+    def root_domain
+      ENV['PRODUCTION_URL'] ? "https://#{ENV['PRODUCTION_URL']}" : "http://localhost:9292"
+    end
+    
     def pagy_get_vars(collection, vars)
       {
         count: collection.count,
