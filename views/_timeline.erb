@@ -96,7 +96,7 @@
      <div class="card-content" >
         <div class="content">
            <% if @user.data['premium'] == true %>
-             <%= pagy_bulma_nav(@pagy) if @pagy.pages > 1 %>
+             <%= pagy_bulma_nav(@pagy) if @pagy && @pagy.pages > 1 %>
            <% elsif !@first_download  %>
              <div class="tweetbox">
                 <section class="container basic-photo">
