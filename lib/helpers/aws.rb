@@ -1,7 +1,5 @@
 require 'aws-sdk'
 
-
-
 def get_aws_connection
   if ENV.fetch('AWS_ACCESS_KEY_ID') && ENV.fetch('AWS_SECRET_ACCESS_KEY')
     # Get an instance of the S3 interface.

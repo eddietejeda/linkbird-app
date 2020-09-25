@@ -9,7 +9,7 @@
             <div style="text-align:center">
             <% if @user.data['stripe_subscription_status'] != 'active' %>
               <!-- Not subscribed -->
-              <%= erb(:_features) %>
+              <%= erb(:_features, :locals => {:page_limit => @page_limit}) %>
             <% end %>
             
             <div class="column has-text-center">

@@ -8,7 +8,7 @@ class TweetWorker
 
     home_timeline = client.home_timeline({count: items})
     
-    puts "home_timeline count #{home_timeline.count}"
+    logger.info "home_timeline count #{home_timeline.count}"
 
     home_timeline.each do |t|
       url = t&.urls&.first&.expanded_url.to_s
@@ -37,7 +37,7 @@ class TweetWorker
               created_at: Time.current.getlocal("+00:00"),
               updated_at: Time.current.getlocal("+00:00")
             }
-            logger.info "🔔 User: #{user_id} - #{url}."
+            logger.info "🔔 User: #{user_id} - #{url} - Added content"
           else
             logger.info "🔔 User: #{user_id} - #{url} - Skipping. No content"
           end

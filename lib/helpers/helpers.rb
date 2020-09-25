@@ -5,6 +5,11 @@ def current_user
   User.find_by(uid: cookies[:uid], cookie_key: cookies[:cookie_key])
 end
 
+def find_user(screen_name)
+  User.find_by(screen_name: screen_name)
+end
+
+
 def expand_url(url)
   result = Curl::Easy.perform(url) do |curl|
     curl.head = true
