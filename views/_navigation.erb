@@ -9,53 +9,44 @@
     </h1>
 </div>
 
-<div class="is-paddingless">
-  <nav class="navbar">
-  <div class="navbar-brand">
+
+<% if current_user %>
+  <div class="is-paddingless">
+    <nav class="navbar">
+    <div class="navbar-brand">
+
+      <% if current_user %>
+        <!-- <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false"> -->
+        <a role="button" class="navbar-burger" data-target="navMenu" aria-label="menu" aria-expanded="false">  
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+        </a>
+      <% end %>
+      
+    </div>
 
     <% if current_user %>
-      <!-- <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false"> -->
-      <a role="button" class="navbar-burger" data-target="navMenu" aria-label="menu" aria-expanded="false">  
-        <span aria-hidden="true"></span>
-        <span aria-hidden="true"></span>
-        <span aria-hidden="true"></span>
-      </a>
-    <% end %>
-      
-  </div>
-
-  <% if current_user %>
-    <div class="navbar-menu" id="navMenu">
-      <div class="navbar-start">
-        <a class="navbar-item" href="/">
-          Home
-        </a>
-        <a class="navbar-item" href="/popular">
-          Popular
-        </a>
-        <a class="navbar-item" href="/share">
-          Share
-        </a>
-        <a class="navbar-item" href="/subscription">
-          Subscription
-        </a>
+      <div class="navbar-menu" id="navMenu">
+        <div class="navbar-start">
+          <a class="navbar-item" href="/">
+            Home
+          </a>
+          <a class="navbar-item" href="/popular">
+            Popular
+          </a>
+          <a class="navbar-item" href="/share">
+            Share
+          </a>
+          <a class="navbar-item" href="/subscription">
+            Subscription
+          </a>
+        </div>
       </div>
-    </div>
-  <% end %>
+    <% end %>
   
   
-</nav>
+  </nav>
 
-</div>
-
-<!-- Logged in-->
-<!-- Updates every 10 minutes -->
-<!-- <div class="col-lg right">
-   <h6 class="update-schedule">
-     <a href="/">Home</a>
-     | <a href="/weekly">Weekly's Top</a>
-     | <a href="/share">Share</a>
-     | <a href="/subscription">Subscription</a>
-   </h6>
-</div> -->
-
+  </div>
+<% end %>
