@@ -79,31 +79,35 @@ var handleResult = function(result) {
 };
 
  // Get Stripe publishable key to initialize Stripe.js
-fetch("/setup")
-  .then(function(result) {
-    return result.json();
-  })
-  .then(function(json) {
-    var publishableKey = json.publishableKey;
-    var basicPriceId = json.basicPrice;
+if (document.getElementById("subscription-page")){
+  
+  fetch("/setup")
+    .then(function(result) {
+      return result.json();
+    })
+    .then(function(json) {
+      var publishableKey = json.publishableKey;
+      var basicPriceId = json.basicPrice;
 
-    var stripe = Stripe(publishableKey);
-    // Setup event handler to create a Checkout Session when button is clicked
-    var basicPlanButton = document.getElementById("activate-premium-plan-btn");
+      var stripe = Stripe(publishableKey);
+      // Setup event handler to create a Checkout Session when button is clicked
+      var basicPlanButton = document.getElementById("activate-premium-plan-btn");
 
-    if ( basicPlanButton ){
-      basicPlanButton.addEventListener("click", function(evt) {
-        createCheckoutSession(basicPriceId).then(function(data) {
-          // Call Stripe.js method to redirect to the new Checkout page
-          stripe
-            .redirectToCheckout({
-              sessionId: data.sessionId
-            })
-            .then(handleResult);
-        });
-      });      
-    }
-  });
+      if ( basicPlanButton ){
+        basicPlanButton.addEventListener("click", function(evt) {
+          createCheckoutSession(basicPriceId).then(function(data) {
+            // Call Stripe.js method to redirect to the new Checkout page
+            stripe
+              .redirectToCheckout({
+                sessionId: data.sessionId
+              })
+              .then(handleResult);
+          });
+        });      
+      }
+    });  
+}
+
   
 
 // Cancel subscription link
@@ -166,3 +170,33 @@ async function postData(url = '', data = {}) {
   return response.json(); // parses JSON response into native JavaScript objects
 }
 
+
+
+
+// Menu
+
+document.addEventListener('DOMContentLoaded', () => {
+
+  // Get all "navbar-burger" elements
+  const $navbarBurgers = Array.prototype.slice.call(document.querySelectorAll('.navbar-burger'), 0);
+
+  // Check if there are any navbar burgers
+  if ($navbarBurgers.length > 0) {
+
+    // Add a click event on each of them
+    $navbarBurgers.forEach( el => {
+      el.addEventListener('click', () => {
+
+        // Get the target from the "data-target" attribute
+        const target = el.dataset.target;
+        const $target = document.getElementById(target);
+
+        // Toggle the "is-active" class on both the "navbar-burger" and the "navbar-menu"
+        el.classList.toggle('is-active');
+        $target.classList.toggle('is-active');
+
+      });
+    });
+  }
+
+});
