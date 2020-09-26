@@ -35,10 +35,4 @@ group :development, :test do
   gem "capybara", "~> 3.33"  
   gem "selenium-webdriver", "~> 3.142"
   gem "apparition", "~> 0.6.0"
-
-
 end
-
-
-
-

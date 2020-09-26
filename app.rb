@@ -6,7 +6,7 @@ class App < Sinatra::Base
   enable :sessions
   helpers Sinatra::Cookies
   register Sinatra::ActiveRecordExtension
-  register Sinatra::Cache
+  # register Sinatra::Cache
       
   include Pagy::Backend
   helpers do
