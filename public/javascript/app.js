@@ -78,34 +78,40 @@ var handleResult = function(result) {
   }
 };
 
- // Get Stripe publishable key to initialize Stripe.js
-if (document.getElementById("subscription-page")){
-  fetch("/setup").then(function(result) {
-      return result.json();
-    })
-    .then(function(json) {
-      var publishableKey = json.publishableKey;
-      var subcriptionPriceId = json.basicPrice;
 
-      var stripe = Stripe(publishableKey);
-      // Setup event handler to create a Checkout Session when button is clicked
-      var subcriptionButton = document.getElementById("activate-premium-plan-btn");
 
-      if ( subcriptionButton ){
-        subcriptionButton.addEventListener("click", function(evt) {
-          evt.target.innerHTML = "Loading..."
-          evt.target.className = "button is-light"
+// Get Stripe publishable key to initialize Stripe.js
+document.addEventListener("DOMContentLoaded", function(event) {
+
+
+  if (document.getElementById("subscription-page")){
+    fetch("/setup").then(function(result) {
+        return result.json();
+      })
+      .then(function(json) {
+        var publishableKey = json.publishableKey;
+        var subcriptionPriceId = json.basicPrice;
+
+        var stripe = Stripe(publishableKey);
+        // Setup event handler to create a Checkout Session when button is clicked
+        var subcriptionButton = document.getElementById("activate-premium-plan-btn");
+
+        if ( subcriptionButton ){
+          subcriptionButton.addEventListener("click", function(evt) {
+            evt.target.innerHTML = "Loading..."
+            evt.target.className = "button is-light"
           
-          createCheckoutSession(subcriptionPriceId).then(function(data) {
-            // Call Stripe.js method to redirect to the new Checkout page
-            stripe.redirectToCheckout({
-              sessionId: data.sessionId
-            }).then(handleResult);
+            createCheckoutSession(subcriptionPriceId).then(function(data) {
+              // Call Stripe.js method to redirect to the new Checkout page
+              stripe.redirectToCheckout({
+                sessionId: data.sessionId
+              }).then(handleResult);
+            });
           });
-        });
-      }
-    });  
-}
+        }
+      });  
+  }
+});
 
   
 
