@@ -26,6 +26,7 @@ gem "sidekiq", "~> 6.1"
 gem 'newrelic_rpm'
 gem "aws-sdk", "~> 3.0"
 gem "aws-sdk-s3", "~> 1.81"
+gem "redis-sinatra", "~> 1.4"
 
 group :development, :test do
   gem "byebug", "~> 11.1"
@@ -37,6 +38,7 @@ group :development, :test do
 
 
 end
+
 
 
 

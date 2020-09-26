@@ -2,13 +2,15 @@ class TweetWorker
   include Sidekiq::Worker
   sidekiq_options retry: 0
 	
-  def perform(user_id, token, secret, items=25)
+  def perform(user_id, items=25)
     tweets = []
-    client = get_twitter_connection(token, secret)
+    
+    user = User.find_by(id: user_id)
+    client = get_twitter_connection(user.secret_data['access_token'], user.secret_data['access_token_secret'])
 
     home_timeline = client.home_timeline({count: items})
     
-    logger.info "home_timeline count #{home_timeline.count}"
+    logger.info "Number of new items in timeline #{home_timeline.count}"
 
     home_timeline.each do |t|
       url = t&.urls&.first&.expanded_url.to_s
@@ -37,12 +39,12 @@ class TweetWorker
               created_at: Time.current.getlocal("+00:00"),
               updated_at: Time.current.getlocal("+00:00")
             }
-            logger.info "🔔 User: #{user_id} - #{url} - Added content"
+            logger.info "🔔 User: #{user_id} - #{url} - SUCCESS"
           else
-            logger.info "🔔 User: #{user_id} - #{url} - Skipping. No content"
+            logger.info "🔔 User: #{user_id} - #{url} - SKIPPING"
           end
         rescue => ex
-          logger.error "🔔 Caught LinkThumbnailer.generate error - #{url} Exception: #{ex}"
+          logger.error "🔔 Error LinkThumbnailer - #{url} Exception: #{ex}"
         end
       end
     end
@@ -51,7 +53,7 @@ class TweetWorker
       logger.info "🔔 Inserting #{tweets.count}"
       Tweet.insert_all(tweets, unique_by: :index_tweets_on_tweet_id)
     else
-      logger.info "🔔 No URLs to add"
+      logger.info "🔔 No new URLs on the home timeline"
     end
   end
 end

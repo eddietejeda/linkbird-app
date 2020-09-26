@@ -14,7 +14,7 @@ namespace :db do
       end
       
       user_secrets = user.secret_data
-      TweetWorker.perform_async( user.id, user_secrets['access_token'], user_secrets['access_token_secret'] )
+      TweetWorker.perform_async( user.id )
     end
   
     puts "Done."
@@ -27,6 +27,7 @@ namespace :db do
     puts "Deleting old tweets"
   
     User.all.each do |user|
+      DeleteOldTweetsWorker.perform_async( user.id )
     end
   
     puts "Done."
@@ -35,7 +36,7 @@ namespace :db do
   
   
   desc "This task is called by the Heroku scheduler add-on"
-  task :delete_old_tweets => :environment do
+  task :rotate_user_keys => :environment do
     puts "Rotating keys"
   
     User.all.each do |user|

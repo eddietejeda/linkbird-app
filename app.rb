@@ -6,6 +6,7 @@ class App < Sinatra::Base
   enable :sessions
   helpers Sinatra::Cookies
   register Sinatra::ActiveRecordExtension
+  register Sinatra::Cache
       
   include Pagy::Backend
   helpers do
@@ -47,8 +48,6 @@ class App < Sinatra::Base
     
     if @user.present?
       
-
-      
       @show_loading_bar = true
             
       update_frequency_in_minutes = 20
@@ -59,8 +58,7 @@ class App < Sinatra::Base
       @first_download = !@user.tweets.first  
       
       if @first_download
-        user_secrets = @user.secret_data
-        TweetWorker.perform_async( @user.id, user_secrets['access_token'], user_secrets['access_token_secret'], 50 )
+        TweetWorker.perform_async( @user.id, 50 )
       end
       
       @page_limit = @@page_limit
@@ -185,8 +183,7 @@ class App < Sinatra::Base
         
     if @user && @user.minutes_since_last_update > 2 # minutes
       puts "SUCCESS / User #{@user.id} manually refreshing"
-      user_secrets = @user.secret_data
-      TweetWorker.perform_async( @user.id, user_secrets['access_token'], user_secrets['access_token_secret'], 5 )      
+      TweetWorker.perform_async( @user.id, 5 )      
     else
       puts "RATE LIMIT / User #{@user.id} manually refreshing"
     end

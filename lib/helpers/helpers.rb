@@ -1,7 +1,7 @@
 require 'uri'
 # logger = Logger.new(STDOUT)
 
-def current_user
+def current_user  
   User.find_by(uid: cookies[:uid], cookie_key: cookies[:cookie_key])
 end
 
