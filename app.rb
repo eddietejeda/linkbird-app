@@ -145,7 +145,7 @@ class App < Sinatra::Base
     
     @user = current_user
 
-    if @user.screen_name.empty?
+    if @user && @user.screen_name.empty?
       user_secrets = @user.secret_data
       client = get_twitter_connection(user_secrets['access_token'], user_secrets['access_token_secret'])      
       @user.screen_name = client.user.screen_name
