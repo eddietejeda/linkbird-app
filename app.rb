@@ -15,17 +15,19 @@ class App < Sinatra::Base
 
   configure :development do
     register Sinatra::Reloader
+    set :show_exceptions, true
+    # set :sessions, secure: true
   end
 
   configure :production do
-    # set :sessions, :domain => 'foo.com'
+    set :sessions, domain: 'linkbird.app', secure: true
   end
 
   configure :production, :development do
     use OmniAuth::Builder do
       provider :twitter, ENV['TWITTER_API_CONSUMER_KEY'], ENV['TWITTER_API_CONSUMER_SECRET']
     end  
-    set :cookie_options, :expires => Time.new + 30.days
+    set :cookie_options, expires: Time.new + 30.days
   end
 
     
@@ -44,6 +46,9 @@ class App < Sinatra::Base
     @user = current_user
     
     if @user.present?
+      
+
+      
       @show_loading_bar = true
             
       update_frequency_in_minutes = 20
@@ -61,13 +66,25 @@ class App < Sinatra::Base
       @page_limit = @@page_limit
       @minutes_until_next_update = [(update_frequency_in_minutes - minutes_since_last_update), 0].max
       @pagy, @tweets = pagy(Tweet.where(user_id: @user.id).order(created_at: :desc), items: @@page_limit)
+      
+
+      if @tweets.count == 0
+        @alert = "<p>Setting up your account. <br>This may take a minute the first time</p>"
+        
+      elsif @tweets.count < 15
+        @alert = "<p><strong>Don't see many Tweets?</strong></p> 
+        <p>That's okay! LinkBird does not go back in your timeline, it only looks forward. 
+        This means that over time, LinkBird shows more relevant links. </p>
+        <br>
+        <p>On mobile devices, you can pull down on the page to fetch new links.</p>" 
+      end
     end
 
     erb :index
   end
 
   # Weekly
-  get '/weekly' do
+  get '/popular' do
     
     @user = current_user
     @tweets = []
@@ -84,7 +101,13 @@ class App < Sinatra::Base
         DESC LIMIT 10", {user_id: @user.id}]
     end
     
-    erb :_weekly
+    if @tweets.count == 0
+      @alert = "<p>Setting up your account. <br>This may take a minute the first time</p>"
+    elsif @tweets.count < 15
+      @alert = "<p>We need atleast 24 hours of data before this becomes accurate. Check back later.</p>"
+    end
+    
+    erb :popular
   end
   
   
@@ -181,7 +204,6 @@ class App < Sinatra::Base
     session_id = params[:session_id]
     
     if session_id
-      # byebug
       session = Stripe::Checkout::Session.retrieve(session_id)
     
       @user.data["stripe_customer"]     = session['customer']
@@ -191,7 +213,7 @@ class App < Sinatra::Base
       @user.set_subscription_status!
     end
     
-    
+    @subscription_page = true
 
     erb :subscription
   end
