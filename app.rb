@@ -95,7 +95,7 @@ class App < Sinatra::Base
         FROM tweets 
         WHERE 
         	user_id = :user_id AND
-        	created_at > current_date - interval '5' day
+        	created_at > current_date - interval '1' day
         GROUP BY id 
         ORDER BY total 
         DESC LIMIT 15", {user_id: @user.id}]
