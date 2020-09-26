@@ -20,8 +20,8 @@ class App < Sinatra::Base
   end
 
   configure :production do
-    set :sessions #, domain: 'www.linkbird.app', secure: true
-  end 
+    # set :sessions, domain: 'www.linkbird.app', secure: true
+  end
 
   configure :production, :development do
     use OmniAuth::Builder do
