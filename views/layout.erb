@@ -17,15 +17,13 @@
     <% end %>
     
     <script src="./javascript/app.js" defer></script>  
-    <link rel="icon" type="image/png" href="/images/linkbird-228x228.png">        
-    <link rel="apple-touch-icon" href="/images/linkbird-228x228.png"/>
-    <link rel="apple-touch-icon" sizes="72x72" href="/images/linkbird-72x72.png"/>
+    <link rel="apple-touch-icon" sizes="72x72"   href="/images/linkbird-72x72.png"/>
     <link rel="apple-touch-icon" sizes="114x114" href="/images/linkbird-114x114.png"/>
+    <link rel="apple-touch-icon" sizes="228x228" href="/images/linkbird-228x228.png"/>
+    <link rel="icon" type="image/png" href="/images/linkbird-228x228.png">        
 
     <% if @first_download %>
       <meta http-equiv="refresh" content="5">
-    <% elsif @next_update_in_minutes == 0 %>
-      <meta http-equiv="refresh" content="60">
     <% end %>
     
   </head>
