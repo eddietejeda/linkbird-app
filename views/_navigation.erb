@@ -1,10 +1,62 @@
-<!-- Logged in-->
-<div class="col-lg right">
-   <h6 class="update-schedule">
-     <!-- Updates every 10 minutes -->
-     <a href="/">Home</a> 
-     | <a href="/weekly">Weekly's Top</a> 
-     | <a href="/share">Share</a> 
-     | <a href="/subscription">Subscription</a> 
-   </h6>
+<div class="column is-12">
+    <h1 class="title has-text-black">
+      <a href="/">      
+        <div style="width: 165px; height: 50px; margin: 20px auto 0;" class="logo <%= current_user ? "logged-in" : "not-logged-in" %>">
+          <div style="background: url(/images/linkbird.png) no-repeat; height: 35px; width: 50px; background-size: 40px; position: absolute;"></div>
+          <div style="height: 35px;width: 150px; left: 30px; position: absolute;">LinkBird</div>
+        </div>
+      </a>
+    </h1>
 </div>
+
+<div class="is-paddingless">
+  <nav class="navbar">
+  <div class="navbar-brand">
+
+    <% if current_user %>
+      <!-- <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false"> -->
+      <a role="button" class="navbar-burger" data-target="navMenu" aria-label="menu" aria-expanded="false">  
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+      </a>
+    <% end %>
+      
+  </div>
+
+  <% if current_user %>
+    <div class="navbar-menu" id="navMenu">
+      <div class="navbar-start">
+        <a class="navbar-item" href="/">
+          Home
+        </a>
+        <a class="navbar-item" href="/popular">
+          Popular
+        </a>
+        <a class="navbar-item" href="/share">
+          Share
+        </a>
+        <a class="navbar-item" href="/subscription">
+          Subscription
+        </a>
+      </div>
+    </div>
+  <% end %>
+  
+  
+</nav>
+
+</div>
+
+<!-- Logged in-->
+<!-- Updates every 10 minutes -->
+<!-- <div class="col-lg right">
+   <h6 class="update-schedule">
+     <a href="/">Home</a>
+     | <a href="/weekly">Weekly's Top</a>
+     | <a href="/share">Share</a>
+     | <a href="/subscription">Subscription</a>
+   </h6>
+</div> -->
+

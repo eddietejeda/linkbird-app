@@ -1,20 +1,13 @@
-<%= erb(:_navigation) %>
-
-
-<!-- First download -->
-<% if @first_download %>
-  <div class="card card-with-no-border">
-     <div class="card-content">
-        <div class="content">
-           <div class="tweetbox">
-              <section class="container basic-photo">
-                <p><br>Setting up your account. <br>This may take a minute the first time.<br><br></p>
-              </section>
-           </div>
-        </div>
-     </div>
-  </div>  
-<% end %>
+<!-- Title -->
+<div class="card card-with-no-border">
+   <div class="card-content">
+      <div class="content">
+         <div class="tweetbox has-text-centered">
+           <h3 style="margin:0"></h3>
+         </div>
+      </div>
+   </div>
+</div>  
 
 <!-- Public Tweets -->
 <% if @public_page && @user_is_public %>
@@ -40,6 +33,7 @@
 <% end %>
 
 
+
 <!-- List Tweets -->
 <% @tweets.each do |t| %>
   <div class="card card-with-border article">
@@ -57,9 +51,9 @@
               <a href="<%= t.tweet['url'] %>">
                 
                  <% if t.tweet['title'].to_s.length > 0 %>
-                   <h4 class="title is-5 is-size-6-mobile	has-text-black has-text-left"><%= t.tweet['title'] %></h3>
+                   <h4 class="title is-5 is-size-6-mobile	has-text-black has-text-left"><%= t.tweet['title'] %></h4>
                  <% else %>
-                   <h4 class="title is-5 is-size-6-mobile	has-text-black has-text-left"><%= t.tweet['description'].to_s[0..20] %>...</h3>
+                   <h4 class="title is-5 is-size-6-mobile	has-text-black has-text-left"><%= t.tweet['description'].to_s[0..20] %>...</h4>
                  <% end %>
                  
                  <p class="content has-text-black has-text-left tweet-content">
@@ -102,11 +96,19 @@
                   <p>You are viewing <%= @tweets.count %> out of <%= @page_limit %> articles.<br>Subscribe to view up to 1000 articles</p>
                   <button id="activate-premium-plan-btn">Activate Subcription</button>
                   <br/>
-                  <div><a href="/profile">Learn more</a><br></div>
+                  <p><a href="/subscription">Learn more</a><br></p>
                 </section>
              </div>
            <% end %>
         </div>
      </div>
   </div>
+<% else %>
+  <div class="card-with-no-border">
+     <div class="card-content" >
+        <div class="content">
+
+        </div>
+     </div>
+  </div>  
 <% end %>

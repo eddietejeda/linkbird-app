@@ -12,7 +12,10 @@
     <title>LinkBird</title>
   
     <!-- Load Stripe.js on your website. -->
-    <script src="https://js.stripe.com/v3/"></script>
+    <% if @subscription_page %>
+      <script src="https://js.stripe.com/v3/"></script>
+    <% end %>
+    
     <script src="./javascript/app.js" defer></script>  
     <link rel="icon" type="image/png" href="/images/linkbird-228x228.png">        
     <link rel="apple-touch-icon" href="/images/linkbird-228x228.png"/>
@@ -40,25 +43,15 @@
       <div class="hero-body">
         <div class="container has-text-centered column is-6 is-offset-3 px-0">
           <div class="wrapper">
-            <div id="refresh-icon"><img src="/images/refresh.jpg"></div>
+
+            <%= erb(:_navigation) %>
 
 
-            <div class="column is-12">
-              <br/>
-                <a href="/">                  
-                <h1   style="display:inline-flex; width: 175px;" class="title has-text-black <%= "not-logged-in" if !@user %>">
-                    <div style="background: url('/images/linkbird.png') no-repeat; height: 35px; width: 50px;background-size: 40px;display: table;"></div>
-                    LinkBird
-                </h1>
-                </a>
-              </a>
-            </div>
-
-            <% if @alert  %>                    
-              <hr class="login-hr">
-              <p class="subtitle has-text-black"><%= @alert %></p>
-              <div class="box">
-            <% end  %>                    
+            <% if @alert  %>
+              <div class="notification is-warning is-light px-10" style="margin-top: 20px">
+                <%= @alert %>
+              </div>
+            <% end  %>
             
             <%= yield %>
                     
@@ -68,7 +61,10 @@
             <p class="has-text-grey">
               <a href="/privacy">Privacy</a> &nbsp;·&nbsp;
               <a href="/terms-of-service">Terms of Service</a> &nbsp;
-              <a href="/logout">Sign out</a> 
+              
+              <% if current_user %>
+                <a href="/logout">Sign out</a> 
+              <% end %>
             </p>
             <div class="column is-10 is-offset-1">
               <p class="has-text-grey">

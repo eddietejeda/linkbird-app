@@ -1,6 +1,4 @@
-<%= erb(:_navigation) %>
-
-<div class="card card-with-no-border">
+<div id="subscription-page" class="card card-with-no-border">
   <div class="card-content">
     <div class="content">
         <section class="column has-text-left">
@@ -13,22 +11,29 @@
             <% end %>
             
             <div class="column has-text-center">
+              
+              <!-- Active subscription  -->
               <% if @user.data['stripe_subscription_status'] == 'active' && @user.data["stripe_subscription_end_date"] > DateTime.now %>
                 <p>Thank you for the support!</p>
                 <p> <span class="tag is-info" style="font-size: 100%">Premium Subscription Active</span></p>
-
                 <form action="/cancel" method="POST" id="cancel-subscription-form">
                   <p><small><a id="cancel-subscription-link" style="text-decoration: none" href="#">Cancel Subscription</a></small></p>
                   <p><small>(Renewal: <%= DateTime.parse( @user.data["stripe_subscription_end_date"] ).strftime("%B %d, %Y") %>  )</small></p>                    
                   <input type="submit" style="display:none">
                 </form>
+              
+              
+              <!--  Canceled but active -->
               <% elsif @user.data['stripe_subscription_status'] != 'active' && @user.data["stripe_subscription_end_date"] && @user.data["stripe_subscription_end_date"].to_date > DateTime.now %>
-                  <p style="margin-top: 50px">Subscription has been canceled but premium features will <br>remain active until <%= DateTime.parse( @user.data["stripe_subscription_end_date"] ).strftime("%B %d, %Y") %> </p>
-                <% else %>
+                  <p style="margin-top: 50px">Subscription has been canceled but premium features will remain active until <%= DateTime.parse( @user.data["stripe_subscription_end_date"] ).strftime("%B %d, %Y") %> </p>
+
+
+              <!-- Not subscribed -->
+              <% else %>
                   <button id="activate-premium-plan-btn">Activate Subscription</button>
               <% end %>
-            </div>
-            
+
+            </div>            
           </div>
         </section>
       </div>

@@ -1,78 +1,71 @@
-<%= erb(:_navigation) %>
-
-
-<!-- First download -->
-<% if @first_download %>
+<% if @tweets.count > 0 %>
+  <!-- Render Tweets -->
   <div class="card card-with-no-border">
      <div class="card-content">
         <div class="content">
-           <div class="tweetbox">
-              <section class="container basic-photo">
-                <p><br>Setting up your account. <br>This may take a minute the first time.<br><br></p>
-              </section>
+           <div class="tweetbox has-text-centered">
+             <h3 style="margin:0">Your most popular links this week</h3>
            </div>
         </div>
      </div>
   </div>  
 <% end %>
-
-<!-- Render Tweets -->
-<div class="card card-with-no-border">
-   <div class="card-content">
-      <div class="content">
-         <div class="tweetbox has-text-centered">
-           <h3>Most popular links this week</h3>
-         </div>
-      </div>
-   </div>
-</div>  
 <% @tweets.each_with_index do |t,i| %>
-
   <div class="card card-with-border article">
-     <div class="card-content" style="padding-bottom: 0.5rem">
-        <div class="media">
-             <div class="fav media-left px-4 is-inline-flex" >
-                <figure class="image is-48x48">
-                  <% if t.tweet['favicon'].to_s.length > 0 %>
-                    <img class="article-image" src="<%= preferred_fav_icon(t.tweet['favicon'].to_s) %>" data-backup="<%= t.tweet.to_h['images'].first.to_h['src'].to_s %>" />                     
-                  <% end %>
-                </figure>
-             </div>
+    <div class="card-content" style="padding-bottom: 0.5rem">
+      <div class="media">
+        <div class="fav media-left px-4 is-inline-flex" >
+          <figure class="image is-48x48">
+            <% if t.tweet['favicon'].to_s.length > 0 %>
+              <img class="article-image" src="<%= preferred_fav_icon(t.tweet['favicon'].to_s) %>" data-backup="<%= t.tweet.to_h['images'].first.to_h['src'].to_s %>" />                     
+            <% end %>
+          </figure>
+        </div>
 
-            <strong style="position: absolute;font-size: 12pt"><%= i+1 %></strong>
+        <strong style="position: absolute;font-size: 12pt"><%= i+1 %></strong>
            
-           <div class="media-content px-2 " style="overflow: hidden;">
-              <a href="<%= t.tweet['url'] %>">
-                
-                 <% if t.tweet['title'].to_s.length > 0 %>
-                   <h4 class="title is-5 is-size-6-mobile	has-text-black has-text-left"><%= t.tweet['title'] %></h3>
-                 <% else %>
-                   <h4 class="title is-5 is-size-6-mobile	has-text-black has-text-left"><%= t.tweet['description'].to_s[0..20] %>...</h3>
-                 <% end %>
-                 
-                 <p class="content has-text-black has-text-left tweet-content">
-                    <%= t.tweet['description'] %>
-                    <br>
-                 </p>
-              </a>
-                              
-              <div class="column is-6 px-0" style="padding-bottom: 0">
-                <div class="heading has-text-black is-5 px-0">
-                   <div class="columns">
-                      <div class="column has-text-left has-text-black is-12">
-                        Shared By: <a href="https://twitter.com/<%= t.meta['screen_name'] %>"><%= t.meta["name"] %></a></div>
-                      <div class="column has-text-right has-text-black is-12 mobile-align-left">
-                        <a target="_new" href="https://twitter.com/<%= t.meta['screen_name'] %>/status/<%= t.tweet_id %>">
-                          <span class=""><i class="fas fa-retweet"></i>&nbsp;<%= t.meta["retweet_count"] %>&nbsp;</span>
-                          <span class=""><i class="fas fa-heart"></i>&nbsp;<%= t.meta["favorite_count"] %>&nbsp;</span>
-                          <span class=""><%= format_datetime t.tweet_date, @user_timezone %>&nbsp;</span>
-                        </a>
-                      </div>
-                    </div>
+        <div class="media-content px-2 " style="overflow: hidden;">
+          <a href="<%= t.tweet['url'] %>">
+            <% if t.tweet['title'].to_s.length > 0 %>
+              <h4 class="title is-5 is-size-6-mobile	has-text-black has-text-left"><%= t.tweet['title'] %></h4>
+            <% else %>
+              <h4 class="title is-5 is-size-6-mobile	has-text-black has-text-left"><%= t.tweet['description'].to_s[0..20] %>...</h4>
+            <% end %>
+
+            <p class="content has-text-black has-text-left tweet-content">
+              <%= t.tweet['description'] %>
+              <br>
+            </p>
+          </a>
+
+          <div class="column is-6 px-0" style="padding-bottom: 0">
+            <div class="heading has-text-black is-5 px-0">
+              <div class="columns">
+                <div class="column has-text-left has-text-black is-12">
+                  Shared By: 
+                  <a href="https://twitter.com/<%= t.meta['screen_name'] %>"><%= t.meta["name"] %></a>
+                </div>
+                <div class="column has-text-right has-text-black is-12 mobile-align-left">
+                  <a target="_new" href="https://twitter.com/<%= t.meta['screen_name'] %>/status/<%= t.tweet_id %>">
+                    <span class=""><i class="fas fa-retweet"></i>&nbsp;<%= t.meta["retweet_count"] %>&nbsp;</span>
+                    <span class=""><i class="fas fa-heart"></i>&nbsp;<%= t.meta["favorite_count"] %>&nbsp;</span>
+                    <span class=""><%= format_datetime t.tweet_date, @user_timezone %>&nbsp;</span>
+                  </a>
                 </div>
               </div>
             </div>
           </div>
         </div>
       </div>
+    </div>
+  </div>
 <% end %>
+
+
+<div class="card-with-no-border">
+   <div class="card-content" >
+      <div class="content">
+
+      </div>
+   </div>
+</div>
