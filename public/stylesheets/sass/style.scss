@@ -239,11 +239,13 @@ button {
   .navbar{
     min-height: 0;
     left: 0px;
-    top: 0px;
+    top: 25px;
     position: absolute;
     margin-top: 20px;
     margin-left: 10px;
-    width: 95%;
+    width: 100%;
+    padding: 0;
+    margin: 0;
   }
   
   .navbar-burger{
