@@ -20,7 +20,7 @@ class App < Sinatra::Base
   end
 
   configure :production do
-    set :sessions, domain: 'linkbird.app', secure: true
+    set :sessions, domain: 'www.linkbird.app', secure: true
   end
 
   configure :production, :development do
@@ -98,7 +98,7 @@ class App < Sinatra::Base
         	created_at > current_date - interval '5' day
         GROUP BY id 
         ORDER BY total 
-        DESC LIMIT 10", {user_id: @user.id}]
+        DESC LIMIT 15", {user_id: @user.id}]
     end
     
     if @tweets.count == 0
