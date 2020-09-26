@@ -227,14 +227,20 @@ button {
 
   }
   
+
+}
+
+
+
+@media only screen and (max-width: 1024px) {
   
   .navbar{
     min-height: 0;
-    right: 0px;
+    left: 0px;
     top: 0px;
     position: absolute;
     margin-top: 20px;
-    margin-right: 10px;
+    margin-left: 10px;
   }
 }
 
