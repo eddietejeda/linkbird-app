@@ -84,7 +84,7 @@ var handleResult = function(result) {
 document.addEventListener("DOMContentLoaded", function(event) {
 
 
-  if (document.getElementById("subscription-page")){
+  if (document.getElementById("activate-premium-plan-btn")){
     fetch("/setup").then(function(result) {
         return result.json();
       })
