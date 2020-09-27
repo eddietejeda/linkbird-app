@@ -1,14 +1,13 @@
 require 'uri'
 # logger = Logger.new(STDOUT)
 
-def current_user  
-  User.find_by(uid: cookies[:uid], cookie_key: cookies[:cookie_key])
+def current_user
+  User.where("uid = :uid AND cookie_keys @> :cookie_key", {uid: request.cookies['uid'], cookie_key: [{cookie_key: request.cookies['cookie_key']}].to_json }).first
 end
 
 def find_user(screen_name)
   User.find_by(screen_name: screen_name)
 end
-
 
 def expand_url(url)
   result = Curl::Easy.perform(url) do |curl|
@@ -42,6 +41,47 @@ def preferred_fav_icon(url, filepath: "config/preferred-fav-icon.yml")
 end
 
 
+def delete_active_cookie(previous_cookie_list, cookie_to_delete)
+  new_cookie_list = []
+
+  previous_cookie_list.each do |c|
+    if c['public_id'] == cookie_to_delete[:public_id].to_i
+      next
+    end
+    new_cookie_list << c
+  end
+    
+  new_cookie_list
+end
+
+
+def add_or_update_active_cookies(previous_cookie_list, new_cookie)
+  new_cookie_list = []
+
+  if previous_cookie_list.select{|c|c[:public_id] == new_cookie[:public_id]}.length > 0
+    # Update
+    previous_cookie_list.each do |c|
+      current = c
+      if c[:public_id] == new_cookie[:public_id]
+        current = new_cookie
+      end
+      new_cookie_list << current
+    end
+  else
+    # New
+    new_cookie_list =  previous_cookie_list
+    new_cookie_list << new_cookie
+  end
+    
+  new_cookie_list
+end
+
+def prettify_user_agent(user_string)
+  user_agent = UserAgentParser.parse user_string
+  operating_system = user_agent.os
+  "#{operating_system.to_s} #{user_agent.to_s}"  
+end
+
 def format_datetime(datetime, timezone)
   if valid_timezone(timezone)
     datetime.getlocal(timezone).strftime('%b %-d, %Y %l:%M%P')
@@ -54,3 +94,4 @@ end
 def valid_timezone(timezone)
   timezone.to_s.match(/[\-\+]\d\d\:\d\d/)
 end
+

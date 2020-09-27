@@ -194,7 +194,7 @@ class App < Sinatra::Base
   get '/subscription' do
     @user = current_user
     @page_limits = @@page_limit
-    if !@user
+    if !current_user
       redirect '/'      
     end
 
@@ -214,6 +214,8 @@ class App < Sinatra::Base
 
     erb :subscription
   end
+  
+  
 
   get '/setup' do
     content_type 'application/json'
@@ -301,15 +303,27 @@ class App < Sinatra::Base
 
     user = User.find_by(uid: cookies[:uid])
 
-    if user.nil?
-      user = User.create(uid: cookies[:uid], cookie_key: cookies[:cookie_key])
+    if user.nil?      
+      user = User.create(uid: cookies[:uid], secret_key: "")
+    end
+    
+    if user.secret_key.blank?
+      secret_key = SecureRandom.uuid
+      user.secret_key = secret_key
     end
 
-    user.cookie_key = cookies[:cookie_key]
-    user.encrypted_data = encrypt_data(cookies[:cookie_key], user_secrets.to_h.to_json.to_s)
-    user.save!      
+    new_cookie = { 
+      public_id: cookies[:cookie_key].hash, 
+      cookie_key: cookies[:cookie_key], 
+      last_login: DateTime.now, 
+      browser: request.env['HTTP_USER_AGENT'] 
+    }
+    user.cookie_keys = add_or_update_active_cookies(user.cookie_keys, new_cookie)
+    
+    user.encrypted_data = encrypt_data(user.secret_key, user_secrets.to_h.to_json.to_s)
 
-    user.set_subscription_status! if user.present?
+    user.save!
+    user.set_subscription_status!
 
     redirect to('/')    
   end
@@ -317,7 +331,6 @@ class App < Sinatra::Base
   get '/auth/failure' do
     @alert = "<h1>Authentication Failed</h1><h3>message:<h3><pre>#{params}</pre>"
     erb :index
-    
   end
   
   get '/auth/twitter/deauthorized' do    
@@ -327,12 +340,46 @@ class App < Sinatra::Base
   
   get '/logout' do
     cookies.delete(:uid)
-    cookies.delete(:access_token)
-    cookies.delete(:access_token_secret)
     cookies.delete(:cookie_key)
     redirect '/'
   end
   
+  get '/security' do
+
+    @history = []
+
+    if !current_user
+      redirect '/'      
+    end
+    
+    @history = current_user.cookie_keys    
+    erb :security
+  end
+  
+  
+  post '/disconnect/session' do 
+    content_type 'application/json'
+    
+    user = current_user
+    
+    if !user
+      redirect '/'      
+    end
+    
+    data = JSON.parse request.body.read
+
+    previous_cookie_list = user.cookie_keys
+    cookie_to_delete = { public_id: data['public_id'] }
+    
+    new_cookie_list = delete_active_cookie(previous_cookie_list, cookie_to_delete)
+    
+    user.cookie_keys = new_cookie_list
+    user.save!
+
+    { status: "success" }.to_json    
+  end
+  
+
   
   private
   

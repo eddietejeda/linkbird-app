@@ -27,10 +27,11 @@ gem 'newrelic_rpm'
 gem "aws-sdk", "~> 3.0"
 gem "aws-sdk-s3", "~> 1.81"
 gem "redis-sinatra", "~> 1.4"
+gem "user_agent_parser"
 
 group :development, :test do
   gem "byebug", "~> 11.1"
-  gem "awesome_print", "~> 1.8"
+  gem "amazing_print", "~> 1.2"
   gem "rspec"
   gem "capybara", "~> 3.33"  
   gem "selenium-webdriver", "~> 3.142"

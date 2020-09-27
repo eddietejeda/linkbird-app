@@ -14,6 +14,7 @@ require 'pagy/extras/bulma'
 
 require "uri"
 require 'curb'
+require 'user_agent_parser'
 
 require 'securerandom'
 
@@ -36,7 +37,7 @@ logger = Logger.new(STDOUT)
 if settings.development?
   require 'sinatra/reloader' 
   require "byebug" 
-  require "awesome_print" 
+  require "amazing_print" 
   require 'sidekiq/web'    
   logger.level = Logger::DEBUG
 end

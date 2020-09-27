@@ -5,7 +5,6 @@ class User < ActiveRecord::Base
   def set_subscription_status!
     self.data['premium'] = subscribed?
     
-    
     if self.data["stripe_subscription"]
       subscription = Stripe::Subscription.retrieve(self.data["stripe_subscription"])
     
@@ -18,12 +17,17 @@ class User < ActiveRecord::Base
   
   def secret_data
     data = "{}"
-    if self.cookie_key.present? && self.encrypted_data.present?
-      data = decrypt_data(self.cookie_key, self.encrypted_data)
+    if self.secret_key.present? && self.encrypted_data.present?
+      data = decrypt_data(self.secret_key, self.encrypted_data)
     end
     JSON.parse(data)
   end
       
+      
+  def update_secret_key
+    
+    
+  end
   def minutes_since_last_update
     last_tweet = self.tweets.order(created_at: :desc).first
 
