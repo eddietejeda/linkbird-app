@@ -92,7 +92,7 @@ end
 def prettify_user_agent(user_string)
   user_agent = UserAgentParser.parse user_string
   operating_system = user_agent.os
-  "#{operating_system.to_s} #{user_agent.to_s}"  
+  "#{operating_system.to_s} <br> #{user_agent.to_s}"  
 end
 
 def format_datetime(datetime, timezone)

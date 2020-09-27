@@ -345,11 +345,8 @@ class App < Sinatra::Base
   end
   
   get '/security' do
-    user = authenticate!
-
-    @history = []
-    
-    @history = current_user.cookie_keys    
+    user = authenticate!    
+    @login_history = current_user.cookie_keys #.sort_by{|k, v| puts k["last_login"]}.reverse    
     erb :security
   end
   
