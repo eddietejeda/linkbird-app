@@ -6,7 +6,7 @@ namespace :db do
   
     User.all.each do |user|
       
-      if user.cookie_key.empty? || user.encrypted_data.empty?
+      if user.secret_key.empty? || user.encrypted_data.empty?
         puts "🔔 Updating Tweets - Current user #{user.id} - Keys empty."
         next
       else
