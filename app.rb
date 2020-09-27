@@ -84,7 +84,8 @@ class App < Sinatra::Base
   # Weekly
   get '/popular' do
     
-    @user = current_user
+    @user = authenticate!
+    
     @tweets = []
     @page_limit = @@page_limit
     
@@ -111,11 +112,11 @@ class App < Sinatra::Base
   
   # Friend Tweets
   get '/@:screen_name' do
+    @public_page = true
     
     @user = find_user params['screen_name'] # regexp ^@?(\w){1,15}$
     @tweets = []
     @page_limit = @@page_limit
-    @public_page = true
     @user_is_public = false
     
     if @user && @user.data['public'] == true
@@ -130,7 +131,8 @@ class App < Sinatra::Base
   post '/public_profile' do
     data = JSON.parse request.body.read
     
-    @user = current_user    
+    @user = authenticate!
+    
     @user.data['public'] = (data['public']=='true')
     @user.save!
     
@@ -141,7 +143,8 @@ class App < Sinatra::Base
     
   get '/share' do
     
-    @user = current_user
+    @user = authenticate!
+
 
     if @user && @user.screen_name.empty?
       user_secrets = @user.secret_data
@@ -160,13 +163,11 @@ class App < Sinatra::Base
 
 
   post '/cancel' do
-    if current_user
-      current_user.cancel_subscription
-      current_user.set_subscription_status!
-      redirect '/subscription'      
-    else
-      redirect '/'
-    end
+    user = authenticate!
+    
+    user.cancel_subscription
+    user.set_subscription_status!
+    redirect '/subscription'      
   end
 
   get '/privacy' do
@@ -178,7 +179,7 @@ class App < Sinatra::Base
   end
 
   get '/refresh' do
-    @user = current_user        
+    @user = authenticate!
     now = DateTime.now    
         
     if @user && @user.minutes_since_last_update > 2 # minutes
@@ -192,11 +193,9 @@ class App < Sinatra::Base
     redirect '/'
   end
   get '/subscription' do
-    @user = current_user
+    @user = authenticate!
+
     @page_limits = @@page_limit
-    if !current_user
-      redirect '/'      
-    end
 
     session_id = params[:session_id]
     
@@ -339,18 +338,16 @@ class App < Sinatra::Base
   end
   
   get '/logout' do
+    invalidate_session_cookie(cookies[:cookie_key].hash)
     cookies.delete(:uid)
     cookies.delete(:cookie_key)
     redirect '/'
   end
   
   get '/security' do
+    user = authenticate!
 
     @history = []
-
-    if !current_user
-      redirect '/'      
-    end
     
     @history = current_user.cookie_keys    
     erb :security
@@ -359,22 +356,10 @@ class App < Sinatra::Base
   
   post '/disconnect/session' do 
     content_type 'application/json'
-    
-    user = current_user
-    
-    if !user
-      redirect '/'      
-    end
-    
+    user = authenticate!
+  
     data = JSON.parse request.body.read
-
-    previous_cookie_list = user.cookie_keys
-    cookie_to_delete = { public_id: data['public_id'] }
-    
-    new_cookie_list = delete_active_cookie(previous_cookie_list, cookie_to_delete)
-    
-    user.cookie_keys = new_cookie_list
-    user.save!
+    invalidate_session_cookie(data['public_id'])
 
     { status: "success" }.to_json    
   end
@@ -383,6 +368,13 @@ class App < Sinatra::Base
   
   private
   
+    def authenticate!
+      user = current_user
+      if !user
+        redirect '/'      
+      end
+      user
+    end
     def root_domain
       ENV['PRODUCTION_URL'] ? "https://#{ENV['PRODUCTION_URL']}" : "http://localhost:9292"
     end

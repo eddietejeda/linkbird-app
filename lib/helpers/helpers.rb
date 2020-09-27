@@ -2,7 +2,9 @@ require 'uri'
 # logger = Logger.new(STDOUT)
 
 def current_user
-  User.where("uid = :uid AND cookie_keys @> :cookie_key", {uid: request.cookies['uid'], cookie_key: [{cookie_key: request.cookies['cookie_key']}].to_json }).first
+  if request.cookies['uid'] && request.cookies['cookie_key']
+    User.where("uid = :uid AND cookie_keys @> :cookie_key", {uid: request.cookies['uid'], cookie_key: [{cookie_key: request.cookies['cookie_key']}].to_json }).first
+  end
 end
 
 def find_user(screen_name)
@@ -40,6 +42,17 @@ def preferred_fav_icon(url, filepath: "config/preferred-fav-icon.yml")
   end
 end
 
+
+def invalidate_session_cookie(public_id)
+  user = current_user
+  previous_cookie_list = user.cookie_keys
+  cookie_to_delete = { public_id: public_id }
+  
+  new_cookie_list = delete_active_cookie(previous_cookie_list, cookie_to_delete)
+  
+  user.cookie_keys = new_cookie_list
+  user.save!
+end
 
 def delete_active_cookie(previous_cookie_list, cookie_to_delete)
   new_cookie_list = []
