@@ -318,8 +318,7 @@ class App < Sinatra::Base
     redirect to('/')    
   end
   
-  get '/auth/failure' do
-        
+  get '/auth/failure' do    
     case params['message']
     when 'session_expired'
       @alert = "<strong>Error from Twitter</strong> <p>Session expired. Try again</p>"
@@ -370,6 +369,7 @@ class App < Sinatra::Base
       end
       user
     end
+    
     def root_domain
       ENV['PRODUCTION_URL'] ? "https://#{ENV['PRODUCTION_URL']}" : "http://localhost:9292"
     end

@@ -11,10 +11,7 @@
     <title>LinkBird</title>
   
     <!-- Load Stripe.js on your website. -->
-    <% if @subscription_page %>
-      <script src="https://js.stripe.com/v3/"></script>
-    <% end %>
-    
+    <script src="https://js.stripe.com/v3/" defer></script>
     <script src="./javascript/app.js" defer></script>  
     <link rel="apple-touch-icon" sizes="72x72"   href="/images/linkbird-72x72.png"/>
     <link rel="apple-touch-icon" sizes="114x114" href="/images/linkbird-114x114.png"/>
