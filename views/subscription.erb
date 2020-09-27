@@ -25,12 +25,12 @@
               
               <!--  Canceled but active -->
               <% elsif @user.data['stripe_subscription_status'] != 'active' && @user.data["stripe_subscription_end_date"] && @user.data["stripe_subscription_end_date"].to_date > DateTime.now %>
-                  <p style="margin-top: 50px">Subscription has been canceled but premium features will remain active until <%= DateTime.parse( @user.data["stripe_subscription_end_date"] ).strftime("%B %d, %Y") %> </p>
+                <p style="margin-top: 50px">Subscription has been canceled but premium features will remain active until <%= DateTime.parse( @user.data["stripe_subscription_end_date"] ).strftime("%B %d, %Y") %> </p>
 
 
               <!-- Not subscribed -->
               <% else %>
-                  <button id="activate-premium-plan-btn" class="button is-info">Activate Subscription</button>
+                <button id="activate-premium-plan-btn" class="button is-info">Activate Subscription</button>
               <% end %>
 
             </div>            
@@ -39,6 +39,3 @@
       </div>
     </div>
   </div> 
-
-
-

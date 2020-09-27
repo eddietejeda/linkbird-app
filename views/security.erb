@@ -1,26 +1,26 @@
 <div class="card card-with-no-border">
   <div class="card-content">
     <div class="content">
-        <section class="column has-text-left">
-          <h3 style="text-align:center">Active Logins</h3>
-          
-          <table>
+      <section class="column has-text-left">
+        <h3 style="text-align:center">Active Logins</h3>
+        
+        <table>
+          <tr>
+              <th>Last Login</th>
+              <th>Browser</th>
+              <th></th>
+          </tr>
+          <% @login_history.each do |item|%>
             <tr>
-                <th>Last Login</th>
-                <th>Browser</th>
-                <th></th>
+              <td><%= format_datetime(DateTime.parse(item['last_login']), cookies['user_timezone']) if item['last_login'] %></td>
+              <td><%= "<span class='tag'>current </span>&nbsp;" if item['public_id'] == cookies['cookie_key'].hash %><%= prettify_user_agent(item['browser']) %></td>
+              <td><a class="delete disconnect-button" data-public-id="<%= item['public_id'] %>">Disconnect</a></td>
             </tr>
-            <% @login_history.each do |item|%>
-              <tr>
-                <td><%= format_datetime(DateTime.parse(item['last_login']), cookies['user_timezone']) if item['last_login'] %></td>
-                <td><%= "<span class='tag'>current </span>&nbsp;" if item['public_id'] == cookies['cookie_key'].hash %><%= prettify_user_agent(item['browser']) %></td>
-                <td><a class="delete disconnect-button" data-public-id="<%= item['public_id'] %>">Disconnect</a></td>
-              </tr>
-            <% end %>
-          </table>
-          
-          <br>
-        </section>
+          <% end %>
+        </table>
+        
+        <br>
+      </section>
     </div>
   </div>
 </div> 

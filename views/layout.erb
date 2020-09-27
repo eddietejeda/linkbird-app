@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html>
-
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -25,12 +24,9 @@
     <% if @first_download %>
       <meta http-equiv="refresh" content="5">
     <% end %>
-    
   </head>
 
   <body>
-    
-  
     <% if @show_loading_bar == true %>
       <div class="loading-container">
         <div class="loading"></div>
@@ -42,46 +38,23 @@
         <div class="container has-text-centered column is-6 is-offset-3 px-0">
           <div class="wrapper">
 
+
+
             <%= erb(:navigation) %>
-
-
             <% if @alert  %>
               <div class="notification is-warning is-light px-10" style="margin-top: 20px">
                 <%= @alert %>
               </div>
-            <% end  %>
-            
+            <% end  %>            
             <%= yield %>
-                    
-          </div>
-                
-          <div class="column is-10 is-offset-1 footer">
-            <p class="has-text-grey">
-              <a href="/privacy">Privacy</a> &nbsp;·&nbsp;
-              <a href="/terms-of-service">Terms of Service</a> 
-              
-              <% if current_user %>
-                &nbsp;·&nbsp;
-                <a href="/security">Security</a> &nbsp;·&nbsp;
-                <a href="/logout">Sign out</a>
-              <% end %>
-            </p>
-            <div class="column is-10 is-offset-1">
-              <p class="has-text-grey">
-                © Visudo LLC <%= DateTime.now.strftime("%Y") %>.
-              </p>
-              <p class="has-text-grey">
-                 All Rights Reserved. 
-              </p>
-              <p>
-                <%= ENV.to_h['HEROKU_RELEASE_VERSION'] %>
-              </p>
-            </div>
-          </div>
+            
+            
+            
+          </div>      
+          <%= erb(:footer) %>
         </div>
       </div>
     </section>
     
   </body>
-    
 </html>

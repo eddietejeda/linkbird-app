@@ -13,7 +13,6 @@
   <div class="card-content">
     <div class="content">
         <section class=" has-text-centered">
-          
           <div class="columns">
             <div class="column is-3 is-offset-1 has-text-left">
               <div class="buttons has-addons">
@@ -22,20 +21,14 @@
               </div>
             </div>
             <div class="column is-7 is-px-0">
-          
               <input type="text" <%= "disabled" if @user_is_public == false %> style="<%= "color: #ccc" if @user_is_public == false %>; width:100%; font-size: 15pt; padding: 15px" value="<%= @user_url %>">
-            
               <br>
               <br>
               <p>When you unlock your account, your friends can see your newsfeed.</p>
               <p><strong><a href="<%= @user_url %>">Preview here</a></strong></p>
-            
             </div>
           </div>
         </section>
       </div>
     </div>
   </div> 
-
-
-
