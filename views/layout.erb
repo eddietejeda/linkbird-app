@@ -4,10 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel="stylesheet" href="stylesheets/loading.css" />
-    <link rel="stylesheet" href="stylesheets/font-awesome.css" />
-    <link rel="stylesheet" href="stylesheets/bulma.css" />
-    <link rel="stylesheet" href="stylesheets/style.css" />
+    <link rel="stylesheet" href="/stylesheets/loading.css" />
+    <link rel="stylesheet" href="/stylesheets/font-awesome.css" />
+    <link rel="stylesheet" href="/stylesheets/bulma.css" />
+    <link rel="stylesheet" href="/stylesheets/style.css" />
     <title>LinkBird</title>
   
     <!-- Load Stripe.js on your website. -->
@@ -43,6 +43,7 @@
             <%= erb(:navigation) %>
             <% if @alert  %>
               <div class="notification is-warning is-light px-10" style="margin-top: 20px">
+                <div class="delete hide-alert" id="<%= @alert.hash.abs %>"></div>
                 <%= @alert %>
               </div>
             <% end  %>            

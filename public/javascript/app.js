@@ -132,6 +132,19 @@ document.addEventListener("DOMContentLoaded", function(event) {
       this.src = this.getAttribute('data-backup');
     };
    })
+
+
+   document.querySelectorAll('.hide-alert').forEach(function(btn){
+
+     btn.addEventListener("click", function (e) {
+       e.target.parentElement.style.display = 'none';
+     });
+
+   })
+   
+   
+   
+   
 });
 
 

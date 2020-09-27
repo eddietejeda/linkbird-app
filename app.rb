@@ -65,7 +65,6 @@ class App < Sinatra::Base
       @minutes_until_next_update = [(update_frequency_in_minutes - minutes_since_last_update), 0].max
       @pagy, @tweets = pagy(Tweet.where(user_id: @user.id).order(created_at: :desc), items: @@page_limit)
       
-
       if @tweets.count == 0
         @alert = "<p>Setting up your account. <br>This may take a minute the first time</p>"
         
@@ -83,7 +82,6 @@ class App < Sinatra::Base
 
   # Weekly
   get '/popular' do
-    
     @user = authenticate!
     
     @tweets = []
@@ -109,7 +107,6 @@ class App < Sinatra::Base
     erb :popular
   end
   
-  
   # Friend Tweets
   get '/@:screen_name' do
     @public_page = true
@@ -124,7 +121,6 @@ class App < Sinatra::Base
       @pagy, @tweets = pagy(Tweet.where(user_id: @user.id).order(created_at: :desc), items: @page_limit)      
     end
 
-    
     erb :index
   end
   
@@ -140,9 +136,7 @@ class App < Sinatra::Base
     { status: 'success' }.to_json      
   end
   
-    
   get '/share' do
-    
     @user = authenticate!
 
 
@@ -158,9 +152,6 @@ class App < Sinatra::Base
 
     erb :share
   end
-  
-  
-
 
   post '/cancel' do
     user = authenticate!
@@ -312,7 +303,7 @@ class App < Sinatra::Base
     end
 
     new_cookie = { 
-      public_id: cookies[:cookie_key].hash, 
+      public_id: cookies[:cookie_key].hash.abs, 
       cookie_key: cookies[:cookie_key], 
       last_login: DateTime.now, 
       browser: request.env['HTTP_USER_AGENT'] 
@@ -328,17 +319,24 @@ class App < Sinatra::Base
   end
   
   get '/auth/failure' do
-    @alert = "<h1>Authentication Failed</h1><h3>message:<h3><pre>#{params}</pre>"
+        
+    case params['message']
+    when 'session_expired'
+      @alert = "<strong>Error from Twitter</strong> <p>Session expired. Try again</p>"
+    when 'invalid_credentials'
+      @alert = "<strong>Error from Twitter</strong> <p>You authentication failed or was canceled.</p><p><a href='/'>Try again</a></p>."
+    end
+    
     erb :index
   end
   
   get '/auth/twitter/deauthorized' do    
-    @alert = "Twitter has deauthorized this app."
+    @alert = "<strong>Error from Twitter</strong> <p>Twitter has deauthorized this app</p>"    
     erb :index
   end
   
   get '/logout' do
-    invalidate_session_cookie(cookies[:cookie_key].hash)
+    invalidate_session_cookie(cookies[:cookie_key].hash.abs)
     cookies.delete(:uid)
     cookies.delete(:cookie_key)
     redirect '/'
