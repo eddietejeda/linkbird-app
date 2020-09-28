@@ -124,7 +124,7 @@ class App < Sinatra::Base
     erb :index
   end
   
-  post '/public_profile' do
+  post '/profile/visibility' do
     data = JSON.parse request.body.read
     
     @user = authenticate!
@@ -358,6 +358,11 @@ class App < Sinatra::Base
     { status: "success" }.to_json    
   end
   
+  
+  not_found do
+    status 404
+    erb :_404
+  end
 
   
   private

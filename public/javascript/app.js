@@ -157,7 +157,7 @@ document.cookie = `user_timezone=${user_timezone.slice(0, 3)}:${user_timezone.sl
 document.querySelectorAll('.unlock-button').forEach(function(btn){
 
   btn.addEventListener("click", function (e) {
-    postData('/public_profile', { public: e.target.value })
+    postData('/profile/visibility', { public: e.target.value })
       .then(data => {
         // console.log(data); // JSON data parsed by `data.json()` call
         // TODO: Don't want to deal with state management now. Just refresh.
