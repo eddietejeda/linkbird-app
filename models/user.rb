@@ -28,6 +28,11 @@ class User < ActiveRecord::Base
     
     
   end
+  
+  def last_login
+    DateTime.parse self.data['login_data'].reverse.first
+  end
+  
   def minutes_since_last_update
     last_tweet = self.tweets.order(created_at: :desc).first
 
