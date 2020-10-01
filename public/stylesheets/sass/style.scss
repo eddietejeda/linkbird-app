@@ -7,39 +7,41 @@ html,body {
   height: 100%;
   background-color: #F2F6FA;
 }
+
 body{
   height: 100% !important;
-  
 }
+
+.hero-body {
+  flex-grow: 1;
+  flex-shrink: 0;
+  padding: 0rem 1rem !important;
+}
+
 .hero.is-success {
   background: #F2F6FA;
 }
+
 .hero .nav, .hero.is-success .nav {
   -webkit-box-shadow: none;
   box-shadow: none;
 }
+
 .box {
   margin-top: 5rem;
 }
+
 .avatar {
   margin-top: -70px;
   padding-bottom: 20px;
 }
+
 .avatar img {
   padding: 5px;
   background: #fff;
   border-radius: 50%;
   -webkit-box-shadow: 0 2px 3px rgba(10,10,10,.1), 0 0 0 1px rgba(10,10,10,.1);
   box-shadow: 0 2px 3px rgba(10,10,10,.1), 0 0 0 1px rgba(10,10,10,.1);
-}
-input {
-  font-weight: 300;
-}
-p {
-//  font-weight: 700;
-}
-p.subtitle {
-  padding-top: 1rem;
 }
 
 .login-hr{
@@ -57,37 +59,48 @@ p.subtitle {
 .fa{
   margin-left: 5px; 
 }
+
+
 h1{
   a{
     color: black;    
   }
 }
+.primary-title{
+  font-size: 150%;
+  //  padding: 0px 50px;
+  margin-top: 20px;
+}
 
 .update-schedule{
   margin: 20px;
 }
-//.frame{
-//  background-color: white;
-//  border: 2px solid #e6ecf0;
-//  border-radius: 20px;
-//}
 
 
 .article:hover{
   background-color: rgb(245, 248, 250);
-};
-
-.content ul{
-//  list-style: none;
 }
 
-.logo.logged-in{
+.logo{
+  width: 300px;  
+}
+
+.logo-wrapper{
+  z-index: 100; 
+  width: 165px; 
+  height: 50px; 
+  margin: 20px 
+  auto 0;
+}
+
+.logo-wrapper.logged-in{
   width: 175px;
-  position: relative;
+//  position: relative;
 }
-.logo.not-logged-in{
+
+.logo-wrapper.not-logged-in{
   margin: 0 auto;
-  position: relative;
+//  position: relative;
 }
 
 .tweet-content{
@@ -97,8 +110,8 @@ h1{
   -webkit-box-orient: vertical;  
   min-height: 50px;
 }
+
 .footer{
-//  margin-top: 50px;
   background-color: transparent;
 
 }
@@ -108,7 +121,6 @@ h1{
 }
 
 .section{
-//  background-color: #F2F6FA;
   padding: 0;
 }
 
@@ -136,6 +148,7 @@ button {
   box-shadow: none !important;
   border-width: 0;  
 }
+
 .card-with-border{
   box-shadow: none !important;
   border-width: 2px 0 0 0;
@@ -152,9 +165,8 @@ button {
   box-shadow: 0 0.5em 1em -0.125em rgba(10,10,10,0.1), 0 0px 0 1px rgba(10,10,10,0.02);
   color: #4a4a4a;
   max-width: 100%;
-  position: relative;
+//  position: relative;
 }
-
 
 .retweet-icon{
   width: 14px;
@@ -182,9 +194,6 @@ button {
 
 
 .navbar-item {
-//  cursor: pointer;
-//  padding-top: 27px;
-//  margin-right: 15px;
   font-weight: 600; 
   color: #3273dc;
 }
@@ -194,6 +203,26 @@ button {
   justify-content: inline-flex !important;  
   margin: 0 auto !important;
 }
+
+
+.popular-position{
+  position: absolute;
+  font-size: 12pt;
+  top: 80px;
+  left: 60px;  
+}
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -206,8 +235,6 @@ button {
     padding-right: 0   !important;
   }
   
-
-
   #refresh-icon{
     position: absolute; 
     top: 0; 
@@ -217,22 +244,29 @@ button {
     width: 20px;
     display: block;
   }
-
 }
 
 
-
-.popular-position{
-  position: absolute;
-  font-size: 12pt;
-  top: 80px;
-  left: 60px;  
-}
-
-@media only screen and (max-width: 768px) {
+@media only screen and (max-width: 1024px) {
+//@media only screen and (max-width: 768px) {
   .mobile-align-left {
     text-align: left !important;
     padding-top: 0;
+  }
+  
+  .navbar-brand{
+    align-items: stretch;
+    display: flex;
+    flex-shrink: 0;
+    min-height: 3.25rem;
+    top: 37px;
+    left: 20px;
+  }
+  
+  .navbar{
+    position: absolute;
+    top: 52px;
+    left: 0;    
   }
   
   .popular-position{
@@ -241,35 +275,99 @@ button {
     top: 63px; 
     left: 29px; 
   }
-  
 
-}
-
-
-
-@media only screen and (max-width: 1024px) {
-  
-  .navbar{
-    min-height: 0;
-    left: 0px;
-    top: 25px;
-    position: absolute;
-    margin-top: 20px;
-    margin-left: 10px;
-    width: 100%;
-    padding: 0;
-    margin: 0;
-  }
-  
   .navbar-burger{
     padding-left: 0;
     margin-left: 0;
+    position:absolute;
+    background: white;
   }
+  
+  .navbar-burger.is-active{
+    position: fixed;
+    z-index: 10000;
+    left: 15px;
+    background: rgb(250,250,250);
+  }
+
+  .navbar-menu{
+    display: block !important;
+    position:fixed;
+    left: -250px;
+    top: 10px;
+    width: 250px;
+  	-webkit-transition: -webkit-transform 1s;
+  	transition: transform 1s;
+    height: 100%;
+    transition-timing-function: linear;
+  }
+  
+  .navbar-menu.is-active{
+    display: block !important;
+    position:fixed;
+    left: 0px;
+  	-webkit-transition: -webkit-transform 1s;
+  	transition: transform 1s;
+    z-index: 2000;
+    padding-top: 100px;
+    transition-timing-function: linear;
+  }
+
+//  .navbar{
+//    min-height: 0;
+//    left: 0px;
+//    top: 25px;
+//    position: absolute;
+//    margin-top: 20px;
+//    margin-left: 10px;
+//    width: 100%;
+//    padding: 0;
+//    margin: 0;
+//  }
+
 }
 
 
-.hero-body {
-  flex-grow: 1;
-  flex-shrink: 0;
-  padding: 0rem 1rem !important;
-}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//
+//
+//// PLAYFUL ALTERNATIVE
+//
+//.wrapper > div {
+//  background: aqua;
+//}
+//
+//.wrapper > div > h1{
+//  background: black;
+//}
+//
+//.wrapper > div > h1 > a{
+//  background: aqua;
+//}
+//
+//.wrapper > div > h1 > a > div{
+//  background: yellowgreen;
+//}
+//
+//
+//
