@@ -14,7 +14,7 @@ end
   
 def create_bucket(bucket_name)
   if list_buckets.select { |b| b.name == bucket_name }.length == 0
-    puts 'creating bucket'
+    logger.info 'creating bucket'
     s3.create_bucket(bucket: bucket_name)
   end
 end
