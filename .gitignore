@@ -1,10 +1,12 @@
+.DS_Store
 .sass-cache
 .byebug_history
 vendor
 tmp
+public/images/*.pxm
 public/stylesheets/*.css
 public/stylesheets/*.map
 config/symmetric-encryption.yml
 bin/
 public/stylesheets/sass/backup.scss
-
+*.dump
