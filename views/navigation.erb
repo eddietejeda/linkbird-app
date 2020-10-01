@@ -1,33 +1,18 @@
-<div class="column is-12">
-    <h1 class="title has-text-black">
-      <a href="/">      
-        <div style="z-index: 100; width: 165px; height: 50px; margin: 20px auto 0;" class="logo <%= current_user ? "logged-in" : "not-logged-in" %>">
-          <div style="background: url(/images/linkbird.png) no-repeat; height: 35px; width: 50px; background-size: 40px; position: absolute;"></div>
-          <div style="height: 35px;width: 150px; left: 30px; position: absolute;">LinkBird</div>
-        </div>
-      </a>
-    </h1>
-</div>
-
-
 <% if current_user %>
-  <div class="is-paddingless">
-    <nav class="navbar">
-    <div class="navbar-brand">
+  <nav class="navbar is-paddingless">
 
+    <div class="navbar-brand">
       <% if current_user %>
-        <!-- <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false"> -->
         <a role="button" class="navbar-burger" data-target="navMenu" aria-label="menu" aria-expanded="false">  
           <span aria-hidden="true"></span>
           <span aria-hidden="true"></span>
           <span aria-hidden="true"></span>
         </a>
       <% end %>
-      
     </div>
 
     <% if current_user %>
-      <div class="navbar-menu" id="navMenu">
+      <div id="navMenu" class="navbar-menu sidenav">
         <div class="navbar-start">
           <a class="navbar-item" href="/">
             Home
@@ -35,8 +20,11 @@
           <a class="navbar-item" href="/popular">
             Popular
           </a>
-          <a class="navbar-item" href="/share">
-            Share
+          <a class="navbar-item" href="/profile">
+            Profile
+          </a>
+          <a class="navbar-item is-hidden-desktop" href="/install">
+            Install
           </a>
           <a class="navbar-item" href="/subscription">
             Subscription
@@ -44,9 +32,6 @@
         </div>
       </div>
     <% end %>
-  
-  
-  </nav>
 
-  </div>
+  </nav>
 <% end %>

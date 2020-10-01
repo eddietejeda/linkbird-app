@@ -1,0 +1,6 @@
+<% if @alert  %>
+  <div class="notification is-warning is-light px-10" style="margin-top: 20px">
+    <div class="delete hide-alert" id="<%= @alert.hash.abs %>"></div>
+    <%= @alert %>
+  </div>
+<% end  %>
