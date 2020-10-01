@@ -30,9 +30,6 @@ GEM
       public_suffix (>= 2.0.2, < 5.0)
     amazing_print (1.2.1)
     ansi (1.5.0)
-    apparition (0.6.0)
-      capybara (~> 3.13, < 4)
-      websocket-driver (>= 0.6.5)
     ast (2.4.1)
     aws-eventstream (1.1.0)
     aws-partitions (1.373.0)
@@ -982,12 +979,18 @@ GEM
     concurrent-ruby (1.1.7)
     connection_pool (2.2.3)
     curb (0.9.10)
+    database_cleaner (1.8.5)
+    database_cleaner-active_record (1.8.0)
+      activerecord
+      database_cleaner (~> 1.8.0)
     diff-lcs (1.4.4)
     domain_name (0.5.20190701)
       unf (>= 0.0.5, < 1.0.0)
     equalizer (0.0.11)
     ethon (0.12.0)
       ffi (>= 1.3.0)
+    factory_bot (6.1.0)
+      activesupport (>= 5.0.0)
     ffi (1.13.1)
     ffi-compiler (1.0.1)
       ffi (>= 1.0.0)
@@ -1027,7 +1030,7 @@ GEM
     net-http-persistent (4.0.0)
       connection_pool (~> 2.2)
     net_http_timeout_errors (0.3.5)
-    newrelic_rpm (6.13.0)
+    newrelic_rpm (6.13.1)
     nio4r (2.5.2)
     nokogiri (1.10.10)
       mini_portile2 (~> 2.4.0)
@@ -1139,9 +1142,6 @@ GEM
       iso8601 (~> 0.9.1)
       net_http_timeout_errors (~> 0.3.0)
       oga (~> 3.0)
-    websocket-driver (0.7.3)
-      websocket-extensions (>= 0.1.0)
-    websocket-extensions (0.1.5)
     xpath (3.2.0)
       nokogiri (~> 1.8)
     zeitwerk (2.4.0)
@@ -1151,21 +1151,22 @@ PLATFORMS
 
 DEPENDENCIES
   amazing_print (~> 1.2)
-  apparition (~> 0.6.0)
   aws-sdk (~> 3.0)
   aws-sdk-s3 (~> 1.81)
   byebug (~> 11.1)
   capybara (~> 3.33)
   curb (~> 0.9.10)
+  database_cleaner-active_record (~> 1.8)
+  factory_bot (~> 6.1)
   link_thumbnailer!
-  newrelic_rpm
+  newrelic_rpm (~> 6.13)
   omniauth-twitter (~> 1.4)
   pagy (~> 3.8)
-  pg
+  pg (~> 1.2)
   puma (~> 4.3)
   rake (~> 13.0)
   redis-sinatra (~> 1.4)
-  rspec
+  rspec (~> 3.9)
   sass (~> 3.7)
   selenium-webdriver (~> 3.142)
   sidekiq (~> 6.1)
@@ -1175,7 +1176,7 @@ DEPENDENCIES
   stripe (~> 5.25)
   twitter (~> 7.0)
   twitter-text (~> 3.1)
-  user_agent_parser
+  user_agent_parser (~> 2.7)
 
 BUNDLED WITH
    2.1.4

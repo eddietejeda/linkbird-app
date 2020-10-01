@@ -8,7 +8,6 @@ gem "sinatra", "~> 2.1"
 gem "sinatra-contrib", "~> 2.1"
 gem "sinatra-activerecord", "~> 2.0"
 
-
 gem "twitter", "~> 7.0"
 gem "twitter-text", "~> 3.1"
 gem "omniauth-twitter", "~> 1.4"
@@ -20,20 +19,21 @@ gem "curb", "~> 0.9.10"
 gem "link_thumbnailer", github: 'gottfrois/link_thumbnailer', ref: '2ec9026aaaccf638207e6fa480f750bfdc5c9a80'
 gem "stripe", "~> 5.25"
 gem "pagy", "~> 3.8"
+gem "newrelic_rpm", "~> 6.13"
 
-gem 'pg'
+gem "pg", "~> 1.2"
 gem "sidekiq", "~> 6.1"
-gem 'newrelic_rpm'
 gem "aws-sdk", "~> 3.0"
 gem "aws-sdk-s3", "~> 1.81"
 gem "redis-sinatra", "~> 1.4"
-gem "user_agent_parser"
+gem "user_agent_parser", "~> 2.7"
 
 group :development, :test do
   gem "byebug", "~> 11.1"
   gem "amazing_print", "~> 1.2"
-  gem "rspec"
   gem "capybara", "~> 3.33"  
   gem "selenium-webdriver", "~> 3.142"
-  gem "apparition", "~> 0.6.0"
+  gem "factory_bot", "~> 6.1"
+  gem "rspec", "~> 3.9"
+  gem "database_cleaner-active_record", "~> 1.8"
 end
