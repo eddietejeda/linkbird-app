@@ -1,3 +1,6 @@
+require 'logger'
+logger = Logger.new(STDOUT)
+
 class User < ActiveRecord::Base
 
   has_many :tweets
