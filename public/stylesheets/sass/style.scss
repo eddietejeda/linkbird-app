@@ -117,7 +117,7 @@ h1{
 }
 
 .pagy-bulma-nav {
-  margin-bottom: 100px;
+//  margin-bottom: 100px;
 }
 
 .section{
@@ -327,11 +327,18 @@ button {
 
 }
 
+.pagination-list{
+  list-style: none !important; 
+  padding: 0 !important;
+  margin: 0 !important;
+}
 
 
 
-
-
+.tag{
+  font-size: 120% !important;
+  font-weight: 700;  
+}
 
 
 

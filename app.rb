@@ -58,7 +58,7 @@ class App < Sinatra::Base
       @user_timezone =  cookies['user_timezone'] 
       @first_download = !@user.tweets.first  
       
-      if @first_download
+      if @first_download && settings.production?
         TweetWorker.perform_async( @user.id, 50 )
       end
       
@@ -66,7 +66,7 @@ class App < Sinatra::Base
       @minutes_until_next_update = [(update_frequency_in_minutes - minutes_since_last_update), 0].max
       @pagy, @tweets = pagy(Tweet.where(user_id: @user.id).order(created_at: :desc), items: @@page_limit)
       
-      if @tweets.count == 0
+      if @tweets.count.equal? 0
         @alert = "<p>Setting up your account. <br>This may take a minute the first time</p>"
         
       elsif @tweets.count < 15
