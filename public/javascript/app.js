@@ -20,9 +20,6 @@ if (loading){
   
   
   function swipeEnd(e) {
-    // if (document.body.scrollTop === 0 && !isLoading) {
-    //   for (const card of cards) card.style.transform = `rotateX(0deg)`;
-    // }
     isLoading=false;
   }
 
@@ -36,7 +33,6 @@ if (loading){
       pCurrent.x = e.screenX;
       pCurrent.y = e.screenY;
     }
-  
   
     let changeY = pStart.y < pCurrent.y ? Math.abs(pStart.y - pCurrent.y) : 0;
     if (document.body.scrollTop === 0) {
@@ -82,35 +78,34 @@ var handleResult = function(result) {
 
 // Get Stripe publishable key to initialize Stripe.js
 document.addEventListener("DOMContentLoaded", function(event) {
-
-
   if (document.getElementById("activate-premium-plan-btn")){
     fetch("/setup").then(function(result) {
         return result.json();
       })
-      .then(function(json) {
-        var publishableKey = json.publishableKey;
-        var subcriptionPriceId = json.basicPrice;
+    .then(function(json) {
+      var publishableKey = json.publishableKey;
+      var subcriptionPriceId = json.basicPrice;
 
-        var stripe = Stripe(publishableKey);
-        // Setup event handler to create a Checkout Session when button is clicked
-        var subcriptionButton = document.getElementById("activate-premium-plan-btn");
+      var stripe = Stripe(publishableKey);
+      // Setup event handler to create a Checkout Session when button is clicked
+      var subcriptionButton = document.getElementById("activate-premium-plan-btn");
 
-        if ( subcriptionButton ){
-          subcriptionButton.addEventListener("click", function(evt) {
-            evt.target.innerHTML = "Loading..."
-            evt.target.className = "button is-light"
-          
-            createCheckoutSession(subcriptionPriceId).then(function(data) {
-              // Call Stripe.js method to redirect to the new Checkout page
-              stripe.redirectToCheckout({
-                sessionId: data.sessionId
-              }).then(handleResult);
-            });
+      if ( subcriptionButton ){
+        subcriptionButton.addEventListener("click", function(evt) {
+          evt.target.innerHTML = "Loading..."
+          evt.target.className = "button is-light"
+        
+          createCheckoutSession(subcriptionPriceId).then(function(data) {
+            // Call Stripe.js method to redirect to the new Checkout page
+            stripe.redirectToCheckout({
+              sessionId: data.sessionId
+            }).then(handleResult);
           });
-        }
-      });  
+        });
+      }
+    });  
   }
+  
 });
 
   
@@ -135,16 +130,10 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
 
    document.querySelectorAll('.hide-alert').forEach(function(btn){
-
      btn.addEventListener("click", function (e) {
        e.target.parentElement.style.display = 'none';
      });
-
    })
-   
-   
-   
-   
 });
 
 
@@ -161,7 +150,7 @@ document.querySelectorAll('.unlock-button').forEach(function(btn){
       .then(data => {
         // console.log(data); // JSON data parsed by `data.json()` call
         // TODO: Don't want to deal with state management now. Just refresh.
-        window.location = '/share'
+        window.location = '/profile'
     });
   });
 });
@@ -207,29 +196,53 @@ async function postData(url = '', data = {}) {
 
 
 // Menu
-
 document.addEventListener('DOMContentLoaded', () => {
-
-  // Get all "navbar-burger" elements
-  const $navbarBurgers = Array.prototype.slice.call(document.querySelectorAll('.navbar-burger'), 0);
+  const navbarBurgers = Array.prototype.slice.call(document.querySelectorAll('.navbar-burger'), 0);
 
   // Check if there are any navbar burgers
-  if ($navbarBurgers.length > 0) {
+  if (navbarBurgers.length > 0) {
 
     // Add a click event on each of them
-    $navbarBurgers.forEach( el => {
-      el.addEventListener('click', () => {
+    navbarBurgers.forEach( burger => {
+      
+      burger.addEventListener('blur', () => {
 
         // Get the target from the "data-target" attribute
-        const target = el.dataset.target;
-        const $target = document.getElementById(target);
+        const nav = document.getElementById( burger.dataset.target );
 
         // Toggle the "is-active" class on both the "navbar-burger" and the "navbar-menu"
-        el.classList.toggle('is-active');
-        $target.classList.toggle('is-active');
+        burger.classList.toggle('is-active');
+        nav.classList.toggle('is-active');
+        console.log('blur');
+        
+      });
 
+
+      burger.addEventListener('click', () => {
+
+        // Get the target from the "data-target" attribute
+        const nav = document.getElementById( burger.dataset.target );
+
+        // Toggle the "is-active" class on both the "navbar-burger" and the "navbar-menu"
+        burger.classList.toggle('is-active');
+        nav.classList.toggle('is-active');
+        nav.focus();
+        
+        // nav.burger.addEventListener('blur', () => {
+        //   burger.classList.toggle('is-active');
+        //   nav.classList.toggle('is-active');
+        // });
+        
+        // document.querySelectorAll('.logo').forEach(function(logo){
+        //   logo.classList.toggle('is-hidden');
+        // })
+        
       });
     });
+    
+    
+    
+    
   }
 
 });
