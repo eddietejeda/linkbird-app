@@ -9,6 +9,7 @@ class App < Sinatra::Base
   # register Sinatra::Cache
       
   include Pagy::Backend
+
   helpers do
     include Pagy::Frontend
   end
@@ -136,7 +137,7 @@ class App < Sinatra::Base
     { status: 'success' }.to_json      
   end
   
-  get '/share' do
+  get '/profile' do
     @user = authenticate!
 
 
@@ -150,7 +151,7 @@ class App < Sinatra::Base
     @user_url = "#{root_domain}/@#{@user.screen_name}"
     @user_is_public = (@user.data.to_h['public'] == true)
 
-    erb :share
+    erb :profile
   end
 
   post '/cancel' do
@@ -165,6 +166,10 @@ class App < Sinatra::Base
     erb :privacy
   end
   
+  get '/install' do
+    erb :install
+  end
+    
   get '/terms-of-service' do
     erb :terms_of_service
   end
@@ -174,12 +179,11 @@ class App < Sinatra::Base
     now = DateTime.now    
         
     if @user && @user.minutes_since_last_update > 2 # minutes
-      puts "SUCCESS / User #{@user.id} manually refreshing"
+      logger.info "SUCCESS / User #{@user.id} manually refreshing"
       TweetWorker.perform_async( @user.id, 5 )      
     else
-      puts "RATE LIMIT / User #{@user.id} manually refreshing"
+      logger.error "RATE LIMIT / User #{@user.id} manually refreshing"
     end
-    
     
     redirect '/'
   end
@@ -293,7 +297,7 @@ class App < Sinatra::Base
 
     user = User.find_by(uid: cookies[:uid])
 
-    if user.nil?      
+    if user.nil?
       user = User.create(uid: cookies[:uid], secret_key: "")
     end
     
