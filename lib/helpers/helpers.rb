@@ -25,7 +25,7 @@ end
 
 
 def reload!
-  logger.info "Reloading #{ENV.fetch('ENV')} environment"
+  puts "Reloading #{ENV.fetch('ENV')} environment"
   load './bootup.rb'
 end
 
