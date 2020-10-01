@@ -43,13 +43,13 @@
     <div class="card card-with-border article">
        <div class="card-content" style="padding-bottom: 0.5rem">
           <div class="media">
-               <div class="fav media-left px-4 is-inline-flex" >
-                  <figure class="image is-48x48">
-                    <% if t.tweet['favicon'].to_s.length > 0 %>
-                      <img class="article-image" src="<%= preferred_fav_icon(t.tweet['favicon'].to_s) %>" data-backup="<%= t.tweet.to_h['images'].first.to_h['src'].to_s %>" />                     
-                    <% end %>
-                  </figure>
-               </div>
+             <div class="fav media-left px-4 is-inline-flex" >
+                <figure class="image is-48x48">
+                  <% if t.tweet['favicon'].to_s.length > 0 %>
+                    <img class="article-image" src="<%= preferred_fav_icon(t.tweet['favicon'].to_s) %>" data-backup="<%= t.tweet.to_h['images'].first.to_h['src'].to_s %>" />                     
+                  <% end %>
+                </figure>
+             </div>
            
              <div class="media-content px-2 " style="overflow: hidden;">
                 <a href="<%= t.tweet['url'] %>">
@@ -57,12 +57,22 @@
                    <% if t.tweet['title'].to_s.length > 0 %>
                      <h4 class="title is-5 is-size-6-mobile	has-text-black has-text-left"><%= t.tweet['title'] %></h4>
                    <% else %>
-                     <h4 class="title is-5 is-size-6-mobile	has-text-black has-text-left"><%= t.tweet['description'].to_s[0..20] %>...</h4>
+                     <% if t.tweet['url'] && File.extname(t.tweet['url']) == ".pdf" %>
+                       <h4 class="title is-5 is-size-6-mobile	has-text-black has-text-left"><%= File.basename(t.tweet['url']) %></h4>
+                     <% else %>
+                       <h4 class="title is-5 is-size-6-mobile	has-text-black has-text-left"><%= t.tweet['description'].to_s[0..20] %>...</h4>
+                     <% end %>
                    <% end %>
                  
                    <p class="content has-text-black has-text-left tweet-content">
-                      <%= t.tweet['description'] %>
-                      <br>
+                     <% if t.tweet['url'] && File.extname(t.tweet['url']) == ".pdf" %>
+                       <span style="margin: 0 auto">
+                         <i style="font-size: 50pt" class="fas fa-file-pdf"></i>
+                       </span>
+                     <% else %>
+                       <%= t.tweet['description'] %>
+                     <% end %>
+                     <br>
                    </p>
                 </a>
                               
