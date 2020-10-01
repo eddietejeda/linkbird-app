@@ -1,6 +1,3 @@
-require 'logger'
-logger = Logger.new(STDOUT)
-
 class User < ActiveRecord::Base
 
   has_many :tweets
@@ -77,7 +74,7 @@ class User < ActiveRecord::Base
 
     home_timeline = client.home_timeline({count: items})
     
-    logger.info "Number of new items in timeline #{home_timeline.count}"
+    puts "Number of new items in timeline #{home_timeline.count}"
 
     home_timeline.each do |t|
       url = t&.urls&.first&.expanded_url.to_s
@@ -106,21 +103,21 @@ class User < ActiveRecord::Base
               created_at: Time.current.getlocal("+00:00"),
               updated_at: Time.current.getlocal("+00:00")
             }
-            logger.info "🔔 User: #{self.id} - #{url} - SUCCESS"
+            puts "🔔 User: #{self.id} - #{url} - SUCCESS"
           else
-            logger.info "🔔 User: #{self.id} - #{url} - SKIPPING"
+            puts "🔔 User: #{self.id} - #{url} - SKIPPING"
           end
         rescue => ex
-          logger.error "🔔 Error LinkThumbnailer - #{url} Exception: #{ex}"
+          puts "🔔 Error LinkThumbnailer - #{url} Exception: #{ex}"
         end
       end
     end
     
     if tweets.count > 0
-      logger.info "🔔 Inserting #{tweets.count}"
+      puts "🔔 Inserting #{tweets.count}"
       Tweet.insert_all(tweets, unique_by: :index_tweets_on_tweet_id)
     else
-      logger.info "🔔 No new URLs on the home timeline"
+      puts "🔔 No new URLs on the home timeline"
     end
   end
 
