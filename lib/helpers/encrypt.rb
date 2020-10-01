@@ -2,7 +2,6 @@ require 'base64'
 require 'digest'
 require 'openssl'
 
-
 def get_encryption_key
   ENV.fetch('APP_ENCRYPTION_KEY')
 end

@@ -1,5 +1,7 @@
 require 'uri'
-# logger = Logger.new(STDOUT)
+require 'logger'
+
+logger = Logger.new(STDOUT)
 
 def current_user
   if request.cookies['uid'] && request.cookies['cookie_key']
@@ -23,7 +25,7 @@ end
 
 
 def reload!
-  puts "Reloading #{ENV.fetch('ENV')} environment"
+  logger.info "Reloading #{ENV.fetch('ENV')} environment"
   load './bootup.rb'
 end
 
