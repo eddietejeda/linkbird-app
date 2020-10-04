@@ -102,7 +102,7 @@ class App < Sinatra::Base
     
     if @tweets.count == 0
       @alert = "<p>Setting up your account. <br>This may take a minute the first time</p>"
-    elsif @tweets.count < 15
+    elsif @tweets.count < 10
       @alert = "<p>We need atleast 24 hours of data before this becomes accurate. Check back later.</p>"
     end
     
@@ -122,10 +122,7 @@ class App < Sinatra::Base
     
     if @user && @user.data['public_profile'] == true
       @user_is_public = true
-      
-      
       @hide_menu = @current_logged_in_user ? false : true
-      
       @pagy, @tweets = pagy(Tweet.where(user_id: @user.id).order(created_at: :desc), items: PAGE_LIMIT)      
     end
 
