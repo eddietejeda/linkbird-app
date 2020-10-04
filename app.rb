@@ -112,18 +112,24 @@ class App < Sinatra::Base
   # Friend Tweets
   get '/@:screen_name' do
     @public_page = true
-    byebug
-    @user = find_user params['screen_name'] # regexp ^@?(\w){1,15}$
+    
+    @current_logged_in_user = current_user
+    
+    @user = find_user params[:screen_name] # regexp ^@?(\w){1,15}$
     @tweets = []
     @page_limit = PAGE_LIMIT
     @user_is_public = false
     
     if @user && @user.data['public_profile'] == true
       @user_is_public = true
+      
+      
+      @hide_menu = @current_logged_in_user ? false : true
+      
       @pagy, @tweets = pagy(Tweet.where(user_id: @user.id).order(created_at: :desc), items: PAGE_LIMIT)      
     end
 
-    erb :index
+    erb :timeline
   end
   
   post '/settings/update' do
