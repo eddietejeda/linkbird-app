@@ -60,7 +60,7 @@ def delete_active_cookie(previous_cookie_list, cookie_to_delete)
   new_cookie_list = []
 
   previous_cookie_list.each do |c|
-    if c['public_id'] == cookie_to_delete[:public_id].to_i
+    if c['browser_id'].to_i == cookie_to_delete[:browser_id].to_i
       next
     end
     new_cookie_list << c
@@ -73,11 +73,11 @@ end
 def add_or_update_active_cookies(previous_cookie_list, new_cookie)
   new_cookie_list = []
 
-  if previous_cookie_list.select{|c|c[:public_id] == new_cookie[:public_id]}.length > 0
+  if previous_cookie_list.select{|c|c[:browser_id] == new_cookie[:browser_id]}.length > 0
     # Update
     previous_cookie_list.each do |c|
       current = c
-      if c[:public_id] == new_cookie[:public_id]
+      if c[:browser_id] == new_cookie[:browser_id]
         current = new_cookie
       end
       new_cookie_list << current
