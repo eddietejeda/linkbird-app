@@ -1,41 +1,4 @@
-<!-- Title -->
-<div class="card card-with-no-border">
-   <div class="card-content">
-      <div class="content">
-         <div class="tweetbox has-text-centered">
-           <h3 style="margin:0"></h3>
-         </div>
-      </div>
-   </div>
-</div>  
-
-
-
-
-<!-- Public Tweets -->
-<% if @public_page && @user_is_public %>
-  <div class="card card-with-no-border">
-     <div class="card-content">
-        <div class="content">
-           <div class="tweetbox has-text-centered">
-             <h3>@<%= @user.screen_name %> Newsfeed</h3>
-           </div>
-        </div>
-     </div>
-  </div>  
-<% elsif @user_is_public == false %>
-  <div class="card card-with-no-border">
-     <div class="card-content">
-        <div class="content">
-           <div class="tweetbox has-text-centered">
-             <h3>Account does not exist <br>or is set to private</h3>
-           </div>
-        </div>
-     </div>
-  </div>    
-<% end %>
-
-
+<%= erb(:account) %>
 
 <!-- List Tweets -->
 <% if @tweets %>
@@ -52,7 +15,7 @@
              </div>
            
              <div class="media-content px-2 " style="overflow: hidden;">
-                <a href="<%= t.tweet['url'] %>">
+                <a target="_new" href="<%= t.tweet['url'] %>">
                 
                    <% if t.tweet['title'].to_s.length > 0 %>
                      <h4 class="title is-5 is-size-6-mobile	has-text-black has-text-left"><%= t.tweet['title'] %></h4>
@@ -101,25 +64,4 @@
 
 
 
-
-<!--Pagination -->
-<% if @user.present? && (@user.data.to_h['premium'] == true || @tweets.count > (@page_limit-1)) %>
-  <div class="card <%= @first_download ? 'card-with-no-border' : 'card-with-border' %>">
-     <div class="card-content" >
-        <div class="content">
-           <% if @user.data['premium'] == true %>
-             <%= pagy_bulma_nav(@pagy) if @pagy && @pagy.pages > 1 %>
-           <% elsif !@first_download  %>
-             <div class="tweetbox">
-                <section class="container basic-photo">
-                  <p>You are viewing <%= @tweets.count %> out of <%= @page_limit %> articles.<br>Subscribe to view up to 1000 articles</p>
-                  <button id="activate-premium-plan-btn" class="button is-info">Activate Subscription</button>
-                  <br>
-                  <p><a href="/subscription">Learn more</a><br></p>
-                </section>
-             </div>
-           <% end %>
-        </div>
-     </div>
-  </div>
-<% end %>
+<%= erb(:pagination) %>

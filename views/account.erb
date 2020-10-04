@@ -1,0 +1,42 @@
+<!--  Heading for public profile -->
+<% if @public_page && @user_is_public %>
+  <div class="card card-with-no-border">
+     <div class="card-content">
+        <div class="content">
+           <div class="tweetbox has-text-centered">
+             <h3>@<%= @user.screen_name %> Newsfeed</h3>
+           </div>
+        </div>
+     </div>
+  </div>  
+  
+
+<!--  Heading for private profile -->  
+<% elsif @user_is_public == false %>
+  <div class="card card-with-no-border">
+     <div class="card-content">
+        <div class="content">
+           <div class="tweetbox has-text-centered">
+             <h3>Account does not exist <br>or is set to private</h3>
+           </div>
+        </div>
+     </div>
+  </div>
+  
+  
+  
+  
+<!--  Primary timeline -->
+<% else %>    
+  <div class="card card-with-no-border">
+     <div class="card-content">
+        <div class="content">
+           <div class="tweetbox has-text-centered">
+             <h3 style="margin:0"></h3>
+           </div>
+        </div>
+     </div>
+  </div> 
+  
+   
+<% end %>

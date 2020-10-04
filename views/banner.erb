@@ -1,20 +1,20 @@
 <!--Not logged in -->
 <h1 class="primary-title title has-text-black <%= "not-logged-in" if !@user %>">
-  Ad-free, chatter-free, newsfeed.<br><br>
+  Ad-free, chatter-free, newsfeed.<br>
 </h1>
 
 
 <p style="padding: 0 50px">Get a reading list from your Twitter feed.<br></p>
 
 <!-- Login button -->
-<div class="flex-grid">
-   <div class="col-sm"></div>
-   <div class="col-md">
-     <a id="login-button" href='/auth/twitter?use_authorize=true'><img width="300px" src="/images/sign-in-with-twitter.png"></a>
-     <br>
-     <br>
-     <br>
-     <br>
-   </div>
-   <div class="col-sm"></div>
+<div class="column">
+   <a  href='/auth/twitter?use_authorize=true'>
+     <img id="login-button" src="/images/sign-in-with-twitter.png">
+   </a>
+</div>
+
+
+
+<div class="column">
+  <h3 class="title is-6 has-text-black"><a href="/about">How does it work?</a></h3>
 </div>

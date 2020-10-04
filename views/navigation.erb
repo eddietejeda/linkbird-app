@@ -1,37 +1,33 @@
-<% if current_user %>
+<% if @user %>
+
   <nav class="navbar is-paddingless">
 
     <div class="navbar-brand">
-      <% if current_user %>
-        <a role="button" class="navbar-burger" data-target="navMenu" aria-label="menu" aria-expanded="false">  
-          <span aria-hidden="true"></span>
-          <span aria-hidden="true"></span>
-          <span aria-hidden="true"></span>
-        </a>
-      <% end %>
+      <a role="button" class="navbar-burger" data-target="navMenu" aria-label="menu" aria-expanded="false">  
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+      </a>
     </div>
 
-    <% if current_user %>
-      <div id="navMenu" class="navbar-menu sidenav">
-        <div class="navbar-start">
-          <a class="navbar-item" href="/">
-            Home
-          </a>
+    <div id="navMenu" class="navbar-menu sidenav">
+      <div class="navbar-start">
+        <a class="navbar-item" href="/">
+          Home
+        </a>
+      
           <a class="navbar-item" href="/popular">
-            Popular
+            Popular Today
           </a>
           <a class="navbar-item" href="/profile">
-            Profile
+            <%= @user.is_subscriber? ? 'Profile' : 'Premium &nbsp; <i class="fas fa-lock" style="font-size: 7pt"></i>' %>
           </a>
           <a class="navbar-item is-hidden-desktop" href="/install">
             Install
           </a>
-          <a class="navbar-item" href="/subscription">
-            Subscription
-          </a>
-        </div>
       </div>
-    <% end %>
+    </div>
 
   </nav>
+
 <% end %>

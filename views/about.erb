@@ -3,11 +3,23 @@
     <div class="content">
       <section class="column has-text-left">
         <div class="column px-0">
-          <div style="text-align:center">
-            <% if @user.data['stripe_subscription_status'] != 'active' %>
-              <%= erb(:features) %>
-            <% end %>
-          </div>
+          <h5>How does LinkBird work?</h5>
+          
+          <p>LinkBird connects to your Twitter account and scans your timeline for links shared by your network.</p>
+          
+          <p>This makes it easier for to to stay on top of the biggest news and developments, without having to follow the twitter discussions</p>
+          
+          <p>LinkBird is not ncessarily chronoloical tweets. The links are extracted from your tailored Twitter timeline. So everytime you refresh
+            linkbird, you're getting the most recent articles.</p>
+            
+          <p>When you pull down on timeline, the content refreshes every minute.
+            
+          <p>Since your home timeline is always changing, LinkBird is downloading the most relevant content in the background</p>
+          
+          <p>You can use a c
+
+          <p style="text-align: center;margin: 0 auto;"><a style="text-decoration: none" href="/">Return home</a></p>
+
         </div>
       </section>
     </div>
