@@ -32,15 +32,17 @@ end
 
 def preferred_fav_icon(url, filepath: "config/preferred-fav-icon.yml")
   favicon = YAML.load_file filepath if File.exists? filepath
-  hostname = URI.parse(url).host.gsub("www.", "")
-  second_hostname  =  URI.parse(url).host.split(".").drop(1).join(".")
+  uri = URI.parse(url)
+  hostname = uri.host.gsub("www.", "")
+  second_hostname  =  uri.host.split(".").drop(1).join(".")
   
   if hostname && favicon.to_h[hostname] 
     favicon.to_h[hostname] 
   elsif second_hostname && favicon.to_h[second_hostname] 
     favicon.to_h[second_hostname] 
   else
-    url
+    uri.scheme = "https"
+    uri.to_s
   end
 end
 
