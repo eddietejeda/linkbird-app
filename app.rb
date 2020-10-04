@@ -205,8 +205,8 @@ class App < Sinatra::Base
   end
 
   get '/(about|privacy|install|terms-of-service)' do
-    sanatize_filename = request.env['REQUEST_PATH'].match(/\/([a-zA-Z\-]+)/)[1]
-    @content = Kramdown::Document.new(File.read("views/static/#{sanatize_filename}.md")).to_html
+    @filepath = request.env['REQUEST_PATH'].match(/\/([a-zA-Z\-]+)/)[1]
+    @content = Kramdown::Document.new(File.read("views/static/#{@filepath}.md")).to_html
     erb :static
   end
 
