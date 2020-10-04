@@ -1,9 +1,13 @@
 ### Privacy 
 
-What information is collected? The only information collected from users is: 
+#####  What information is collected?
+
+We purposely use the Twitter API calls with minimal access. The only information collected from users are: 
 
 * Twitter IDs and authentication keys 
 * Tweets contents to display on LinkBird 
+
+
 
 ##### Use of cookies, log files, and tracking
 
