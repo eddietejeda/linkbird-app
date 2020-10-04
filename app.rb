@@ -1,4 +1,5 @@
 # encoding: utf-8
+PAGE_LIMIT=20.freeze
 
 class App < Sinatra::Base
   
@@ -39,14 +40,12 @@ class App < Sinatra::Base
     end    
   end
   
-  @@page_limit = 20
   
   # Home
   get '/' do
     
     @tweets = []
     @user = current_user
-    
     if @user.present?
       
       @show_loading_bar = true
@@ -62,9 +61,9 @@ class App < Sinatra::Base
         TweetWorker.perform_async( @user.id, 50 )
       end
       
-      @page_limit = @@page_limit
+      @page_limit = PAGE_LIMIT
       @minutes_until_next_update = [(update_frequency_in_minutes - minutes_since_last_update), 0].max
-      @pagy, @tweets = pagy(Tweet.where(user_id: @user.id).order(created_at: :desc), items: @@page_limit)
+      @pagy, @tweets = pagy(Tweet.where(user_id: @user.id).order(created_at: :desc), items: PAGE_LIMIT)
       
       if @tweets.count.equal? 0
         @alert = "<p>Setting up your account. <br>This may take a minute the first time</p>"
@@ -76,6 +75,10 @@ class App < Sinatra::Base
         <br>
         <p>On mobile devices, you can pull down on the page to fetch new links.</p>" 
       end
+      
+      
+    else
+      @hide_menu = true
     end
 
     erb :index
@@ -86,7 +89,7 @@ class App < Sinatra::Base
     @user = authenticate!
     
     @tweets = []
-    @page_limit = @@page_limit
+    @page_limit = PAGE_LIMIT
     
     if @user.present?
       @tweets = Tweet.find_by_sql ["SELECT *, SUM((meta->>'favorite_count')::int + (meta->>'retweet_count')::int) AS total 
@@ -114,43 +117,85 @@ class App < Sinatra::Base
     
     @user = find_user params['screen_name'] # regexp ^@?(\w){1,15}$
     @tweets = []
-    @page_limit = @@page_limit
+    @page_limit = PAGE_LIMIT
     @user_is_public = false
     
-    if @user && @user.data['public'] == true
+    if @user && @user.data['public_profile'] == 1
       @user_is_public = true
-      @pagy, @tweets = pagy(Tweet.where(user_id: @user.id).order(created_at: :desc), items: @page_limit)      
+      @pagy, @tweets = pagy(Tweet.where(user_id: @user.id).order(created_at: :desc), items: PAGE_LIMIT)      
     end
 
     erb :index
   end
   
-  post '/profile/visibility' do
+  post '/settings/update' do
     data = JSON.parse request.body.read
-    
     @user = authenticate!
     
-    @user.data['public'] = (data['public']=='true')
-    @user.save!
+    status = false;
+    
+    # TODO: merge the logic of basic_settings and premium_features into a function
+    basic_settings = [
+      "public_profile",
+      "pull_to_refresh_timeline"
+    ]
+    
+
+    if basic_settings.include? (data.keys.first)
+
+      if data.values.first === "true" || data.values.first === "false"
+        data_value = (data.values.first == "true")
+      else
+        data_value = data.values.first.to_i
+      end 
+
+      @user.data[data.keys.first] = data_value
+      status = true if @user.save!
+    end
+
+    premium_features = [
+      "update_frequency_in_minutes",
+      "tweet_archive_limit"
+    ]
+
+    if (premium_features.include? (data.keys.first)) && (@user.is_subscriber?)
+      # We only mess with bools and numbers in these toggles
+      if data.values.first === "true" || data.values.first === "false"
+        data_value = (data.values.first == "true")
+      else
+        data_value = data.values.first.to_i
+      end 
+      
+
+      @user.data[data.keys.first] = data_value
+      status = true if @user.save!
+    end
+
     
     content_type 'application/json'
-    { status: 'success' }.to_json      
+    { status: status }.to_json
   end
   
   get '/profile' do
     @user = authenticate!
 
-
-    if @user && @user.screen_name.empty?
-      user_secrets = @user.secret_data
-      client = get_twitter_connection(user_secrets['access_token'], user_secrets['access_token_secret'])      
-      @user.screen_name = client.user.screen_name
-      @user.save!
+    # TODO: Remove once all users have set user name after first login
+    if @user
+      
+      @page_limit = PAGE_LIMIT
+      @subscription_page = true
+      @user.update_stripe_user_subscription params[:session_id] 
+      
+      if @user.screen_name.empty?
+        user_secrets = @user.secret_data
+        client = get_twitter_connection user_secrets['access_token'], user_secrets['access_token_secret']
+        @user.screen_name = client.user.screen_name
+        @user.save!
+      end
+      
     end
     
     @user_url = "#{root_domain}/@#{@user.screen_name}"
-    @user_is_public = (@user.data.to_h['public'] == true)
-
     erb :profile
   end
 
@@ -158,9 +203,14 @@ class App < Sinatra::Base
     user = authenticate!
     
     user.cancel_subscription
-    user.set_subscription_status!
-    redirect '/subscription'      
+    user.refresh_account_settings!
+    redirect '/profile?canceled=profile-page'      
   end
+
+  get '/about' do
+    erb :about
+  end
+  
 
   get '/privacy' do
     erb :privacy
@@ -187,36 +237,26 @@ class App < Sinatra::Base
     
     redirect '/'
   end
-  get '/subscription' do
+  
+  
+  # get '/subscription' do
+  #   @user = authenticate!
+  #   @page_limit = PAGE_LIMIT
+  #   @subscription_page = true
+  #
+  #   set_stripe_user_settings(@user, params[:session_id])
+  #
+  #   erb :checkout
+  # end
+  
+  get '/checkout/setup' do
+    content_type 'application/json'
+    { publishableKey: ENV['STRIPE_PUBLISHABLE_KEY'], subcriptionPriceId: ENV['STRIPE_PRICE_KEY'] }.to_json
+  end
+
+  post '/checkout/session' do
     @user = authenticate!
 
-    @page_limits = @@page_limit
-
-    session_id = params[:session_id]
-    
-    if session_id
-      session = Stripe::Checkout::Session.retrieve(session_id)
-    
-      @user.data["stripe_customer"]     = session['customer']
-      @user.data["stripe_subscription"] = session['subscription']
-
-      @user.save!
-      @user.set_subscription_status!
-    end
-    
-    @subscription_page = true
-
-    erb :subscription
-  end
-  
-  
-
-  get '/setup' do
-    content_type 'application/json'
-    { publishableKey: ENV['STRIPE_PUBLISHABLE_KEY'], basicPrice: ENV['STRIPE_PRICE_KEY'] }.to_json
-  end
-
-  post '/create-checkout-session' do
     content_type 'application/json'
     data = JSON.parse request.body.read
     # Create new Checkout Session for the order
@@ -230,13 +270,13 @@ class App < Sinatra::Base
     # root_domain = ENV['PRODUCTION_URL'] ? "https://#{ENV['PRODUCTION_URL']}" : "http://localhost:9292"
     
     session = Stripe::Checkout::Session.create(
-      success_url: "#{root_domain}/subscription?session_id={CHECKOUT_SESSION_ID}",
-      cancel_url: "#{root_domain}/subscription?cancel=1",
+      success_url: "#{root_domain}/profile?session_id={CHECKOUT_SESSION_ID}",
+      cancel_url: "#{root_domain}/profile?canceled=checkout-page",
       payment_method_types: ['card'],
       mode: 'subscription',
       line_items: [{
         quantity: 1,
-        price: data['priceId'],
+        price: data['subcriptionPriceId'],
       }]
     )
 
@@ -244,6 +284,7 @@ class App < Sinatra::Base
   end
 
   post '/webhook' do
+    @user = authenticate!
     # You can use webhooks to receive information about asynchronous payment events.
     # For more about our webhook events check out https://stripe.com/docs/webhooks.
     webhook_secret = ENV['STRIPE_WEBHOOK_SECRET']
@@ -287,7 +328,6 @@ class App < Sinatra::Base
   
   # Twitter Auth
   get '/auth/twitter/callback' do
-
     cookies[:uid] = env['omniauth.auth']['uid']
     cookies[:cookie_key] = SecureRandom.uuid
 
@@ -306,18 +346,31 @@ class App < Sinatra::Base
       user.secret_key = secret_key
     end
 
+    
+    # basic finger printing. the cookie is the real unique
+    # value. but this is for extra measure to make it easier
+    # to identify which browser we are signing out when we
+    # destroy sessions
+    
+    browser_id = Digest::SHA256.hexdigest "#{request.env['HTTP_USER_AGENT']}
+              #{request.env['REMOTE_ADDR']}
+              #{request.env['HTTP_SEC_CH_UA']}
+              #{request.env['HTTP_ACCEPT_LANGUAGE']}
+              #{request.env['REMOTE_ADDR']}"
+
     new_cookie = { 
-      public_id: cookies[:cookie_key].hash.abs, 
+      browser_id: browser_id,
       cookie_key: cookies[:cookie_key], 
       last_login: DateTime.now, 
-      browser: request.env['HTTP_USER_AGENT'] 
+      browser: request.env['HTTP_USER_AGENT']
     }
-    user.cookie_keys = add_or_update_active_cookies(user.cookie_keys, new_cookie)
     
+    
+    user.cookie_keys = add_or_update_active_cookies(user.cookie_keys, new_cookie)
     user.encrypted_data = encrypt_data(user.secret_key, user_secrets.to_h.to_json.to_s)
 
     user.save!
-    user.set_subscription_status!
+    user.refresh_account_settings!
 
     redirect to('/')    
   end
@@ -329,7 +382,6 @@ class App < Sinatra::Base
     when 'invalid_credentials'
       @alert = "<strong>Error from Twitter</strong> <p>You authentication failed or was canceled.</p><p><a href='/'>Try again</a></p>."
     end
-    
     erb :index
   end
   
@@ -346,15 +398,15 @@ class App < Sinatra::Base
   end
   
   get '/security' do
-    user = authenticate!    
+    @user = authenticate!    
     @login_history = current_user.cookie_keys #.sort_by{|k, v| puts k["last_login"]}.reverse    
     erb :security
   end
   
   
-  post '/disconnect/session' do 
+  post '/session/destroy' do 
     content_type 'application/json'
-    user = authenticate!
+    @user = authenticate!
   
     data = JSON.parse request.body.read
     invalidate_session_cookie(data['public_id'])
@@ -365,7 +417,8 @@ class App < Sinatra::Base
   
   not_found do
     status 404
-    erb :_404
+    @error = "Page not found"
+    erb :error
   end
 
   
@@ -384,10 +437,10 @@ class App < Sinatra::Base
     end
     
     def pagy_get_vars(collection, vars)
-      {
+      { 
         count: collection.count,
         page: params["page"],
-        items: vars[:items] || @@page_limit
+        items: vars[:items] || PAGE_LIMIT
       }
     end
 
