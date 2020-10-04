@@ -13,4 +13,3 @@ document.querySelectorAll('.disconnect-button').forEach(function(btn){
     });
   });
 });
-  

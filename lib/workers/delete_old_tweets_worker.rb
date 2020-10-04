@@ -5,7 +5,7 @@ class DeleteOldTweetsWorker
   def perform(user_id)
     
     user = User.find_by( id: user_id )
-    max_tweets = user.data.to_h["tweet_archive_limit"].to_i * 10 # create a bit of a buffer
+    max_tweets = user.data.to_h["tweet_archive_limit"] ? user.data.to_h["tweet_archive_limit"].to_i * 10 : 100 # create a bit of a buffer
     
     logger.info "Current user_id=#{user.id} has #{user.tweets.size} tweets"
 

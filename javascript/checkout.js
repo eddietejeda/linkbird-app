@@ -32,7 +32,7 @@ document.querySelectorAll('.cancel-subscription-link').forEach(function(link){
   link.addEventListener("click", function () {
     document.getElementById('cancel-subscription-form').submit();
   }); 
-})
+});
 
 
 // Create a Checkout Session with the selected plan ID
@@ -56,5 +56,3 @@ var handleResult = function(result) {
     console.log(document.getElementById("error-message").error.message);
   }
 };
-
-

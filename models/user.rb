@@ -4,7 +4,7 @@ class User < ActiveRecord::Base
     
   def refresh_account_settings!
 
-    # these values are only set 
+    # these values are only set if subscription has been set by update_stripe_user_subscription
     if self.data["stripe_subscription"]
       subscription = Stripe::Subscription.retrieve(self.data["stripe_subscription"])
       self.data["stripe_subscription_status"] = subscription.status
@@ -42,10 +42,7 @@ class User < ActiveRecord::Base
       
   def rotate_secret_key
     
-    
   end
-  
-  
   
   def last_login
     DateTime.parse self.data['login_data'].reverse.first
@@ -96,7 +93,6 @@ class User < ActiveRecord::Base
   
   
   def update_stripe_user_subscription(session_id)
-    
     if session_id
       session = Stripe::Checkout::Session.retrieve(session_id)
 

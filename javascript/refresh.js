@@ -18,7 +18,6 @@ if (loading){
     }
   }
   
-  
   function swipeEnd(e) {
     isLoading=false;
   }
