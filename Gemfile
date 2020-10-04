@@ -27,6 +27,7 @@ gem "aws-sdk", "~> 3.0"
 gem "aws-sdk-s3", "~> 1.81"
 gem "redis-sinatra", "~> 1.4"
 gem "user_agent_parser", "~> 2.7"
+gem "kramdown", "~> 2.3"
 
 group :development, :test do
   gem "byebug", "~> 11.1"

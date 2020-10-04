@@ -201,21 +201,10 @@ class App < Sinatra::Base
     redirect '/profile?canceled=profile-page'      
   end
 
-  get '/about' do
-    erb :about
-  end
-  
-
-  get '/privacy' do
-    erb :privacy
-  end
-  
-  get '/install' do
-    erb :install
-  end
-    
-  get '/terms-of-service' do
-    erb :terms_of_service
+  get '/(about|privacy|install|terms-of-service)' do
+    sanatize_filename = request.env['REQUEST_PATH'].match(/\/([a-zA-Z\-]+)/)[1]
+    @content = Kramdown::Document.new(File.read("views/static/#{sanatize_filename}.md")).to_html
+    erb :static
   end
 
   get '/refresh' do

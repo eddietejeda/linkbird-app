@@ -23,7 +23,7 @@
         
         
         <!-- Premium -->
-         <input type="hidden" id="is-premium-user" value="<%= @user.data.to_h['is_premium'] %>" >
+         <input type="hidden" id="is-premium-user" value="<%= @user.is_subscriber? %>" >
 
         <!-- Public Profile -->
         <div class="columns">

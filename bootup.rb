@@ -18,6 +18,7 @@ require 'user_agent_parser'
 
 require 'securerandom'
 require 'digest'
+require 'kramdown'
 
 require 'logger'
 require 'pg'

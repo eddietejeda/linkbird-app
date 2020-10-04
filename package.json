@@ -8,7 +8,7 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "webpack -d",
+    "dev": "npx webpack --mode development --watch --info-verbosity verbose",
     "build": "webpack --mode production"
   },
   "author": "",
