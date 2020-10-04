@@ -12,4 +12,4 @@ Over time, we'll be adding features that will make it easy for you to slice and 
 
 ##### What are the terms of service and privacy policy?
 
-Privacy is extremely important and the service is entirely funded by its subscribers. Please review the [Terms of Service](/terms-of-service) and [Privacy Policy](/privacy) for more information. 
+Privacy is at the core of LinkBird and why LinkBird is entirely funded by its subscribers. Please review the [Terms of Service](/terms-of-service) and [Privacy Policy](/privacy) for more information. 
