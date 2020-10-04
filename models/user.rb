@@ -12,11 +12,11 @@ class User < ActiveRecord::Base
     end
 
     if !self.data["public_profile"]
-      self.data["public_profile"] = 1
+      self.data["public_profile"] = true
     end
     
     if !self.data["pull_to_refresh_timeline"]
-      self.data["pull_to_refresh_timeline"] = 1
+      self.data["pull_to_refresh_timeline"] = true
     end
     
 
@@ -25,7 +25,7 @@ class User < ActiveRecord::Base
     end
 
     if !self.data["tweet_archive_limit"]
-      self.data["tweet_archive_limit"] = 200
+      self.data["tweet_archive_limit"] = 20
     end
     
     self.save!

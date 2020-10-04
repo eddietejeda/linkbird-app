@@ -94,12 +94,10 @@ class App < Sinatra::Base
     if @user.present?
       @tweets = Tweet.find_by_sql ["SELECT *, SUM((meta->>'favorite_count')::int + (meta->>'retweet_count')::int) AS total 
         FROM tweets 
-        WHERE 
-        	user_id = :user_id AND
-        	created_at > current_date - interval '1' day
+        WHERE user_id = :user_id AND created_at > current_date - interval '1' day
         GROUP BY id 
         ORDER BY total 
-        DESC LIMIT 15", {user_id: @user.id}]
+        DESC LIMIT 10", {user_id: @user.id}]
     end
     
     if @tweets.count == 0
@@ -114,13 +112,13 @@ class App < Sinatra::Base
   # Friend Tweets
   get '/@:screen_name' do
     @public_page = true
-    
+    byebug
     @user = find_user params['screen_name'] # regexp ^@?(\w){1,15}$
     @tweets = []
     @page_limit = PAGE_LIMIT
     @user_is_public = false
     
-    if @user && @user.data['public_profile'] == 1
+    if @user && @user.data['public_profile'] == true
       @user_is_public = true
       @pagy, @tweets = pagy(Tweet.where(user_id: @user.id).order(created_at: :desc), items: PAGE_LIMIT)      
     end
@@ -139,10 +137,8 @@ class App < Sinatra::Base
       "public_profile",
       "pull_to_refresh_timeline"
     ]
-    
 
     if basic_settings.include? (data.keys.first)
-
       if data.values.first === "true" || data.values.first === "false"
         data_value = (data.values.first == "true")
       else
@@ -181,7 +177,6 @@ class App < Sinatra::Base
 
     # TODO: Remove once all users have set user name after first login
     if @user
-      
       @page_limit = PAGE_LIMIT
       @subscription_page = true
       @user.update_stripe_user_subscription params[:session_id] 
@@ -192,7 +187,6 @@ class App < Sinatra::Base
         @user.screen_name = client.user.screen_name
         @user.save!
       end
-      
     end
     
     @user_url = "#{root_domain}/@#{@user.screen_name}"
