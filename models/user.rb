@@ -2,14 +2,30 @@ class User < ActiveRecord::Base
 
   has_many :tweets
     
-  def set_subscription_status!
-    self.data['premium'] = subscribed?
-    
+  def refresh_account_settings!
+
+    # these values are only set 
     if self.data["stripe_subscription"]
       subscription = Stripe::Subscription.retrieve(self.data["stripe_subscription"])
-    
       self.data["stripe_subscription_status"] = subscription.status
       self.data["stripe_subscription_end_date"] = Time.at(subscription.current_period_end)
+    end
+
+    if !self.data["public_profile"]
+      self.data["public_profile"] = 1
+    end
+    
+    if !self.data["pull_to_refresh_timeline"]
+      self.data["pull_to_refresh_timeline"] = 1
+    end
+    
+
+    if !self.data["update_frequency_in_minutes"]
+      self.data["update_frequency_in_minutes"] = 20
+    end
+
+    if !self.data["tweet_archive_limit"]
+      self.data["tweet_archive_limit"] = 200
     end
     
     self.save!
@@ -24,10 +40,12 @@ class User < ActiveRecord::Base
   end
       
       
-  def update_secret_key
+  def rotate_secret_key
     
     
   end
+  
+  
   
   def last_login
     DateTime.parse self.data['login_data'].reverse.first
@@ -46,17 +64,27 @@ class User < ActiveRecord::Base
     last_update_in_seconds / 60
   end
     
+
+  def is_subscriber?
+    self.is_active_subscriber? || self.is_canceled_subscriber?
+  end
   
-  def subscribed?
-    # Needs research. There should be a simpler API call for this. 
-    customer = self.data.to_h['stripe_customer']
-    if customer
-      Stripe::Customer.retrieve(customer).subscriptions.map{|s| 
-        s.plan[:active] == true && s.plan[:product] == ENV['STRIPE_PRODUCT_KEY']
-      }.first
+  def is_active_subscriber?
+    subscriber = false
+    
+    if self.data.to_h['stripe_subscription_status']
+      subscriber = (self.data.to_h['stripe_subscription_status'] == "active")
+    elsif self.is_canceled_subscriber?
+      subscriber = true
     end
+
+    return subscriber
   end
 
+  def is_canceled_subscriber?
+    (self.data.to_h['stripe_subscription_status'] == "canceled") && (self.data.to_h['stripe_subscription_end_date'] > DateTime.now)
+  end
+  
   def cancel_subscription
     customer = self.data.to_h['stripe_customer']
     subscription = self.data.to_h['stripe_subscription']
@@ -67,7 +95,22 @@ class User < ActiveRecord::Base
   end
   
   
+  def update_stripe_user_subscription(session_id)
+    
+    if session_id
+      session = Stripe::Checkout::Session.retrieve(session_id)
+
+      self.data["stripe_customer"]     = session['customer']
+      self.data["stripe_subscription"] = session['subscription']
+
+      self.save!
+      self.refresh_account_settings!
+    end
+  end
+  
+  
   def update_tweets(items=25)
+    
     tweets = []
     
     client = get_twitter_connection(self.secret_data['access_token'], self.secret_data['access_token_secret'])

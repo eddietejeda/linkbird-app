@@ -10,3 +10,7 @@ config/symmetric-encryption.yml
 bin/
 public/stylesheets/sass/backup.scss
 *.dump
+node_modules/
+public/fonts/
+public/main.css
+public/main.js

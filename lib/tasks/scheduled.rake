@@ -7,10 +7,8 @@ namespace :db do
     User.all.each do |user|
       
       if user.secret_key.empty? || user.encrypted_data.empty?
-        puts "🔔 Updating Tweets - Current user #{user.id} - Keys empty."
+        puts "⛔ Updating Tweets - Current user #{user.id} - Security keys not found."
         next
-      else
-        puts "🔔 Updating Tweets - Current user #{user.id} - Keys found"        
       end
       
       user_secrets = user.secret_data

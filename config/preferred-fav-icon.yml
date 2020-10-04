@@ -7,7 +7,7 @@
 "bloomberg.com"       : "https://linkbird-app.s3.amazonaws.com/bloomberg.jpg"
 "washingtonpost.com"  : "https://linkbird-app.s3.amazonaws.com/washingtonpost.ico"
 "https://assets.bwbx.io/s3/javelin/public/javelin/images/favicon-black-63fe5249d3.png" : "https://linkbird-app.s3.amazonaws.com/bloomberg.jpg"
-
+"https://www.spur.org/sites/default/files/favicon.png" : "https://pbs.twimg.com/profile_images/1283457372699017216/v0M0jO2G_400x400.jpg"
 # "news.bbc.co.uk"      : "https://linkbird-app.s3.amazonaws.com/bloomberg.jpg"
 # "economist.com"       : "https://linkbird-app.s3.amazonaws.com/bloomberg.jpg"
 # "nytimes.com"         : "https://linkbird-app.s3.amazonaws.com/bloomberg.jpg"
