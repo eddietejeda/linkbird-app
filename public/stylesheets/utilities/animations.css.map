@@ -1,7 +1,0 @@
-{
-"version": 3,
-"mappings": "2BAEI,SAAS,CAAE,YAAY,IAEvB,SAAS,CAAE,cAAc",
-"sources": ["../sass/utilities/animations.sass"],
-"names": [],
-"file": "animations.css"
-}
