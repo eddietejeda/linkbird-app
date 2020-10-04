@@ -17,6 +17,7 @@ require 'curb'
 require 'user_agent_parser'
 
 require 'securerandom'
+require 'digest'
 
 require 'logger'
 require 'pg'
