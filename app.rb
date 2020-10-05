@@ -177,18 +177,10 @@ class App < Sinatra::Base
   get '/profile' do
     @user = authenticate!
 
-    # TODO: Remove once all users have set user name after first login
     if @user
       @page_limit = PAGE_LIMIT
       @subscription_page = true
-      @user.update_stripe_user_subscription params[:session_id] 
-      
-      if @user.screen_name.empty?
-        user_secrets = @user.secret_data
-        client = get_twitter_connection user_secrets['access_token'], user_secrets['access_token_secret']
-        @user.screen_name = client.user.screen_name
-        @user.save!
-      end
+      @user.update_stripe_user_subscription params[:session_id]       
     end
     
     @user_url = "#{root_domain}/@#{@user.screen_name}"
@@ -321,7 +313,11 @@ class App < Sinatra::Base
       user.secret_key = secret_key
     end
 
-    
+
+    # check screen_name after every login
+    client = get_twitter_connection user_secrets['access_token'], user_secrets['access_token_secret']
+    user.screen_name = client.user.screen_name
+
     # basic finger printing. the cookie is the real unique
     # value. but this is for extra measure to make it easier
     # to identify which browser we are signing out when we
