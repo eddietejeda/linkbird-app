@@ -1,0 +1,21 @@
+<!--Not logged in -->
+
+<div class="column is-12">
+  
+  <div class="column" style="margin-top: 0px">    
+    <h1 class="primary-title title has-text-black <%= "not-logged-in" if !@user %>">
+      Ad-free, chatter-free, newsfeed.<br>
+    </h1>
+    <p class="slogan">Get a reading list from your Twitter feed.<br></p>
+
+
+    <!-- Login button -->
+    <a  href='/auth/twitter?use_authorize=true'>
+      <img id="login-button" src="/images/sign-in-with-twitter.png">
+    </a>       
+  </div>
+  
+  <h3 class="title is-6 has-text-black"><a href="/about">How does it work? <i class="fas fa-graduation-cap"></i></a></h3>
+  
+</div>
+

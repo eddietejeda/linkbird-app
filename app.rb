@@ -69,13 +69,12 @@ class App < Sinatra::Base
         @alert = "<p>Setting up your account. <br>This may take a minute the first time</p>"
         
       elsif @tweets.count < 15
-        @alert = "<p><strong>Don't see many Tweets?</strong></p> 
-        <p>That's okay! LinkBird does not go back in your timeline, it only looks forward. 
-        This means that over time, LinkBird shows more relevant links. </p>
-        <br>
-        <p>On mobile devices, you can pull down on the page to fetch new links.</p>" 
+        @alert = "<p><strong>Don't see many Tweets?</strong></p>
+                  <p>That's okay! LinkBird does not go back in your timeline, it only looks forward.
+                  This means that over time, LinkBird shows more relevant links. </p>
+                  <br>
+                  <p>On mobile devices, you can pull down on the page to fetch new links.</p>"
       end
-      
       
     else
       @hide_menu = true
@@ -225,16 +224,6 @@ class App < Sinatra::Base
   end
   
   
-  # get '/subscription' do
-  #   @user = authenticate!
-  #   @page_limit = PAGE_LIMIT
-  #   @subscription_page = true
-  #
-  #   set_stripe_user_settings(@user, params[:session_id])
-  #
-  #   erb :checkout
-  # end
-  
   get '/checkout/setup' do
     content_type 'application/json'
     { publishableKey: ENV['STRIPE_PUBLISHABLE_KEY'], subcriptionPriceId: ENV['STRIPE_PRICE_KEY'] }.to_json
@@ -337,7 +326,6 @@ class App < Sinatra::Base
     # value. but this is for extra measure to make it easier
     # to identify which browser we are signing out when we
     # destroy sessions
-    
     browser_id = Digest::SHA256.hexdigest "#{request.env['HTTP_USER_AGENT']}
               #{request.env['REMOTE_ADDR']}
               #{request.env['HTTP_SEC_CH_UA']}
