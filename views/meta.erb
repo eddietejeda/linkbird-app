@@ -11,6 +11,16 @@
   <link rel="apple-touch-icon" sizes="228x228" href="/images/touch-logo.png"/>
   <link rel="icon" type="image/png" href="/images/favicon.png">
 
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-179944627-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-179944627-1');
+  </script>
+
   <% if @first_download %>
     <meta http-equiv="refresh" content="5">
   <% end %>

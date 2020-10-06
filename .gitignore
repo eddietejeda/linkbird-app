@@ -5,7 +5,8 @@ vendor
 node_modules
 tmp
 bin
-public/fonts/
+media/private
+public/fonts
 public/images/*.pxm
 public/stylesheets/*.css
 public/stylesheets/*.map
