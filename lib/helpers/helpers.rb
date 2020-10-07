@@ -108,7 +108,24 @@ def format_datetime(datetime, timezone)
 end
 
 
+def prettify_datetime(datetime)
+  
+  d = datetime
+  if d.class == String
+    d = DateTime.parse(datetime)
+  end
+  
+  d.strftime('%b %-d, %Y %l:%M%P')
+end
+
+
 def valid_timezone(timezone)
   timezone.to_s.match(/[\-\+]\d\d\:\d\d/)
+end
+
+
+def reading_time(text)
+   time = text.split(" ").count / 250
+   "#{time} minute#{'s' if time > 2}"
 end
 
