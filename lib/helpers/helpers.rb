@@ -110,11 +110,14 @@ end
 
 def prettify_datetime(datetime)
   
+  if !datetime
+    return ""
+  end
+  
   d = datetime
   if d.class == String
     d = DateTime.parse(datetime)
   end
-  
   d.strftime('%b %-d, %Y %l:%M%P')
 end
 
