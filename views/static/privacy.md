@@ -14,10 +14,11 @@ LinkBird purposely uses the Twitter API calls with the least permissions. The on
 * Cookies are primarily used for session management. 
 * Basic fuzzy fingerprinting is used to help you manage and protect your active sessions in the [security page](/security) and not associated with any other data.  
 * Server logs are used only for performance and technical diagnostics using New Relic.
+* Google Analytics is used only to count visitors, not for advertising.
 * After 1000 links, a daily script automatically deletes old tweets.
 
 ##### Contact information 
 
 For questions, contact privacy@linkbird.app 
 
-Effective: Oct 6, 2020
+Effective: Oct 7, 2020
