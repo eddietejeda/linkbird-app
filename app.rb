@@ -19,7 +19,7 @@ class App < Sinatra::Base
   configure :development do
     register Sinatra::Reloader
     set :show_exceptions, true
-    set :sessions, same_site: :lax, secure: true, path: '/'
+    # set :sessions, same_site: :lax, secure: true, path: '/'
   end
 
   configure :production do
