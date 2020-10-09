@@ -8,10 +8,10 @@ if ENV['NEW_RELIC_LICENSE_KEY']
   require 'newrelic_rpm'
 end
 
-if settings.production?
-  run App
-else
+if settings.development?
   run Rack::URLMap.new('/' => App, '/sidekiq' => Sidekiq::Web)  
+else
+  run App
 end
 
 

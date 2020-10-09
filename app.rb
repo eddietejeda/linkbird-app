@@ -19,11 +19,15 @@ class App < Sinatra::Base
   configure :development do
     register Sinatra::Reloader
     set :show_exceptions, true
-    set :sessions, same_site: :lax, secure: true, path: '/'
+    set :sessions, same_site: :lax, secure: false, path: '/'
   end
 
   configure :staging do
-    # set :sessions, domain: 'www.linkbird.app', secure: true
+    set :sessions, same_site: :lax, secure: true, path: '/'
+  end
+
+  configure :production do
+    # set :sessions, domain: 'linkbird.app', secure: true
   end
 
   configure :production, :development, :staging do
