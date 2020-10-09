@@ -19,14 +19,14 @@ class App < Sinatra::Base
   configure :development do
     register Sinatra::Reloader
     set :show_exceptions, true
-    # set :sessions, same_site: :lax, secure: true, path: '/'
+    set :sessions, same_site: :lax, secure: true, path: '/'
   end
 
-  configure :production do
+  configure :staging do
     # set :sessions, domain: 'www.linkbird.app', secure: true
   end
 
-  configure :production, :development do
+  configure :production, :development, :staging do
     use OmniAuth::Builder do
       provider :twitter, ENV['TWITTER_API_CONSUMER_KEY'], ENV['TWITTER_API_CONSUMER_SECRET']
     end  
