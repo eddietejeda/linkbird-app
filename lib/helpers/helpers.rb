@@ -107,6 +107,16 @@ def format_datetime(datetime, timezone)
   end
 end
 
+def browser_fingerprint
+  # basic finger printing. the cookie is the real unique
+  # value. but this is for extra measure to make it easier
+  # to identify which browser we are signing out when we
+  # destroy sessions
+  "#{request.env['HTTP_USER_AGENT']}#{request.env['REMOTE_ADDR']}"
+end
+
+
+
 
 def prettify_datetime(datetime)
   

@@ -318,18 +318,8 @@ class App < Sinatra::Base
     client = get_twitter_connection user_secrets['access_token'], user_secrets['access_token_secret']
     user.screen_name = client.user.screen_name
 
-    # basic finger printing. the cookie is the real unique
-    # value. but this is for extra measure to make it easier
-    # to identify which browser we are signing out when we
-    # destroy sessions
-    browser_id = Digest::SHA256.hexdigest "#{request.env['HTTP_USER_AGENT']}
-              #{request.env['REMOTE_ADDR']}
-              #{request.env['HTTP_SEC_CH_UA']}
-              #{request.env['HTTP_ACCEPT_LANGUAGE']}
-              #{request.env['REMOTE_ADDR']}"
-
     new_cookie = { 
-      browser_id: browser_id,
+      browser_id: browser_fingerprint,
       cookie_key: cookies[:cookie_key], 
       last_login: DateTime.now, 
       browser: request.env['HTTP_USER_AGENT']
@@ -374,6 +364,9 @@ class App < Sinatra::Base
   end
   
   
+  
+  
+  
   post '/session/destroy' do 
     content_type 'application/json'
     @user = authenticate!
@@ -397,7 +390,7 @@ class App < Sinatra::Base
     def authenticate!
       user = current_user
       if !user
-        redirect '/'      
+        redirect '/'
       end
       user
     end
