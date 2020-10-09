@@ -2,7 +2,7 @@
 
 <img src="/images/phone-view.png" style="top: 0; float: right; width: 200px; padding: 5px ; margin: 20px 50px 50px">
 
-LinkBird was created to solve a simple challenge: finding interesting articles shared on Twitter without scrolling through <i>a lot</i> of chatter. Sometimes it's fun to follow Twitter discussions. Other times, it's not. 
+LinkBird was created to solve a simple problem: finding interesting articles shared on Twitter without scrolling through <i>a lot</i> of chatter. Sometimes it's fun to follow Twitter discussions. Other times, it's not. 
 
 ##### How does LinkBird work?
 
