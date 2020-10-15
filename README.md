@@ -8,3 +8,14 @@ Credit:
 
 https://fontawesome.com/icons/heart?style=solid
 https://fontawesome.com/icons/retweet?style=solid
+
+
+https://www.quora.com/Is-it-legally-okay-that-sites-or-apps-like-Pocket-are-able-to-show-content-within-app-from-various-sites-without-needing-the-user-to-leave
+
+
+
+-----
+RELEASE
+rename heroku task to: get_recent_tweets
+
+rename access tokens
