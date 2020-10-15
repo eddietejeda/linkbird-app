@@ -1,0 +1,44 @@
+<!-- Render Tweets -->
+<div class="card card-with-no-border">
+   <div class="card-content">
+      <div class="content">
+         <div class="tweetbox has-text-centered">
+           <h4 style="margin:0">Lists</h4>
+         </div>
+      </div>
+   </div>
+</div>  
+
+
+
+<div class="card card-with-no-border">
+  <div class="card-content">
+    <div class="content">
+      <section class="has-text-centered">
+        <!-- Premium -->
+        <!-- <h4>Lists</h4> -->
+        <!-- Premium -->
+         <input type="hidden" id="is-premium-user" value="<%= @current_user.is_subscriber? %>" >
+                
+        <% @lists.each_with_index do |list, index|%>
+          <!-- Public Profile -->
+          <div class="columns">
+            <div class="column is-7 is-offset-1 has-text-left">
+              <strong><a href="<%= list['url'] %>"><%= list['name'] %></a> </strong>
+              <p><%= list['description'] %></p> 
+            </div>
+            <div class="column is-3 is-offset-1">
+              <div class="buttons has-addons">
+                <button data-setting-name="<%= index %>" value="true"  class="toggle-settings-button button <%= "is-info is-selected" if @current_user && @current_user.data.to_h['lists'][index].to_h['show'] == true %>">Show</button>
+                <button data-setting-name="<%= index %>" value="false"  class="toggle-settings-button button <%= "is-info is-selected" if @current_user && @current_user.data.to_h['lists'][index].to_h['show'] == false %>">Hide</button>
+              </div>
+            </div>
+          </div>
+          
+        <% end %>  
+        
+        
+      </section>
+    </div>
+  </div>
+</div> 

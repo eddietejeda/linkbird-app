@@ -2,8 +2,12 @@ class User < ActiveRecord::Base
 
   has_many :tweets
     
+  def initialize
+    super
+    # @client = get_twitter_user_connection(self.secret_data['access_token'], self.secret_data['access_token_secret'])
+  end
+  
   def refresh_account_settings!
-
     # these values are only set if subscription has been set by update_stripe_user_subscription
     if self.data["stripe_subscription"]
       subscription = Stripe::Subscription.retrieve(self.data["stripe_subscription"])
@@ -13,6 +17,10 @@ class User < ActiveRecord::Base
 
     if !self.data["public_profile"]
       self.data["public_profile"] = true
+    end
+
+    if !self.data["following_settings"]
+      self.data["following_settings"] = []
     end
     
     if !self.data["pull_to_refresh_timeline"]
@@ -75,7 +83,7 @@ class User < ActiveRecord::Base
       subscriber = true
     end
 
-    return subscriber
+    subscriber
   end
 
   def is_canceled_subscriber?
@@ -105,59 +113,56 @@ class User < ActiveRecord::Base
   end
   
   
-  def update_tweets(items=25)
+  def get_twitter_lists
+    @client = get_twitter_user_connection(self.secret_data['access_token'], self.secret_data['access_token_secret'])
+    @client.owned_lists(self.screen_name).to_a
+  end
+  
+  
     
-    tweets = []
+  def save_setting(valid_setting_names, setting_name, setting_value)
     
-    client = get_twitter_connection(self.secret_data['access_token'], self.secret_data['access_token_secret'])
-
-    home_timeline = client.home_timeline({count: items})
+    status = false
     
-    puts "Number of new items in timeline #{home_timeline.count}"
+    if valid_setting_names.include? (setting_name)
+      
+      if is_boolean_string(setting_name)
+        new_setting_value = string_to_boolean(setting_value) # convert to boolean
+      elsif is_numeric?(setting_name)
+        new_setting_value = setting_value.to_i # convert to Number
+      else
+        new_setting_value = simple_text(setting_value) # convert to basic alphabetic
+      end 
 
-    home_timeline.each do |t|
-      url = t&.urls&.first&.expanded_url.to_s
-
-      if url.start_with?("http") && URI.parse(url).host != "twitter.com"
-        begin
-          
-          content = LinkThumbnailer.generate(url)
-
-          if content.description.length > 1
-            tweets << { 
-              user_id: self.id, 
-              tweet_id: t.id, 
-              tweet_date: t.created_at,
-              tweet: content, 
-              meta: { 
-                screen_name: t.user.screen_name, 
-                name: t.user.name, 
-                retweet_count: t.retweet_count, 
-                favorite_count: t.favorite_count,
-                followers_count: t.user.followers_count,
-                friends_count: t.user.friends_count,
-                listed_count: t.user.listed_count,
-                statuses_count: t.user.statuses_count
-              },
-              created_at: Time.current.getlocal("+00:00"),
-              updated_at: Time.current.getlocal("+00:00")
-            }
-            puts "🔔 User: #{self.id} - #{url} - SUCCESS"
-          else
-            puts "🔔 User: #{self.id} - #{url} - SKIPPING"
-          end
-        rescue => ex
-          puts "🔔 Error LinkThumbnailer - #{url} Exception: #{ex}"
-        end
-      end
+      self.data[setting_name] = new_setting_value
+      status = true if self.save!
     end
+     
+    status 
+  end
+  
+  
+  def home_timeline_trending_today
     
-    if tweets.count > 0
-      puts "🔔 Inserting #{tweets.count}"
-      Tweet.insert_all(tweets, unique_by: :index_tweets_on_tweet_id)
-    else
-      puts "🔔 No new URLs on the home timeline"
-    end
+    Tweet.find_by_sql ["SELECT *, SUM((meta->>'favorite_count')::int + (meta->>'retweet_count')::int) AS total 
+      FROM tweets 
+      WHERE user_id = :user_id AND created_at > current_date - interval '1' day
+      GROUP BY id 
+      ORDER BY total 
+      DESC LIMIT 10", {user_id: self.id}]
+  end
+  
+  def get_twitter_list_tweets
+    
+    
+  end
+  
+  
+  
+  def download_tweets(count=25)
+    client = get_twitter_user_connection(self.secret_data['access_token'], self.secret_data['access_token_secret'])
+    tweets = client.home_timeline ({count: count})
+    import_tweets(tweets, self.id)
   end
 
 end

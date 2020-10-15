@@ -15,13 +15,13 @@ class App < Sinatra::Base
     include Pagy::Frontend
   end
 
-
   configure :development do
     register Sinatra::Reloader
     set :show_exceptions, true
     set :sessions, same_site: :lax, secure: false, path: '/'
   end
 
+  #https://stackoverflow.com/questions/39303353/how-to-set-a-cookie-in-sinatra
   configure :staging do
     set :sessions, same_site: :lax, secure: true, path: '/'
   end
@@ -32,54 +32,48 @@ class App < Sinatra::Base
 
   configure :production, :development, :staging do
     use OmniAuth::Builder do
-      provider :twitter, ENV['TWITTER_API_CONSUMER_KEY'], ENV['TWITTER_API_CONSUMER_SECRET']
+      provider :twitter, ENV['TWITTER_CONSUMER_KEY'], ENV['TWITTER_CONSUMER_SECRET']
     end  
     set :cookie_options, expires: Time.new + 30.days
   end
 
-    
   before do
     if settings.production?
       redirect "https://#{ENV['PRODUCTION_URL']}" if request.host != ENV['PRODUCTION_URL']
     end    
   end
   
-  
   # Home
   get '/' do
     
     @tweets = []
-    @user = current_user
-    if @user.present?
+    @current_user = current_user
+    if @current_user.present?
       
       @show_loading_bar = true
             
       update_frequency_in_minutes = 20
-      minutes_since_last_update = @user.minutes_since_last_update
+      minutes_since_last_update = @current_user.minutes_since_last_update
 
       # For the template
       @user_timezone =  cookies['user_timezone'] 
-      @first_download = !@user.tweets.first  
+      @first_download = !@current_user.tweets.first  
       
       if @first_download && settings.production?
-        TweetWorker.perform_async( @user.id, 50 )
+        TweetWorker.perform_async( @current_user.id, 50 )
       end
-      
+
+      @lists = @current_user.data['lists']
+
       @page_limit = PAGE_LIMIT
       @minutes_until_next_update = [(update_frequency_in_minutes - minutes_since_last_update), 0].max
-      @pagy, @tweets = pagy(Tweet.where(user_id: @user.id).order(created_at: :desc), items: PAGE_LIMIT)
+      @pagy, @tweets = pagy(Tweet.where(user_id: @current_user.id).order(created_at: :desc), items: PAGE_LIMIT)
       
       if @tweets.count.equal? 0
-        @alert = "<p>Setting up your account. <br>This may take a minute the first time</p>"
-        
+        @alert = render_template "creating_account"
       elsif @tweets.count < 15
-        @alert = "<p><strong>Don't see many Tweets?</strong></p>
-                  <p>That's okay! LinkBird does not go back in your timeline, it only looks forward.
-                  This means that over time, LinkBird shows more relevant links. </p>
-                  <br>
-                  <p>On mobile devices, you can pull down on the page to fetch new links.</p>"
+        @alert = render_template "initial_download"
       end
-      
     else
       @hide_menu = true
     end
@@ -87,116 +81,155 @@ class App < Sinatra::Base
     erb :index
   end
 
-  # Weekly
-  get '/popular' do
-    @user = authenticate!
-    
-    @tweets = []
-    @page_limit = PAGE_LIMIT
-    
-    if @user.present?
-      @tweets = Tweet.find_by_sql ["SELECT *, SUM((meta->>'favorite_count')::int + (meta->>'retweet_count')::int) AS total 
-        FROM tweets 
-        WHERE user_id = :user_id AND created_at > current_date - interval '1' day
-        GROUP BY id 
-        ORDER BY total 
-        DESC LIMIT 10", {user_id: @user.id}]
-    end
-    
-    if @tweets.count == 0
-      @alert = "<p>Setting up your account. <br>This may take a minute the first time</p>"
-    elsif @tweets.count < 10
-      @alert = "<p>We need atleast 24 hours of data before this becomes accurate. Check back later.</p>"
-    end
-    
-    erb :popular
-  end
-  
+
   # Friend Tweets
   get '/@:screen_name' do
-    @public_page = true
+    @current_user = authenticate!
     
-    @current_logged_in_user = current_user
+    @screen_name = params[:screen_name]
+    if !valid_twitter_handle? @screen_name
+      not_found
+    end
     
-    @user = find_user params[:screen_name] # regexp ^@?(\w){1,15}$
-    @tweets = []
+    @current_user = current_user
+    
+    client = get_twitter_app_connection
+
+    # byebug
+    
+    begin
+      # @profile_photo = download_file(client.user(@screen_name).profile_image_url_https.to_s)
+      import_tweets(client.user_timeline(@screen_name, {count: 1}))
+    rescue
+      not_found
+    end
+    
+    @tweets = Tweet.where("meta->>'screen_name' = :screen_name", {screen_name: @screen_name}).order(created_at: :desc).limit(1)
     @page_limit = PAGE_LIMIT
-    @user_is_public = false
-    
-    if @user && @user.data['public_profile'] == true
-      @user_is_public = true
-      @hide_menu = @current_logged_in_user ? false : true
-      @pagy, @tweets = pagy(Tweet.where(user_id: @user.id).order(created_at: :desc), items: PAGE_LIMIT)      
+    @profile_page = true
+    # @public_profile = false
+
+
+    @follow_options = @current_user.data['follow_options'].to_h[@screen_name]
+    if !@follow_options
+      @follow_options = { priority: "sometimes" }
     end
 
-    erb :timeline
+    erb :profile
+  end
+  
+  
+  # Weekly
+  get '/lists' do
+
+    @current_user = authenticate!
+  
+    # if !@current_user.data['lists']
+      lists = []
+      # byebug
+
+      url = "/@#{current_user.screen_name}/home"
+      lists << { 
+        key: url.hash,
+        name: "Home", 
+        url: "/@#{current_user.screen_name}/home", 
+        description: "Based on your timeline, today's most popular articles",
+        show: true 
+      }
+
+      url = "/@#{current_user.screen_name}/trending/today"
+      lists << { 
+        key: url.hash,
+        name: "Trending Today", 
+        url: url, 
+        description: "Based on your timeline, today's most popular articles",
+        show: true, 
+      }
+  
+      @current_user.get_twitter_lists.each do |list|
+        url = "/@#{list['uri'].path.slice(1..-1)}"
+        lists << { 
+          key: url.hash,
+          name: list['name'], 
+          url: url, 
+          description: list['description'],
+          show: true
+        } 
+      end      
+
+      # byebug
+      @current_user.data['default_timeline'] = lists.first[:name]
+      @current_user.data['lists'] = lists
+      @current_user.save!
+    # end
+    
+    @lists = @current_user.data['lists']
+    
+    erb :lists
+  end
+  
+  get '/settings' do
+    @current_user = authenticate!
+
+    if @current_user
+      @page_limit = PAGE_LIMIT
+      @subscription_page = true
+      @current_user.update_stripe_user_subscription params[:session_id]
+    end
+    
+    @user_url = "#{root_domain}/@#{@current_user.screen_name}"
+    erb :settings
   end
   
   post '/settings/update' do
     data = JSON.parse request.body.read
-    @user = authenticate!
+    @current_user = authenticate!
+    
+    setting_name = data.keys.first
+    setting_value = data.values.first
     
     status = false;
     
-    # TODO: merge the logic of basic_settings and premium_features into a function
-    basic_settings = [
-      "public_profile",
-      "pull_to_refresh_timeline"
-    ]
-
-    if basic_settings.include? (data.keys.first)
-      if data.values.first === "true" || data.values.first === "false"
-        data_value = (data.values.first == "true")
-      else
-        data_value = data.values.first.to_i
-      end 
-
-      @user.data[data.keys.first] = data_value
-      status = true if @user.save!
-    end
-
-    premium_features = [
-      "update_frequency_in_minutes",
-      "tweet_archive_limit"
-    ]
-
-    if (premium_features.include? (data.keys.first)) && (@user.is_subscriber?)
-      # We only mess with bools and numbers in these toggles
-      if data.values.first === "true" || data.values.first === "false"
-        data_value = (data.values.first == "true")
-      else
-        data_value = data.values.first.to_i
-      end 
+    if (@current_user.is_subscriber?) && (premium_features.include? (setting_name)) 
+      premium_features = [
+        "update_frequency_in_minutes",
+        "tweet_archive_limit"
+      ]
+      status = @current_user.save_setting(premium_features, setting_name, setting_value)      
+    else
+      basic_settings = [
+        "public_profile",
+        "pull_to_refresh_timeline"
+      ]
+      status = @current_user.save_setting(basic_settings, setting_name, setting_value)
       
-
-      @user.data[data.keys.first] = data_value
-      status = true if @user.save!
     end
 
-    
     content_type 'application/json'
     { status: status }.to_json
   end
-  
-  get '/profile' do
-    @user = authenticate!
-
-    if @user
-      @page_limit = PAGE_LIMIT
-      @subscription_page = true
-      @user.update_stripe_user_subscription params[:session_id]       
-    end
     
-    @user_url = "#{root_domain}/@#{@user.screen_name}"
-    erb :profile
-  end
 
+  post '/@:screen_name/update' do
+    data = JSON.parse request.body.read
+    @current_user = authenticate!
+    
+    setting_name = simple_text(data.keys.first)
+    setting_value = simple_text(data.values.first)
+    
+    follow_options = @current_user.data['follow_options']
+    follow_options.to_h[setting_name] = setting_value
+
+    @current_user.data['follow_options'] = follow_options
+    @current_user.save!
+  end
+  
   post '/cancel' do
     user = authenticate!
     
     user.cancel_subscription
     user.refresh_account_settings!
-    redirect '/profile?canceled=profile-page'      
+    redirect '/settings?canceled=settings-page'      
   end
 
   get '/(about|privacy|install|terms-of-service)' do
@@ -206,14 +239,14 @@ class App < Sinatra::Base
   end
 
   get '/refresh' do
-    @user = authenticate!
+    @current_user = authenticate!
     now = DateTime.now    
         
-    if @user && @user.minutes_since_last_update > 2 # minutes
-      logger.info "SUCCESS / User #{@user.id} manually refreshing"
-      TweetWorker.perform_async( @user.id, 5 )      
+    if @current_user && @current_user.minutes_since_last_update > 2 # minutes
+      logger.info "SUCCESS / User #{@current_user.id} manually refreshing"
+      TweetWorker.perform_async( @current_user.id, 5 )      
     else
-      logger.error "RATE LIMIT / User #{@user.id} manually refreshing"
+      logger.error "RATE LIMIT / User #{@current_user.id} manually refreshing"
     end
     
     redirect '/'
@@ -226,7 +259,7 @@ class App < Sinatra::Base
   end
 
   post '/checkout/session' do
-    @user = authenticate!
+    @current_user = authenticate!
 
     content_type 'application/json'
     data = JSON.parse request.body.read
@@ -239,10 +272,9 @@ class App < Sinatra::Base
 
     # ?session_id={CHECKOUT_SESSION_ID} means the redirect will have the session ID set as a query param
     # root_domain = ENV['PRODUCTION_URL'] ? "https://#{ENV['PRODUCTION_URL']}" : "http://localhost:9292"
-    
     session = Stripe::Checkout::Session.create(
-      success_url: "#{root_domain}/profile?session_id={CHECKOUT_SESSION_ID}",
-      cancel_url: "#{root_domain}/profile?canceled=checkout-page",
+      success_url: "#{root_domain}/settings?session_id={CHECKOUT_SESSION_ID}",
+      cancel_url: "#{root_domain}/settings?canceled=checkout-page",
       payment_method_types: ['card'],
       mode: 'subscription',
       line_items: [{
@@ -255,7 +287,7 @@ class App < Sinatra::Base
   end
 
   post '/webhook' do
-    @user = authenticate!
+    @current_user = authenticate!
     # You can use webhooks to receive information about asynchronous payment events.
     # For more about our webhook events check out https://stripe.com/docs/webhooks.
     webhook_secret = ENV['STRIPE_WEBHOOK_SECRET']
@@ -317,9 +349,8 @@ class App < Sinatra::Base
       user.secret_key = secret_key
     end
 
-
     # check screen_name after every login
-    client = get_twitter_connection user_secrets['access_token'], user_secrets['access_token_secret']
+    client = get_twitter_user_connection user_secrets['access_token'], user_secrets['access_token_secret']
     user.screen_name = client.user.screen_name
 
     new_cookie = { 
@@ -329,28 +360,27 @@ class App < Sinatra::Base
       browser: request.env['HTTP_USER_AGENT']
     }
     
-    
     user.cookie_keys = add_or_update_active_cookies(user.cookie_keys, new_cookie)
     user.encrypted_data = encrypt_data(user.secret_key, user_secrets.to_h.to_json.to_s)
 
     user.save!
     user.refresh_account_settings!
 
-    redirect to('/')    
+    redirect to('/')
   end
   
   get '/auth/failure' do    
     case params['message']
     when 'session_expired'
-      @alert = "<strong>Error from Twitter</strong> <p>Session expired. Try again</p>"
+      @alert = render_template "session_expired"
     when 'invalid_credentials'
-      @alert = "<strong>Error from Twitter</strong> <p>You authentication failed or was canceled.</p><p><a href='/'>Try again</a></p>."
+      @alert = render_template "invalid_credentials"
     end
     erb :index
   end
   
   get '/auth/twitter/deauthorized' do    
-    @alert = "<strong>Error from Twitter</strong> <p>Twitter has deauthorized this app</p>"    
+    @alert = render_template "deauthorized"
     erb :index
   end
   
@@ -362,25 +392,20 @@ class App < Sinatra::Base
   end
   
   get '/security' do
-    @user = authenticate!    
+    @current_user = authenticate!    
     @login_history = current_user.cookie_keys #.sort_by{|k, v| puts k["last_login"]}.reverse    
     erb :security
   end
   
-  
-  
-  
-  
   post '/session/destroy' do 
     content_type 'application/json'
-    @user = authenticate!
+    @current_user = authenticate!
   
-    data = JSON.parse request.body.read
-    invalidate_session_cookie(data['public_id'])
+    data = JSON.parse(request.body.read)
+    invalidate_session_cookie(data['browser_id'])
 
     { status: "success" }.to_json    
   end
-  
   
   not_found do
     status 404

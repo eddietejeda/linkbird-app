@@ -169,6 +169,7 @@ h1{
 .card-with-no-border{
   box-shadow: none !important;
   border-width: 0;  
+  overflow: inherit !important;
 }
 
 .card-with-border{
@@ -388,7 +389,12 @@ h1{
 
 
 
-
+.is-active{
+  
+  .dropdown-content{
+    overflow: visible !important;      
+  }
+}
 
 //
 //

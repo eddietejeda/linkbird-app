@@ -13,6 +13,7 @@ require 'pagy'
 require 'pagy/extras/bulma'
 
 require "uri"
+require "open-uri"
 require 'curb'
 require 'user_agent_parser'
 

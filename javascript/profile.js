@@ -60,7 +60,7 @@ document.querySelectorAll('.toggle-settings-button').forEach(function(btn){
       .then(data => {
         // console.log(data); // JSON data parsed by `data.json()` call
         // TODO: Don't want to deal with state management now. Just refresh.
-        window.location = '/profile';
+        window.location =  window.location
       });
     }
     else{

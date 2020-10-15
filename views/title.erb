@@ -1,42 +1,33 @@
-<!--  Heading for public profile -->
-<% if @public_page && @user_is_public %>
+<!--  Heading for private profile -->  
+<% if !@first_download %>
   <div class="card card-with-no-border">
      <div class="card-content">
         <div class="content">
            <div class="tweetbox has-text-centered">
-             <h3>@<%= @user.screen_name %> Newsfeed</h3>
+              <div class="dropdown">
+                <div class="dropdown-trigger">
+                  <button class="button" aria-haspopup="true" aria-controls="dropdown-menu3">
+                    <span><%= @current_user.data['default_timeline'] %></span>
+                    <span class="icon is-small">
+                      <svg class="fa-angle-down fa-w-10" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="angle-down" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512" data-fa-i2svg=""><path fill="currentColor" d="M143 352.3L7 216.3c-9.4-9.4-9.4-24.6 0-33.9l22.6-22.6c9.4-9.4 24.6-9.4 33.9 0l96.4 96.4 96.4-96.4c9.4-9.4 24.6-9.4 33.9 0l22.6 22.6c9.4 9.4 9.4 24.6 0 33.9l-136 136c-9.2 9.4-24.4 9.4-33.8 0z"></path></svg><!-- <i class="fas fa-angle-down" aria-hidden="true"></i> -->
+                    </span>
+                  </button>
+                </div>
+                <div class="dropdown-menu" id="dropdown-menu3" role="menu">
+                  <div class="dropdown-content">
+                    <% @current_user.data['lists'].each do |list| %>
+                      <% if list['name'] !=  @current_user.data['default_timeline'] %>
+                        <a href="<%= list['url'] %>" class="dropdown-item">
+                          <%= list['name'] %>
+                        </a>
+                      <% end %>
+                    <% end %>
+                  </div>
+                </div>
+              </div>
+             <!-- <h3 style="margin:0">Personalized reading list</h3> -->
            </div>
         </div>
      </div>
   </div>  
-  
-
-<!--  Heading for private profile -->  
-<% elsif @user_is_public == false %>
-  <div class="card card-with-no-border">
-     <div class="card-content">
-        <div class="content">
-           <div class="tweetbox has-text-centered">
-             <h3>Account does not exist <br>or is set to private</h3>
-           </div>
-        </div>
-     </div>
-  </div>
-  
-  
-  
-  
-<!--  Primary timeline -->
-<% elsif !@first_download %>
-  <div class="card card-with-no-border">
-     <div class="card-content">
-        <div class="content">
-           <div class="tweetbox has-text-centered">
-             <h3 style="margin:0">Personalized reading list</h3>
-           </div>
-        </div>
-     </div>
-  </div> 
-  
-   
 <% end %>

@@ -1,11 +1,11 @@
 <div class="column has-text-center">
   <!--  Canceled but active -->
-  <% if @user.is_active_subscriber? %>
+  <% if @current_user.is_active_subscriber? %>
     <form action="/cancel" method="POST" id="cancel-subscription-form">
       <p>
         <small>
           <i class="fas fa-heart" style="color:red"></i> for being a subscriber!<br>
-          Subscription renewal: <%= DateTime.parse( @user.data["stripe_subscription_end_date"] ).strftime("%B %d, %Y") %> 
+          Subscription renewal: <%= DateTime.parse( @current_user.data["stripe_subscription_end_date"] ).strftime("%B %d, %Y") %> 
           <br><a onclick="return confirm('Are you sure to want to cancel subscription?')" class="cancel-subscription-link" style="text-decoration: none" href="#">Cancel Subscription</a>
         </small>
       </p>                    
@@ -13,9 +13,9 @@
     </form>
   
   <!-- Active subscription  -->  
-  <% elsif @user.is_canceled_subscriber? %>
+  <% elsif @current_user.is_canceled_subscriber? %>
     <small>
-      <p style="margin-top: 50px">Subscription has been canceled, but the premium features <br>will remain active until <%= DateTime.parse( @user.data["stripe_subscription_end_date"] ).strftime("%B %d, %Y") %> </p>
+      <p style="margin-top: 50px">Subscription has been canceled, but the premium features <br>will remain active until <%= DateTime.parse( @current_user.data["stripe_subscription_end_date"] ).strftime("%B %d, %Y") %> </p>
     </small>
     <!-- <button class="activate-premium-plan-btn" class="button is-info">Reactivate</button> -->
     
