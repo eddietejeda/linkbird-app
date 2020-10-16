@@ -117,7 +117,9 @@ def browser_fingerprint
                             #{request.env['APP_ENCRYPTION_KEY']}"
 end
 
-
+def cli_column(text, cols=20)
+  text.to_s.ljust(cols)
+end
 
 
 def prettify_datetime(datetime)
