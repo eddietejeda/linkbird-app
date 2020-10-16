@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_09_30_211824) do
+ActiveRecord::Schema.define(version: 2020_10_16_140842) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -35,6 +35,7 @@ ActiveRecord::Schema.define(version: 2020_09_30_211824) do
     t.text "encrypted_data", default: ""
     t.string "screen_name", default: ""
     t.jsonb "cookie_keys", default: []
+    t.string "email", default: ""
   end
 
 end
