@@ -1,4 +1,3 @@
-
 async function postData(url = '', data = {}) {
   // Default options are marked with *
   const response = await fetch(url, {
@@ -22,21 +21,5 @@ function getAll(selector) {
 
   return Array.prototype.slice.call(parent.querySelectorAll(selector), 0);
 }
-
-
-// Remote call
-document.querySelectorAll('.button-remote').forEach(function(btn){
-
-  btn.addEventListener("click", function (e) {
-    // debugger;
-    postData(e.target.dataset.remoteUrl, { public_id: e.target.dataset.publicId })
-      .then(data => {
-        // console.log(data); // JSON data parsed by `data.json()` call
-        // TODO: Don't want to deal with state management now. Just refresh.
-        window.location = '/security'
-    });
-  });
-});
-
 
 export { postData, getAll }
