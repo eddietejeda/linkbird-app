@@ -47,7 +47,7 @@ def preferred_fav_icon(url, filepath: "config/preferred-fav-icon.yml")
 end
 
 
-def invalidate_session_cookie(browser_id)
+def invalidate_browser_id_cookie(browser_id)
   user = current_user
   previous_cookie_list = user.cookie_keys
   cookie_to_delete = { browser_id: browser_id }
