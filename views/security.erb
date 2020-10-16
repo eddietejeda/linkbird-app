@@ -12,9 +12,9 @@
           </tr>
           <% @login_history.each do |item|%>
             <tr>
-              <td><%= format_datetime DateTime.parse(item['last_login']), cookies['user_timezone']  if item['last_login'] %></td>
-              <td><%= "<span class='tag'>current </span>&nbsp;" if item['public_id'].to_i.abs == cookies['cookie_key'].hash.abs %><%= prettify_user_agent(item['browser']) %></td>
-              <td><a class="delete disconnect-button" data-public-id="<%= item['public_id'] %>">Disconnect</a></td>
+              <td><%= format_datetime(DateTime.parse(item['last_login']), cookies['user_timezone']) if item['last_login'] %></td>
+              <td><%= "<span class='tag'>current </span>&nbsp;" if item['browser_id'] == cookies['cookie_key'] %><%= prettify_user_agent(item['browser']) %></td>
+              <td><a class="delete disconnect-button" data-browser-id="<%= item['browser_id'] %>">Disconnect</a></td>
             </tr>
           <% end %>
         </table>

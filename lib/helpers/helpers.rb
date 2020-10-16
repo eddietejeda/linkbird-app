@@ -58,7 +58,7 @@ def download_file(url, path="/public/cache/")
   filepath.gsub("/public/", "/")
 end
 
-def invalidate_session_cookie(browser_id)
+def invalidate_browser_id_cookie(browser_id)
   user = current_user
   previous_cookie_list = user.cookie_keys
   cookie_to_delete = { browser_id: browser_id }
@@ -73,7 +73,7 @@ def delete_active_cookie(previous_cookie_list, cookie_to_delete)
   new_cookie_list = []
 
   previous_cookie_list.each do |c|
-    if c[:browser_id] == cookie_to_delete[:browser_id]
+    if c['browser_id'] == cookie_to_delete[:browser_id]
       next
     end
     new_cookie_list << c
@@ -104,13 +104,6 @@ def add_or_update_active_cookies(previous_cookie_list, new_cookie)
 end
 
 
-def browser_fingerprint
-  # basic finger printing. the cookie is the real unique
-  # value. but this is for extra measure to make it easier
-  # to identify which browser we are signing out when we
-  # destroy sessions
-  "#{request.env['HTTP_USER_AGENT']}#{request.env['REMOTE_ADDR']}#{request.env['APP_ENCRYPTION_KEY']}"
-end
 
 def format_datetime(datetime, timezone)
   if valid_timezone(timezone)
@@ -120,6 +113,15 @@ def format_datetime(datetime, timezone)
   end
 end
 
+def browser_fingerprint
+  # basic finger printing. the cookie is the real unique
+  # value. but this is for extra measure to make it easier
+  # to identify which browser we are signing out when we
+  # destroy sessions
+  Digest::SHA256.hexdigest "#{request.env['HTTP_USER_AGENT']}
+                            #{request.env['REMOTE_ADDR']}
+                            #{request.env['APP_ENCRYPTION_KEY']}"
+end
 
 def prettify_user_agent(user_string)
   user_agent = UserAgentParser.parse user_string
