@@ -355,7 +355,7 @@ class App < Sinatra::Base
   end
   
   get '/logout' do
-    invalidate_session_cookie(cookies[:cookie_key].hash.abs)
+    invalidate_session_cookie(cookies[:cookie_key])
     cookies.delete(:uid)
     cookies.delete(:cookie_key)
     redirect '/'
@@ -376,7 +376,7 @@ class App < Sinatra::Base
     @user = authenticate!
   
     data = JSON.parse request.body.read
-    invalidate_session_cookie(data['public_id'])
+    invalidate_session_cookie(data['browser_id'])
 
     { status: "success" }.to_json    
   end

@@ -47,10 +47,10 @@ def preferred_fav_icon(url, filepath: "config/preferred-fav-icon.yml")
 end
 
 
-def invalidate_session_cookie(public_id)
+def invalidate_session_cookie(browser_id)
   user = current_user
   previous_cookie_list = user.cookie_keys
-  cookie_to_delete = { public_id: public_id }
+  cookie_to_delete = { browser_id: browser_id }
   
   new_cookie_list = delete_active_cookie(previous_cookie_list, cookie_to_delete)
   
@@ -62,7 +62,7 @@ def delete_active_cookie(previous_cookie_list, cookie_to_delete)
   new_cookie_list = []
 
   previous_cookie_list.each do |c|
-    if c['browser_id'].to_i == cookie_to_delete[:browser_id].to_i
+    if c['browser_id'] == cookie_to_delete[:browser_id]
       next
     end
     new_cookie_list << c
@@ -112,7 +112,9 @@ def browser_fingerprint
   # value. but this is for extra measure to make it easier
   # to identify which browser we are signing out when we
   # destroy sessions
-  "#{request.env['HTTP_USER_AGENT']}#{request.env['REMOTE_ADDR']}"
+  Digest::SHA256.hexdigest "#{request.env['HTTP_USER_AGENT']}
+                            #{request.env['REMOTE_ADDR']}
+                            #{request.env['APP_ENCRYPTION_KEY']}"
 end
 
 
