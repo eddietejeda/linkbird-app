@@ -118,9 +118,7 @@ def browser_fingerprint
   # value. but this is for extra measure to make it easier
   # to identify which browser we are signing out when we
   # destroy sessions
-  Digest::SHA256.hexdigest "#{request.env['HTTP_USER_AGENT']}
-                            #{request.env['REMOTE_ADDR']}
-                            #{request.env['APP_ENCRYPTION_KEY']}"
+  Digest::SHA256.hexdigest "#{request.env['HTTP_USER_AGENT']}#{request.env['REMOTE_ADDR']}#{request.env['APP_ENCRYPTION_KEY']}"
 end
 
 def prettify_user_agent(user_string)
@@ -128,6 +126,7 @@ def prettify_user_agent(user_string)
   operating_system = user_agent.os
   "#{operating_system.to_s} <br> #{user_agent.to_s}"  
 end
+
 
 def prettify_datetime(datetime)
   if !datetime
@@ -154,9 +153,9 @@ def cli_column(text, cols=20)
   text.to_s.ljust(cols)
 end
 
-def is_numeric?(s)
+def is_numeric?(string)
   begin
-    Float(s)
+    Float(string)
   rescue
     false # not numeric
   else

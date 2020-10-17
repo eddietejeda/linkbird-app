@@ -28,6 +28,7 @@ class App < Sinatra::Base
 
   configure :production do
     # set :sessions, domain: 'linkbird.app', secure: true
+    set :sessions, same_site: :lax, secure: true, path: '/'
   end
 
   configure :production, :development, :staging do
@@ -347,6 +348,12 @@ class App < Sinatra::Base
     if user.secret_key.blank?
       secret_key = SecureRandom.uuid
       user.secret_key = secret_key
+    end
+
+    user_email = env['omniauth.auth']['extra']['raw_info']['email']
+    
+    if user.email != user_email
+      user.email = user_email
     end
 
     # check screen_name after every login

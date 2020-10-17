@@ -31,8 +31,6 @@ namespace :db do
     puts "Done."
   end
   
-
-
   desc "This task is called by the Heroku scheduler add-on"
   task :last_login => :environment do
   

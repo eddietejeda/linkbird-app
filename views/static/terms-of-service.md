@@ -3,8 +3,6 @@
 ##### General
 By using this service, you agree to follow your jurisdiction's laws concerning accessing online services.
 
-
-
 ##### Cancelation
 We reserve the right to cancel accounts that engage in any illegal, disruptive, or abusive behavior.
         
