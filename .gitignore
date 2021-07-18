@@ -1,3 +1,5 @@
+aws-push
+.env
 .DS_Store
 .sass-cache
 .byebug_history
@@ -10,8 +12,11 @@ public/fonts
 public/images/*.pxm
 public/stylesheets/*.css
 public/stylesheets/*.map
+public/cache/*
 public/*.map
 public/*.css
 public/*.js
 config/symmetric-encryption.yml
 *.dump
+javascript/jsx.js
+views/static/tech.md
