@@ -1,7 +1,7 @@
 {
-  "name": "Linkbird",
+  "name": "linkbird",
   "version": "1.0.0",
-  "description": "Hobbiest ruby web framework to help me get started on new projects using a common structure.",
+  "description": "A simple view of top Twitter articles.",
   "main": "javascript/app.js",
   "directories": {
     "lib": "lib"
