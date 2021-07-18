@@ -12,7 +12,6 @@ document.querySelectorAll('.remote-buttons button').forEach(function(btn){
     
     postData(remoteUrl, payload)
       .then(data => {
-        // console.log(data); // JSON data parsed by `data.json()` call
         // TODO: Don't want to deal with state management now. Just refresh.
         window.location = '/security'
     });

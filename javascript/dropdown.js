@@ -1,9 +1,9 @@
 import {postData, getAll} from './base';
 
-var $dropdowns = getAll('.dropdown:not(.is-hoverable)');
+var dropdowns = getAll('.dropdown:not(.is-hoverable)');
 
-if ($dropdowns.length > 0) {
-  $dropdowns.forEach(function ($el) {
+if (dropdowns.length > 0) {
+  dropdowns.forEach(function ($el) {
     $el.addEventListener('click', function (event) {
       event.stopPropagation();
       $el.classList.toggle('is-active');
@@ -16,7 +16,7 @@ if ($dropdowns.length > 0) {
 }
 
 function closeDropdowns() {
-  $dropdowns.forEach(function ($el) {
+  dropdowns.forEach(function ($el) {
     $el.classList.remove('is-active');
   });
 }

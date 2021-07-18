@@ -7,22 +7,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Add a click event on each of them
     navbarBurgers.forEach( burger => {
-      
-      // burger.addEventListener('blur', () => {
-      //
-      //   // Get the target from the "data-target" attribute
-      //   const nav = document.getElementById( burger.dataset.target );
-      //
-      //   // Toggle the "is-active" class on both the "navbar-burger" and the "navbar-menu"
-      //   burger.classList.toggle('is-active');
-      //   nav.classList.toggle('is-active');
-      //   console.log('blur');
-      //
-      // });
-      //
 
       burger.addEventListener('click', () => {
-
         // Get the target from the "data-target" attribute
         const nav = document.getElementById( burger.dataset.target );
 
@@ -30,7 +16,6 @@ document.addEventListener('DOMContentLoaded', () => {
         burger.classList.toggle('is-active');
         nav.classList.toggle('is-active');
         nav.focus();
-        
       });
     }); 
   }

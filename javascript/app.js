@@ -7,3 +7,6 @@ import './navigation';
 import './dropdown';
 import './refresh';
 import './timezone';
+import './bookmark';
+import './history';
+import './done';
