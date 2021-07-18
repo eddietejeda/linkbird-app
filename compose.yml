@@ -1,0 +1,65 @@
+services:
+  app:
+    build: .
+    depends_on:
+      - postgres
+      - redis
+    ports:
+      - 9292:9292
+    env_file:
+      - .env
+      - .env.development.local
+    entrypoint: ./entrypoints/app-entrypoint.sh
+    volumes:
+      - gem-data:/app/vendor
+
+  worker:
+    build: .
+    image: linkbird
+    depends_on:
+      - postgres
+      - redis
+    env_file:
+      - .env
+      - .env.development.local
+    entrypoint: ./entrypoints/worker-entrypoint.sh
+
+  cron:
+    build: .
+    image: linkbird
+    depends_on:
+      - app
+    env_file:
+      - .env
+      - .env.development.local
+    entrypoint: ./entrypoints/cron-entrypoint.sh
+
+  postgres:
+    image: postgres:13.1
+    env_file:
+      - .env
+      - .env.development.local
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_HOST_AUTH_METHOD: trust
+
+  redis:
+    image: redis:5.0.7
+    env_file:
+      - .env
+      - .env.development.local
+    volumes:
+      - redis-data:/data
+
+
+
+volumes:
+  postgres-data:
+    driver: local
+  redis-data:
+    driver: local
+  gem-data:
+    driver: local
+  node-data:
+    driver: local
