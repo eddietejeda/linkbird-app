@@ -38,137 +38,50 @@ class App < Sinatra::Base
     set :cookie_options, expires: Time.new + 30.days
   end
 
-  before do
-    if settings.production?
-      redirect "https://#{ENV['PRODUCTION_URL']}" if request.host != ENV['PRODUCTION_URL']
-    end    
-  end
   
-  # Home
-  get '/' do
-    
+  
+  # Top Articles
+  get '/' do    
+    @current_user = current_user
+
     @tweets = []
-    @current_user = current_user
-    if @current_user.present?
-      
-      @show_loading_bar = true
-            
-      update_frequency_in_minutes = 20
-      minutes_since_last_update = @current_user.minutes_since_last_update
-
-      # For the template
-      @user_timezone =  cookies['user_timezone'] 
-      @first_download = !@current_user.tweets.first  
-      
-      if @first_download && settings.production?
-        TweetWorker.perform_async( @current_user.id, 50 )
-      end
-
-      @lists = @current_user.data['lists']
-
-      @page_limit = PAGE_LIMIT
-      @minutes_until_next_update = [(update_frequency_in_minutes - minutes_since_last_update), 0].max
-      @pagy, @tweets = pagy(Tweet.where(user_id: @current_user.id).order(created_at: :desc), items: PAGE_LIMIT)
-      
-      if @tweets.count.equal? 0
-        @alert = render_template "creating_account"
-      elsif @tweets.count < 15
-        @alert = render_template "initial_download"
-      end
-    else
-      @hide_menu = true
-    end
-
-    erb :index
-  end
-
-
-  # Friend Tweets
-  get '/@:screen_name' do
-    @current_user = authenticate!
-    
-    @screen_name = params[:screen_name]
-    if !valid_twitter_handle? @screen_name
-      not_found
-    end
-    
-    @current_user = current_user
-    
-    client = get_twitter_app_connection
-
-    # byebug
-    
-    begin
-      # @profile_photo = download_file(client.user(@screen_name).profile_image_url_https.to_s)
-      import_tweets(client.user_timeline(@screen_name, {count: 1}))
-    rescue
-      not_found
-    end
-    
-    @tweets = Tweet.where("meta->>'screen_name' = :screen_name", {screen_name: @screen_name}).order(created_at: :desc).limit(1)
     @page_limit = PAGE_LIMIT
-    @profile_page = true
-    # @public_profile = false
 
-
-    @follow_options = @current_user.data['follow_options'].to_h[@screen_name]
-    if !@follow_options
-      @follow_options = { priority: "sometimes" }
+    if @current_user.present?
+      @tweets = @current_user.get_top_tweets
+      
+      if @tweets.count == 0
+        @alert = render_partial("creating_account")
+      elsif @tweets.count < @page_limit
+        @alert = render_partial("initial_download")
+      end
+      
+      erb :timeline
+    else
+      erb :introduction
     end
 
-    erb :profile
   end
   
-  
-  # Weekly
-  get '/lists' do
 
+  # History
+  get '/history' do
     @current_user = authenticate!
-  
-    # if !@current_user.data['lists']
-      lists = []
-      # byebug
-
-      url = "/@#{current_user.screen_name}/home"
-      lists << { 
-        key: url.hash,
-        name: "Home", 
-        url: "/@#{current_user.screen_name}/home", 
-        description: "Based on your timeline, today's most popular articles",
-        show: true 
-      }
-
-      url = "/@#{current_user.screen_name}/trending/today"
-      lists << { 
-        key: url.hash,
-        name: "Trending Today", 
-        url: url, 
-        description: "Based on your timeline, today's most popular articles",
-        show: true, 
-      }
-  
-      @current_user.get_twitter_lists.each do |list|
-        url = "/@#{list['uri'].path.slice(1..-1)}"
-        lists << { 
-          key: url.hash,
-          name: list['name'], 
-          url: url, 
-          description: list['description'],
-          show: true
-        } 
-      end      
-
-      # byebug
-      @current_user.data['default_timeline'] = lists.first[:name]
-      @current_user.data['lists'] = lists
-      @current_user.save!
-    # end
-    
-    @lists = @current_user.data['lists']
-    
-    erb :lists
+    @page_limit = PAGE_LIMIT
+    @pagy, @tweets = pagy(@current_user.get_history, items: PAGE_LIMIT )
+    erb :history
   end
   
+    
+  # Bookmarks
+  get '/bookmarks' do
+    @current_user = authenticate!
+    @page_limit = PAGE_LIMIT
+    @pagy, @tweets = pagy(@current_user.get_bookmarks, items: PAGE_LIMIT )
+    erb :bookmarks
+  end
+  
+    
   get '/settings' do
     @current_user = authenticate!
 
@@ -188,22 +101,22 @@ class App < Sinatra::Base
     
     setting_name = data.keys.first
     setting_value = data.values.first
+
+    premium_features = [
+      "update_frequency_in_minutes",
+      "tweet_archive_limit"
+    ]
+    basic_settings = [
+      "public_profile",
+      "pull_to_refresh_timeline"
+    ]
     
     status = false;
     
-    if (@current_user.is_subscriber?) && (premium_features.include? (setting_name)) 
-      premium_features = [
-        "update_frequency_in_minutes",
-        "tweet_archive_limit"
-      ]
+    if (@current_user.is_subscriber?) && (premium_features.include? (setting_name))
       status = @current_user.save_setting(premium_features, setting_name, setting_value)      
     else
-      basic_settings = [
-        "public_profile",
-        "pull_to_refresh_timeline"
-      ]
       status = @current_user.save_setting(basic_settings, setting_name, setting_value)
-      
     end
 
     content_type 'application/json'
@@ -211,20 +124,6 @@ class App < Sinatra::Base
   end
     
 
-  post '/@:screen_name/update' do
-    data = JSON.parse request.body.read
-    @current_user = authenticate!
-    
-    setting_name = simple_text(data.keys.first)
-    setting_value = simple_text(data.values.first)
-    
-    follow_options = @current_user.data['follow_options']
-    follow_options.to_h[setting_name] = setting_value
-
-    @current_user.data['follow_options'] = follow_options
-    @current_user.save!
-  end
-  
   post '/cancel' do
     user = authenticate!
     
@@ -233,11 +132,6 @@ class App < Sinatra::Base
     redirect '/settings?canceled=settings-page'      
   end
 
-  get '/(about|privacy|install|terms-of-service)' do
-    @filepath = request.env['REQUEST_PATH'].match(/\/([a-zA-Z\-]+)/)[1]
-    @content = Kramdown::Document.new(File.read("views/static/#{@filepath}.md")).to_html
-    erb :static
-  end
 
   get '/refresh' do
     @current_user = authenticate!
@@ -344,7 +238,7 @@ class App < Sinatra::Base
     if user.nil?
       user = User.create(uid: cookies[:uid], secret_key: "")
     end
-    
+    # byebug
     if user.secret_key.blank?
       secret_key = SecureRandom.uuid
       user.secret_key = secret_key
@@ -379,15 +273,15 @@ class App < Sinatra::Base
   get '/auth/failure' do    
     case params['message']
     when 'session_expired'
-      @alert = render_template "session_expired"
+      @alert = render_partial("session_expired")
     when 'invalid_credentials'
-      @alert = render_template "invalid_credentials"
+      @alert = render_partial("invalid_credentials")
     end
     erb :index
   end
   
   get '/auth/twitter/deauthorized' do    
-    @alert = render_template "deauthorized"
+    @alert = render_partial("deauthorized")
     erb :index
   end
   
@@ -415,6 +309,36 @@ class App < Sinatra::Base
     { status: "success" }.to_json    
   end
   
+
+  post '/bookmark/update' do 
+    content_type 'application/json'
+    @current_user = authenticate!
+
+    data = JSON.parse(request.body.read)    
+    { status: @current_user.set_bookmark( data['tweet_id'] )}.to_json    
+  end
+  
+
+
+  post '/view/update' do 
+    content_type 'application/json'
+    @current_user = authenticate!
+  
+    data = JSON.parse(request.body.read)
+    { status: @current_user.set_view( data['tweet_id'] )}.to_json    
+  end
+
+
+  ####################
+  # Static Pages
+  ####################
+  get '/(about|privacy|install|terms-of-service)' do
+    @filepath = request.env['REQUEST_PATH'].match(/\/([a-zA-Z\-]+)/)[1]
+    @content = Kramdown::Document.new(File.read("views/static/#{@filepath}.md")).to_html
+    erb :static
+  end
+
+
   not_found do
     status 404
     @error = "Page not found"
@@ -422,14 +346,18 @@ class App < Sinatra::Base
   end
 
   
+  ####################
+  # Private Methods
+  ####################
   private
   
     def authenticate!
-      user = current_user
-      if !user
+      
+      if !current_user
         redirect '/'
       end
-      user
+      
+      current_user
     end
     
     def root_domain
