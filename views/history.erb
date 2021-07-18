@@ -1,12 +1,16 @@
-<!--  Heading for private profile -->  
-<% if !@first_download %>
+<!-- This is not being used. Going to delete. -->
+<% if @tweets.count > 0 %>
+  <!-- Render Tweets -->
   <div class="card card-with-no-border">
      <div class="card-content">
         <div class="content">
            <div class="tweetbox has-text-centered">
-             <h3 style="margin:0">Top Articles</h3>
+             <h3 style="margin:0">Reading History</h3>
            </div>
         </div>
      </div>
   </div>  
 <% end %>
+
+<%= erb(:tweets) %>
+<%= erb(:pagination) %>

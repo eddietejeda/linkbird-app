@@ -22,20 +22,20 @@
          <input type="hidden" id="is-premium-user" value="<%= @current_user.is_subscriber? %>" >
 
         <!-- Public Profile -->
-        <div class="columns">
+        <!-- <div class="columns">
           <div class="column is-7 is-offset-1 has-text-left">
             <strong>Public Profile</strong>
-            <p>Share your reading list with your friends. <strong><br><a href="<%= @user_url %>"><%= @user_url %></a></strong></p> 
+            <p>Share your reading list with your friends. <strong><br><a href="<%= @user_url %>"><%= @user_url %></a></strong></p>
           </div>
           <div class="column is-3 is-offset-1 is-px-0">
             <div class="remote-buttons buttons has-addons" data-remote-url="/settings/update">
               <button data-setting-name="public_profile" value="false"  class="toggle-settings-button button <%= "is-info is-selected" if @current_user && @current_user.data.to_h['public_profile'] == false %>">No</button>
-              <button data-setting-name="public_profile" value="true" class="toggle-settings-button button  <%= "is-info is-selected" if @user && @current_user.data.to_h['public_profile'] == true %>">Yes</button>
+              <button data-setting-name="public_profile" value="true" class="toggle-settings-button button  <%= "is-info is-selected" if @current_user && @current_user.data.to_h['public_profile'] == true %>">Yes</button>
 
             </div>
           </div>
         </div>
-
+ -->
         <!-- Public Profile -->
         <div class="columns">
           <div class="column is-7 is-offset-1 has-text-left">

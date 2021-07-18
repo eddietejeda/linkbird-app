@@ -14,19 +14,21 @@
         <a class="navbar-item" href="/">
           Home
         </a>
-
-          <a class="navbar-item" href="/lists">
-            Lists
-          </a>      
-          <a class="navbar-item" href="/settings">
-            <%= @current_user.is_subscriber? ? 'Settings' : 'Settings &nbsp; <i class="fas fa-lock" style="font-size: 7pt"></i>' %>
-          </a>
-          <a class="navbar-item is-hidden-desktop" href="/install">
-            Install
-          </a>
-          <a class="navbar-item is-hidden-desktop" href="/about">
-            About
-          </a>
+        <a class="navbar-item" href="/bookmarks">
+          Bookmarks
+        </a> 
+        <a class="navbar-item" href="/history">
+          History
+        </a>
+        <a class="navbar-item" href="/settings">
+          <%= @current_user.is_subscriber? ? 'Settings' : 'Settings &nbsp; <i class="fas fa-lock" style="font-size: 7pt"></i>' %>
+        </a>
+        <a class="navbar-item is-hidden-desktop" href="/install">
+          Install
+        </a>
+        <a class="navbar-item is-hidden-desktop" href="/about">
+          About
+        </a>
       </div>
     </div>
   </nav>
