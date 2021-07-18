@@ -1,5 +1,6 @@
 aws-push
 .env
+.env*
 .DS_Store
 .sass-cache
 .byebug_history
@@ -20,3 +21,4 @@ config/symmetric-encryption.yml
 *.dump
 javascript/jsx.js
 views/static/tech.md
+scratch/*
