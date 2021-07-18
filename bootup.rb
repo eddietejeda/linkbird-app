@@ -45,4 +45,5 @@ if settings.development?
   logger.level = Logger::DEBUG
 end
 
+APP_ROOT = Dir.pwd
 require './app'
