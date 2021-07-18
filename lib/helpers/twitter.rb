@@ -1,3 +1,5 @@
+require 'link_thumbnailer'
+
 def get_twitter_user_connection(token, secret)
   Twitter::REST::Client.new do |config|
     config.consumer_key        = ENV["TWITTER_CONSUMER_KEY"]
@@ -20,16 +22,17 @@ def get_twitter_app_connection
   end  
 end
 
-# import_tweets(client.user_timeline(@screen_name, {count: 1}))
-
 
 def import_tweets(tweet_list, user_id=1)
   tweets = []
+  client = get_twitter_app_connection
   tweet_list.each do |t|
     url = t&.urls&.first&.expanded_url.to_s
 
-    if url.start_with?("http") && URI.parse(url).host != "twitter.com"
+    excluded_domains = YAML.load_file('config/exclude.yaml')
+    if url.start_with?("http") && !excluded_domains.include?( URI.parse(url).host  )
       begin
+        
         content = LinkThumbnailer.generate(url)
         if content.description.length > 1
           tweets << { 
@@ -45,7 +48,8 @@ def import_tweets(tweet_list, user_id=1)
               followers_count: t.user.followers_count,
               friends_count: t.user.friends_count,
               listed_count: t.user.listed_count,
-              statuses_count: t.user.statuses_count
+              statuses_count: t.user.statuses_count,
+              profile_photo: download_file(client.user(t.user.screen_name).profile_image_url_https.to_s)
             },
             created_at: Time.current.getlocal("+00:00"),
             updated_at: Time.current.getlocal("+00:00")
