@@ -3,11 +3,13 @@ ruby "2.7.1"
 
 source "https://rubygems.org"
 
-git_source(:github) {|repo_name| "https://github.com/#{repo_name}" }
+git_source(:github) {|repo_name| "https://github.com/#{repo_name}.git" }
 
 gem "sinatra", "~> 2.1"
 gem "sinatra-contrib", "~> 2.1"
 gem "sinatra-activerecord", "~> 2.0"
+
+gem "pg", "~> 1.2"
 
 gem "twitter", "~> 7.0"
 gem "twitter-text", "~> 3.1"
@@ -22,7 +24,6 @@ gem "stripe", "~> 5.25"
 gem "pagy", "~> 3.8"
 gem "newrelic_rpm", "~> 6.13"
 
-gem "pg", "~> 1.2"
 gem "sidekiq", "~> 6.1"
 gem "aws-sdk", "~> 3.0"
 gem "aws-sdk-s3", "~> 1.81"
@@ -34,7 +35,7 @@ gem "sanitize", "~> 5.2"
 group :development, :test do
   gem "byebug", "~> 11.1"
   gem "amazing_print", "~> 1.2"
-  gem "capybara", "~> 3.33"  
+  gem "capybara", "~> 3.33"
   gem "selenium-webdriver", "~> 3.142"
   gem "factory_bot", "~> 6.1"
   gem "rspec", "~> 3.9"

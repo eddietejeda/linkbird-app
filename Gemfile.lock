@@ -1,5 +1,5 @@
 GIT
-  remote: https://github.com/gottfrois/link_thumbnailer
+  remote: https://github.com/gottfrois/link_thumbnailer.git
   revision: 2ec9026aaaccf638207e6fa480f750bfdc5c9a80
   ref: 2ec9026aaaccf638207e6fa480f750bfdc5c9a80
   specs:
@@ -30,7 +30,7 @@ GEM
       public_suffix (>= 2.0.2, < 5.0)
     amazing_print (1.2.1)
     ansi (1.5.0)
-    ast (2.4.1)
+    ast (2.4.2)
     aws-eventstream (1.1.0)
     aws-partitions (1.373.0)
     aws-sdk (3.0.1)
@@ -1011,13 +1011,14 @@ GEM
     i18n (1.8.5)
       concurrent-ruby (~> 1.0)
     idn-ruby (0.1.0)
-    image_info (1.2.0)
+    image_info (1.2.2)
+      addressable (~> 2.0)
       image_size (~> 2.0)
       typhoeus (~> 1.0)
     image_size (2.1.0)
     iso8601 (0.9.1)
     jmespath (1.4.0)
-    json (2.3.1)
+    json (2.5.1)
     kramdown (2.3.0)
       rexml
     memoizable (0.4.2)
@@ -1030,11 +1031,11 @@ GEM
     mustermann (1.1.1)
       ruby2_keywords (~> 0.0.1)
     naught (1.1.0)
-    net-http-persistent (4.0.0)
+    net-http-persistent (4.0.1)
       connection_pool (~> 2.2)
     net_http_timeout_errors (0.3.5)
     newrelic_rpm (6.13.1)
-    nio4r (2.5.2)
+    nio4r (2.5.4)
     nokogiri (1.10.10)
       mini_portile2 (~> 2.4.0)
     nokogumbo (2.0.2)
@@ -1055,7 +1056,7 @@ GEM
     pagy (3.8.3)
     pg (1.2.3)
     public_suffix (4.0.5)
-    puma (4.3.5)
+    puma (4.3.7)
       nio4r (~> 2.0)
     rack (2.2.3)
     rack-protection (2.1.0)
@@ -1148,7 +1149,7 @@ GEM
       unf_ext
     unf_ext (0.0.7.7)
     user_agent_parser (2.7.0)
-    video_info (2.8.0)
+    video_info (3.0.0)
       iso8601 (~> 0.9.1)
       net_http_timeout_errors (~> 0.3.0)
       oga (~> 3.0)
@@ -1194,4 +1195,4 @@ RUBY VERSION
    ruby 2.7.1p83
 
 BUNDLED WITH
-   2.1.4
+   2.2.7
