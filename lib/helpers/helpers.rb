@@ -3,12 +3,10 @@ require 'logger'
 
 logger = Logger.new(STDOUT)
 
-
 def reload!
   puts "Reloading #{ENV.fetch('ENV')} environment"
   load './bootup.rb'
 end
-
 
 def current_user
   if request.cookies['uid'] && request.cookies['cookie_key']
@@ -164,7 +162,7 @@ def is_numeric?(string)
 end
 
 def is_boolean_string(text)
-  text == "true" ||  text == "false"
+  text == "true" || text == "false"
 end
 
 def string_to_boolean(text)
@@ -179,8 +177,8 @@ def valid_twitter_handle?(text)
   text.match(/^@?(\w){1,15}$/)
 end
 
-def render_template(filename)
-  html = File.open("partials/#{filename}.erb").read
+def render_partial(filename)
+  html = File.open("#{APP_ROOT}/views/partials/#{filename}.erb").read
   template = ERB.new(html)
   template.result
 end
