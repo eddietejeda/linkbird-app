@@ -1,7 +1,6 @@
-<% if @user && !@hide_menu%>
+<% if  @current_user && !@hide_menu %>
 
   <nav class="navbar is-paddingless">
-
     <div class="navbar-brand">
       <a role="button" class="navbar-burger" data-target="navMenu" aria-label="menu" aria-expanded="false">  
         <span aria-hidden="true"></span>
@@ -15,22 +14,23 @@
         <a class="navbar-item" href="/">
           Home
         </a>
-      
-          <a class="navbar-item" href="/popular">
-            Popular Today
-          </a>
-          <a class="navbar-item" href="/profile">
-            <%= @user.is_subscriber? ? 'Profile' : 'Premium &nbsp; <i class="fas fa-lock" style="font-size: 7pt"></i>' %>
-          </a>
-          <a class="navbar-item is-hidden-desktop" href="/install">
-            Install
-          </a>
-          <a class="navbar-item is-hidden-desktop" href="/about">
-            About
-          </a>
+        <a class="navbar-item" href="/bookmarks">
+          Bookmarks
+        </a> 
+        <a class="navbar-item" href="/history">
+          History
+        </a>
+        <a class="navbar-item" href="/settings">
+          <%= @current_user.is_subscriber? ? 'Settings' : 'Settings &nbsp; <i class="fas fa-lock" style="font-size: 7pt"></i>' %>
+        </a>
+        <a class="navbar-item is-hidden-desktop" href="/install">
+          Install
+        </a>
+        <a class="navbar-item is-hidden-desktop" href="/about">
+          About
+        </a>
       </div>
     </div>
-
   </nav>
 
 <% end %>

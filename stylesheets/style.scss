@@ -169,6 +169,7 @@ h1{
 .card-with-no-border{
   box-shadow: none !important;
   border-width: 0;  
+  overflow: inherit !important;
 }
 
 .card-with-border{
@@ -273,7 +274,7 @@ h1{
 //@media only screen and (max-width: 768px) {
   .mobile-align-left {
     text-align: left !important;
-    padding-top: 0;
+    // padding-top: 0;
   }
   
   .navbar-brand{
@@ -388,7 +389,12 @@ h1{
 
 
 
-
+.is-active{
+  
+  .dropdown-content{
+    overflow: visible !important;      
+  }
+}
 
 //
 //

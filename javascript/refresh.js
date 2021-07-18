@@ -3,7 +3,7 @@
 const pStart = { x: 0, y: 0 };
 const pCurrent = { x: 0, y: 0 };
 const loading = document.querySelector("body > .loading-container");
-var isLoading = false; // Yeah, yeah. Using a global.
+var isLoading = false;
 
 if (loading){
   function swipeStart(e) {

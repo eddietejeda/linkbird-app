@@ -3,7 +3,7 @@
    <div class="card-content">
       <div class="content">
          <div class="tweetbox has-text-centered">
-           <!-- <h3 style="margin:0">Settings</h3> -->
+           <h4 style="margin:0"><%= @screen_name %></h4>
          </div>
       </div>
    </div>
@@ -11,95 +11,34 @@
 
 
 
-<% if !@user.is_subscriber? %>
-  <%= erb(:modal) %>
-<% end %>
-
-
-<div class="card card-with-no-border">
-  <div class="card-content">
-    <div class="content">
-      <section class="has-text-centered">
-        
-        
-        <!-- Premium -->
-         <input type="hidden" id="is-premium-user" value="<%= @user.is_subscriber? %>" >
-
-        <!-- Public Profile -->
-        <div class="columns">
-          <div class="column is-6 is-offset-1 has-text-left">
-            <strong>Public Profile</strong>
-            <p>Share your reading list with your friends. <strong><br><a href="<%= @user_url %>"><%= @user_url %></a></strong></p> 
-          </div>
-          <div class="column is-3 is-offset-1 is-px-0">
-            <div class="buttons has-addons">
-              <button data-setting-name="public_profile" value="false"  class="toggle-settings-button button <%= "is-info is-selected" if @user && @user.data.to_h['public_profile'] == false %>">No</button>
-              <button data-setting-name="public_profile" value="true" class="toggle-settings-button button  <%= "is-info is-selected" if @user && @user.data.to_h['public_profile'] == true %>">Yes</button>
-
+<% if @current_user %>
+  <div class="card card-with-no-border">
+    <div class="card-content">
+      <div class="content">
+        <section class="has-text-centered">
+          <input type="hidden" id="is-premium-user" >
+                
+            <!-- Public Profile -->
+            <div class="columns">
+              <div class="column is-4 is-offset-1 has-text-left">
+                <p>
+                 How often would you like to see the articles from <%= @screen_name %>? 
+                 <img src="<%= @profile_photo %>">
+               </p>
+              </div>
+              <hr>
+              <div class="column is-6 is-offset-1 ">
+                <div class="buttons has-addons">
+                  <button data-setting-name="priority" value="never"     class="toggle-settings-button button <%= "is-info is-selected" if @follow_options[:priority] == 'never' %>">Never</button>
+                  <button data-setting-name="priority" value="sometimes"     class="toggle-settings-button button <%= "is-info is-selected" if @follow_options[:priority] == 'sometimes' %>">Sometimes</button>
+                  <button data-setting-name="priority" value="frequent" class="toggle-settings-button button <%= "is-info is-selected" if @follow_options[:priority] == 'frequent' %>">Frequent</button>
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
+            
+        </section>
         
-        
-        
-        <!-- Public Profile -->
-        <div class="columns">
-          <div class="column is-6 is-offset-1 has-text-left">
-            <strong>Pull to Refresh</strong>
-
-            <p>Pull down on timeline screen to refesh content and add new links.</p>
-          </div>
-          <div class="column is-3 is-offset-1 is-px-0">
-            <div class="buttons has-addons">
-              <button data-setting-name="pull_to_refresh_timeline" value="false"  class="toggle-settings-button button <%= "is-info is-selected" if @user && @user.data.to_h['pull_to_refresh_timeline'] == false %>">No</button>
-              <button data-setting-name="pull_to_refresh_timeline" value="true" class="toggle-settings-button button  <%= "is-info is-selected" if @user && @user.data.to_h['pull_to_refresh_timeline'] == true %>">Yes</button>
-
-            </div>
-          </div>
-        </div>
-        
-        <!-- Premium -->
-        <br>
-        <br>
-        <h4>Premium Features</h4>
-        <br>
-        
-        <!-- Refresh Rate -->
-        <div class="columns">
-          <div class="column is-6 is-offset-1 has-text-left">
-            <strong>Continous background updates</strong>
-            <p>When you are idle, background refreshes occur more frequently.</p>
-          </div>
-          <div class="column is-3 is-offset-1 is-px-0">
-            <div class="buttons has-addons">
-              <button data-setting-name="update_frequency_in_minutes" value="20" class="premium-feature toggle-settings-button button  <%= "is-info is-selected" if @user && @user.data.to_h['update_frequency_in_minutes'] == 20 %>">No</button>
-              <button data-setting-name="update_frequency_in_minutes" value="10"  class="premium-feature toggle-settings-button button <%= "is-info is-selected" if @user && @user.data.to_h['update_frequency_in_minutes'] == 10 %>">Yes</button>
-               <!-- &nbsp; minutes  -->
-            </div>
-          </div>
-        </div>
-        
-        
-        <!-- Article Archive -->
-        <div class="columns">
-          <div class="column is-6 is-offset-1 has-text-left">
-            <strong>Preserve archive of your links</strong>
-            <p>With standard account you can only see 20 articles at a time. With premium subscription, you can see up to 1000. </p>
-          </div>
-          <div class="column is-3 is-offset-1 is-px-0">
-            <div class="buttons has-addons">
-              <button data-setting-name="tweet_archive_limit" value="20" class="premium-feature toggle-settings-button button  <%= "is-info is-selected" if @user && @user.data.to_h['tweet_archive_limit'] == 20 %>">20</button>
-              <button data-setting-name="tweet_archive_limit" value="1000"  class="premium-feature toggle-settings-button button <%= "is-info is-selected " if @user && @user.data.to_h['tweet_archive_limit'] == 1000 %>">1000</button>
-              <!-- &nbsp; articles -->
-            </div>
-          </div>
-        </div>
-        
-        <% if @user.is_subscriber? %>
-          <%= erb(:checkout) %>
-        <% end %>
-        
-      </section>
+      </div>
     </div>
-  </div>
-</div> 
+  </div> 
+<% end %>

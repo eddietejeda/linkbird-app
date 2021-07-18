@@ -1,0 +1,12 @@
+---
+# Domain              : Alternate Favicon
+"cnbc.com"            : "https://linkbird-app.s3.amazonaws.com/cnbc.ico"
+"nbcnews.com"         : "https://linkbird-app.s3.amazonaws.com/cnbc.ico"
+"nypost.com"          : "https://linkbird-app.s3.amazonaws.com/new-york-post.png"
+"economist.com"       : "https://linkbird-app.s3.amazonaws.com/economist.ico"
+"bloomberg.com"       : "https://linkbird-app.s3.amazonaws.com/bloomberg.jpg"
+"washingtonpost.com"  : "https://linkbird-app.s3.amazonaws.com/washingtonpost.ico"
+"spur.org"            : "https://pbs.twimg.com/profile_images/1283457372699017216/v0M0jO2G_400x400.jpg"
+"youtube.com"         : "https://www.youtube.com/s/desktop/d743f786/img/favicon_48.png"
+"usgs.gov"            : "https://linkbird-app.s3.amazonaws.com/usgs.png"
+"apnews.com"          : "https://apnews.com/branding/favicon/64.png"

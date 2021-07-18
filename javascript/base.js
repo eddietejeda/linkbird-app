@@ -22,5 +22,4 @@ function getAll(selector) {
   return Array.prototype.slice.call(parent.querySelectorAll(selector), 0);
 }
 
-
 export { postData, getAll }

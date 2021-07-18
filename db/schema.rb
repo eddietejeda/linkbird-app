@@ -23,7 +23,7 @@ ActiveRecord::Schema.define(version: 2020_10_16_140842) do
     t.datetime "updated_at", precision: 6, null: false
     t.jsonb "meta"
     t.datetime "tweet_date"
-    t.index ["tweet_id"], name: "index_tweets_on_tweet_id", unique: true
+    t.index ["tweet_id", "user_id"], name: "index_tweets_on_tweet_id_and_user_id", unique: true
   end
 
   create_table "users", force: :cascade do |t|

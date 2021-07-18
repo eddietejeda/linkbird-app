@@ -1,15 +1,10 @@
-<% if (@user.present?) && (    @user.is_subscriber?    ||    (@tweets.count > (@page_limit-5))    ) %>
+<% if (@current_user.present?) && (    @current_user.is_subscriber?    ||    (@tweets.count > (@page_limit-5))    ) %>
   <div class="card <%= @first_download ? 'card-with-no-border' : 'card-with-border' %>">
      <div class="card-content" >
         <div class="content">
-
-
-          <% if @user.is_subscriber? %>
+          <% if @current_user.is_subscriber? %>
           <!-- Pagination -->
             <%= pagy_bulma_nav(@pagy) if @pagy && @pagy.pages > 1 %>
-
-
-
            <% elsif !@first_download  %>
            <!-- Article limit -->
              <div class="tweetbox">
@@ -19,8 +14,6 @@
                   <br>
                 </section>
              </div>
-             
-        
            <% end %>
         </div>
      </div>

@@ -3,7 +3,6 @@ document.addEventListener("DOMContentLoaded", function(event) {
    document.querySelectorAll('img').forEach(function(img){
   	img.onerror = function(){
       this.onerror=null;
-      console.log(this.getAttribute('data-backup'));
       this.src = this.getAttribute('data-backup');
     };
    })

@@ -1,0 +1,96 @@
+<!-- Render Tweets -->
+<div class="card card-with-no-border">
+   <div class="card-content">
+      <div class="content">
+         <div class="tweetbox has-text-centered">
+           <h4 style="margin:0">Basic Settings</h4>
+         </div>
+      </div>
+   </div>
+</div>  
+
+<% if !@current_user.is_subscriber? %>
+  <%= erb(:modal) %>
+<% end %>
+
+<div class="card card-with-no-border">
+  <div class="card-content">
+    <div class="content">
+      <section class="has-text-centered">
+
+        <!-- Premium -->
+         <input type="hidden" id="is-premium-user" value="<%= @current_user.is_subscriber? %>" >
+
+        <!-- Public Profile -->
+        <!-- <div class="columns">
+          <div class="column is-7 is-offset-1 has-text-left">
+            <strong>Public Profile</strong>
+            <p>Share your reading list with your friends. <strong><br><a href="<%= @user_url %>"><%= @user_url %></a></strong></p>
+          </div>
+          <div class="column is-3 is-offset-1 is-px-0">
+            <div class="remote-buttons buttons has-addons" data-remote-url="/settings/update">
+              <button data-setting-name="public_profile" value="false"  class="toggle-settings-button button <%= "is-info is-selected" if @current_user && @current_user.data.to_h['public_profile'] == false %>">No</button>
+              <button data-setting-name="public_profile" value="true" class="toggle-settings-button button  <%= "is-info is-selected" if @current_user && @current_user.data.to_h['public_profile'] == true %>">Yes</button>
+
+            </div>
+          </div>
+        </div>
+ -->
+        <!-- Public Profile -->
+        <div class="columns">
+          <div class="column is-7 is-offset-1 has-text-left">
+            <strong>Pull to Refresh</strong>
+
+            <p>Pull down on timeline screen to refesh content and show new links.</p>
+          </div>
+          <div class="column is-3 is-offset-1 is-px-0">
+            <div class="remote-buttons buttons has-addons" data-remote-url="/settings/update">
+              <button data-setting-name="pull_to_refresh_timeline" value="false"  class="toggle-settings-button button <%= "is-info is-selected" if @current_user && @current_user.data.to_h['pull_to_refresh_timeline'] == false %>">No</button>
+              <button data-setting-name="pull_to_refresh_timeline" value="true" class="toggle-settings-button button  <%= "is-info is-selected" if @current_user && @current_user.data.to_h['pull_to_refresh_timeline'] == true %>">Yes</button>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Premium -->
+        <br>
+        <br>
+        <h4>Premium Features</h4>
+        <br>
+        
+        <!-- Refresh Rate -->
+        <div class="columns">
+          <div class="column is-7 is-offset-1 has-text-left">
+            <strong>Continous background updates</strong>
+            <p>When you are idle, background refreshes occur more frequently.</p>
+          </div>
+          <div class="column is-3 is-offset-1 is-px-0">
+            <div class="remote-buttons buttons has-addons" data-remote-url="/settings/update">
+              <button data-setting-name="update_frequency_in_minutes" value="20" class="premium-feature toggle-settings-button button  <%= "is-info is-selected" if @current_user && @current_user.data.to_h['update_frequency_in_minutes'] == 20 %>">No</button>
+              <button data-setting-name="update_frequency_in_minutes" value="10"  class="premium-feature toggle-settings-button button <%= "is-info is-selected" if @current_user && @current_user.data.to_h['update_frequency_in_minutes'] == 10 %>">Yes</button>
+            </div>
+          </div>
+        </div>
+        
+        
+        <!-- Article Archive -->
+        <div class="columns">
+          <div class="column is-7 is-offset-1 has-text-left">
+            <strong>Preserve archive of your links</strong>
+            <p>With standard account you can see 20 articles at a time. With premium subscription, you can see up to 1000. </p>
+          </div>
+          <div class="column is-3 is-offset-1 is-px-0">
+            <div class="remote-buttons buttons has-addons" data-remote-url="/settings/update">
+              <button data-setting-name="tweet_archive_limit" value="20" class="premium-feature toggle-settings-button button  <%= "is-info is-selected" if @current_user && @current_user.data.to_h['tweet_archive_limit'] == 20 %>">20</button>
+              <button data-setting-name="tweet_archive_limit" value="1000"  class="premium-feature toggle-settings-button button <%= "is-info is-selected " if @current_user && @current_user.data.to_h['tweet_archive_limit'] == 1000 %>">1000</button>
+            </div>
+          </div>
+        </div>
+        
+        <% if @current_user.is_subscriber? %>
+          <%= erb(:checkout) %>
+        <% end %>
+        
+      </section>
+    </div>
+  </div>
+</div> 

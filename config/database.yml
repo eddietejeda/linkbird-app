@@ -1,17 +1,15 @@
 default: &default
-  adapter: postgresql
-  encoding: unicode
+  url: <%= ENV['DATABASE_URL'] ? ENV['DATABASE_URL'] : 'postgres://localhost:5432/linkbird-dev' %>
+  timeout: 5000
+  pool: 5
+    
 
 development:
   <<: *default
-  database: linkbird_dev
-
 
 test:
   <<: *default
-  database: linkbird_test
 
 
 production:
   <<: *default
-  url:  <%= ENV["DATABASE_URL"] %>

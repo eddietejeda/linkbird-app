@@ -3,4 +3,3 @@ class AddEmailToUsers < ActiveRecord::Migration[6.0]
     add_column :users, :email, :string,  default: ''
   end
 end
-

@@ -1,8 +1,8 @@
 {
-  "name": "LinkBird",
+  "name": "linkbird",
   "version": "1.0.0",
-  "description": "Hobbiest ruby web framework to help me get started on new projects using a common structure.",
-  "main": "index.js",
+  "description": "A simple view of top Twitter articles.",
+  "main": "javascript/app.js",
   "directories": {
     "lib": "lib"
   },
@@ -15,7 +15,8 @@
   "license": "ISC",
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.15.0",
-    "bulma": "^0.9.0"  
+    "build": "^0.1.4",
+    "bulma": "^0.9.0"
   },
   "devDependencies": {
     "file-loader": "^6.1.0",

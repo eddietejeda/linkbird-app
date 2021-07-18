@@ -21,5 +21,3 @@ LinkBird purposely uses the Twitter API calls with the least permissions. The on
 For questions, contact privacy@linkbird.app 
 
 Effective: Oct 16, 2020
-
-
