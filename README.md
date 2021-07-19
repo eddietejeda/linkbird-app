@@ -11,3 +11,51 @@ When you first create an account, you will only see a couple links, but after a 
 Over time, we'll be adding features that will make it easy for you to slice and dice your links in creative ways.  If you have any feedback or suggestions, please contact suggestions@linkbird.app.
 
 <img src="https://raw.githubusercontent.com/eddietejeda/linkbirdapp/master/public/images/phone-view.png?token=AAFDSJASYLORNG42XWNLZLLAU4EO2" width=200px>
+
+
+
+# Download Source
+
+```
+    git clone git@github.com:eddietejeda/linkbird-application.git
+    cd linkbird-application/
+```
+
+
+# Install Locally
+
+```
+    bundle install;
+    bundle exec rake db:create;
+    bundle exec rake db:seed;    # Optional
+    npm install
+    npm run build
+```
+
+
+# Docker Installation
+
+```
+    docker compose up
+```
+
+
+
+
+# Deploy to AWS
+
+```
+    git clone git@github.com:eddietejeda/linkbird-application.git
+    cd linkbird-application/
+
+
+```
+
+
+# Deploy to Heroku
+
+```
+    heroku create linkbird-test
+    heroku git:remote -a linkbird-test
+    git push heroku master
+```
