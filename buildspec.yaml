@@ -4,15 +4,17 @@ phases:
   pre_build:
     commands:
       - echo Logging in to Amazon ECR...
+      - docker login --username $DOCKERHUB_USERNAME --password $DOCKERHUB_ACCESS_TOKEN
       - $(aws ecr get-login --no-include-email --region $AWS_DEFAULT_REGION)
+
   build:
     commands:
       - echo Build started on `date`
       - echo Building the Docker image...          
       - docker build -t linkbird:latest .
-      - docker tag linkbird:latest 497668422660.dkr.ecr.us-east-1.amazonaws.com/linkbird:latest
+      - docker tag linkbird:latest $AWS_ECR_URL/linkbird:latest
   post_build:
     commands:
       - echo Build completed on `date`
       - echo Pushing the Docker image...
-      - docker push 497668422660.dkr.ecr.us-east-1.amazonaws.com/linkbird:latest
+      - docker push $AWS_ECR_URL/linkbird:latest
