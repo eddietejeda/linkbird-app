@@ -10,9 +10,9 @@ phases:
       - echo Build started on `date`
       - echo Building the Docker image...          
       - docker build -t linkbird:latest .
-      - docker tag linkbird:latest $AWS_ECR_URL/linkbird:latest
+      - docker tag linkbird:latest 497668422660.dkr.ecr.us-east-1.amazonaws.com/linkbird:latest
   post_build:
     commands:
       - echo Build completed on `date`
       - echo Pushing the Docker image...
-      - docker push $AWS_ECR_URL/linkbird:latest
+      - docker push 497668422660.dkr.ecr.us-east-1.amazonaws.com/linkbird:latest
