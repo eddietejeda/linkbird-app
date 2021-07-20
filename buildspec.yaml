@@ -10,7 +10,7 @@ phases:
       - echo Build started on `date`
       - echo Building the Docker image...          
       - docker build -t linkbird:latest .
-      - docker tag linkbird:latest $AWS_ECR_URL/simple-api-codebuild:latest    
+      - docker tag linkbird:latest $AWS_ECR_URL/linkbird:latest
   post_build:
     commands:
       - echo Build completed on `date`
