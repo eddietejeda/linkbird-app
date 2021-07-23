@@ -28,7 +28,7 @@ def expand_url(url)
   result.last_effective_url
 end
 
-def preferred_fav_icon(url, filepath: "config/preferred-fav-icon.yml")
+def preferred_fav_icon(url, filepath: "config/favicon.yml")
   favicon = YAML.load_file filepath if File.exists? filepath
   uri = URI.parse(url)
   hostname = uri.host.gsub("www.", "")

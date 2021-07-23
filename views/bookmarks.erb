@@ -1,16 +1,19 @@
 <!-- This is not being used. Going to delete. -->
-<% if @tweets.count > 0 %>
+<% if @tweets %>
+
   <!-- Render Tweets -->
   <div class="card card-with-no-border">
-     <div class="card-content">
-        <div class="content">
-           <div class="tweetbox has-text-centered">
-             <h3 style="margin:0">Bookmarks</h3>
-           </div>
+    <div class="card-content">
+      <div class="content">
+        <div class="tweetbox has-text-centered">
+          <h3 style="margin:0">Bookmarks</h3>
         </div>
-     </div>
+      </div>
+    </div>
   </div>  
-<% end %>
 
-<%= erb(:tweets) %>
-<%= erb(:pagination) %>
+  <%= erb(:alert) %>
+  <%= erb(:timeline) %>
+  <%= erb(:pagination) %>
+
+<% end %>

@@ -43,9 +43,8 @@ class App < Sinatra::Base
   # Top Articles
   get '/' do    
     @current_user = current_user
-
-    @tweets = []
     @page_limit = PAGE_LIMIT
+
 
     if @current_user.present?
       @tweets = @current_user.get_top_tweets
@@ -56,7 +55,7 @@ class App < Sinatra::Base
         @alert = render_partial("initial_download")
       end
       
-      erb :timeline
+      erb :index
     else
       erb :introduction
     end
@@ -69,6 +68,15 @@ class App < Sinatra::Base
     @current_user = authenticate!
     @page_limit = PAGE_LIMIT
     @pagy, @tweets = pagy(@current_user.get_history, items: PAGE_LIMIT )
+
+
+    if @tweets.count == 0
+      @alert = render_partial("creating_account")
+    elsif @tweets.count < @page_limit
+      @alert = render_partial("initial_download")
+    end
+
+
     erb :history
   end
   
@@ -78,6 +86,13 @@ class App < Sinatra::Base
     @current_user = authenticate!
     @page_limit = PAGE_LIMIT
     @pagy, @tweets = pagy(@current_user.get_bookmarks, items: PAGE_LIMIT )
+
+    if @tweets.count == 0
+      @alert = render_partial("creating_account")
+    elsif @tweets.count < @page_limit
+      @alert = render_partial("initial_download")
+    end
+
     erb :bookmarks
   end
   

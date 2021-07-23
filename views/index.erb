@@ -1,6 +1,17 @@
-<!-- Home -->
-<!-- <% if current_user %>
-  <%= erb(:timeline) %>
-<% else %>
-  <%= erb(:introduction) %>
-<% end %> -->
+<% if @tweets %>
+  <div class="card card-with-no-border">
+     <div class="card-content">
+        <div class="content">
+           <div class="tweetbox has-text-centered">
+             <h3 style="margin:0">Top Articles</h3>
+           </div>
+        </div>
+     </div>
+  </div>  
+
+   <%= erb(:alert) %>
+   <%= erb(:timeline) %>
+   <%= erb(:done) %>
+   <%= erb(:pagination) %>
+<% end %>
+
