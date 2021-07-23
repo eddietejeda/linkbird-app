@@ -13,5 +13,3 @@ if settings.development?
 else
   run App
 end
-
-
