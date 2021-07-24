@@ -51,7 +51,7 @@ class App < Sinatra::Base
       
       if @tweets.count == 0
         @alert = render_partial("creating_account")
-      elsif @tweets.count < @page_limit
+      elsif @tweets.count < 5
         @alert = render_partial("initial_download")
       end
       
@@ -71,9 +71,7 @@ class App < Sinatra::Base
 
 
     if @tweets.count == 0
-      @alert = render_partial("creating_account")
-    elsif @tweets.count < @page_limit
-      @alert = render_partial("initial_download")
+      @alert = render_partial("history_instruction")
     end
 
 
@@ -88,9 +86,7 @@ class App < Sinatra::Base
     @pagy, @tweets = pagy(@current_user.get_bookmarks, items: PAGE_LIMIT )
 
     if @tweets.count == 0
-      @alert = render_partial("creating_account")
-    elsif @tweets.count < @page_limit
-      @alert = render_partial("initial_download")
+      @alert = render_partial("bookmark_instruction")
     end
 
     erb :bookmarks
