@@ -1,16 +1,18 @@
-<% if @tweets.count > 0 %>
+<% if @tweets && @tweets.count > 0 %>
+
+  <!-- Render Tweets -->
   <div class="card card-with-no-border">
-     <div class="card-content">
-        <div class="content">
-           <div class="tweetbox has-text-centered">
-             <h3 style="margin:0">Top Articles</h3>
-           </div>
+    <div class="card-content">
+      <div class="content">
+        <div class="tweetbox has-text-centered">
+          <h3 style="margin:0">Top Articles</h3>
         </div>
-     </div>
+      </div>
+    </div>
   </div>  
 
-   <%= erb(:timeline) %>
-   <%= erb(:done) %>
-   <%= erb(:pagination) %>
-<% end %>
+  <%= erb(:timeline) %>
+  <%= erb(:done) %>
+  <%= erb(:pagination) %>
 
+<% end %>
