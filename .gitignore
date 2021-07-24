@@ -16,6 +16,5 @@ public/cache/*
 public/*.map
 public/*.css
 public/*.js
-config/symmetric-encryption.yml
 scratch/*
 *.dump

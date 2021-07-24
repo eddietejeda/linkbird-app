@@ -34,5 +34,5 @@ RUN bundle install
 RUN npm install
 
 COPY . ${APP_HOME}
-EXPOSE 9292
 RUN npm run build
+EXPOSE 9292
