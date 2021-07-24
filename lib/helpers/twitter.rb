@@ -10,8 +10,6 @@ def get_twitter_user_connection(token, secret)
   end  
 end
 
-
-
 def get_twitter_worker_connection
   Twitter::REST::Client.new do |config|
     config.consumer_key        = ENV["TWITTER_WORKER_CONSUMER_KEY"]
@@ -22,14 +20,14 @@ def get_twitter_worker_connection
   end  
 end
 
-
 def import_tweets(tweet_list, user_id=1)
   tweets = []
-  client = get_twitter_worker_connection
+  worker_connection = get_twitter_worker_connection
+
   tweet_list.each do |t|
     url = t&.urls&.first&.expanded_url.to_s
 
-    excluded_domains = YAML.load_file("#{APP_ROOT}/config/exclude.yaml")
+    excluded_domains = YAML.load_file("#{APP_ROOT}/config/exclude.yml")
     if url.start_with?("http") && !excluded_domains.include?( URI.parse(url).host  )
       begin
         
@@ -49,7 +47,7 @@ def import_tweets(tweet_list, user_id=1)
               friends_count: t.user.friends_count,
               listed_count: t.user.listed_count,
               statuses_count: t.user.statuses_count,
-              profile_photo: download_file(client.user(t.user.screen_name).profile_image_url_https.to_s)
+              profile_photo: download_file(worker_connection.user(t.user.screen_name).profile_image_url_https.to_s)
             },
             created_at: Time.current.getlocal("+00:00"),
             updated_at: Time.current.getlocal("+00:00")
