@@ -12,24 +12,24 @@ end
 
 
 
-def get_twitter_app_connection
+def get_twitter_worker_connection
   Twitter::REST::Client.new do |config|
-    config.consumer_key        = ENV["TWITTER_APP_CONSUMER_KEY"]
-    config.consumer_secret     = ENV["TWITTER_APP_CONSUMER_SECRET"]
+    config.consumer_key        = ENV["TWITTER_WORKER_CONSUMER_KEY"]
+    config.consumer_secret     = ENV["TWITTER_WORKER_CONSUMER_SECRET"]
     
-    config.access_token        = ENV["TWITTER_APP_ACCESS_TOKEN"] 
-    config.access_token_secret = ENV["TWITTER_APP_ACCESS_TOKEN_SECRET"]
+    config.access_token        = ENV["TWITTER_WORKER_ACCESS_TOKEN"] 
+    config.access_token_secret = ENV["TWITTER_WORKER_ACCESS_TOKEN_SECRET"]
   end  
 end
 
 
 def import_tweets(tweet_list, user_id=1)
   tweets = []
-  client = get_twitter_app_connection
+  client = get_twitter_worker_connection
   tweet_list.each do |t|
     url = t&.urls&.first&.expanded_url.to_s
 
-    excluded_domains = YAML.load_file('config/exclude.yaml')
+    excluded_domains = YAML.load_file("#{APP_ROOT}/config/exclude.yaml")
     if url.start_with?("http") && !excluded_domains.include?( URI.parse(url).host  )
       begin
         
