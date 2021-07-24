@@ -1,4 +1,4 @@
-<% if @tweets %>
+<% if @tweets.count > 0 %>
   <div class="card card-with-no-border">
      <div class="card-content">
         <div class="content">
@@ -9,7 +9,6 @@
      </div>
   </div>  
 
-   <%= erb(:alert) %>
    <%= erb(:timeline) %>
    <%= erb(:done) %>
    <%= erb(:pagination) %>
