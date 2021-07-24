@@ -22,7 +22,8 @@ end
 
 def import_tweets(tweet_list, user_id=1)
   tweets = []
-  worker_connection = get_twitter_worker_connection
+  # worker_connection = get_twitter_worker_connection
+  client = get_twitter_user_connection(User.find(user_id).secret_data['access_token'], User.find(user_id).secret_data['access_token_secret'])
 
   tweet_list.each do |t|
     url = t&.urls&.first&.expanded_url.to_s
@@ -47,7 +48,7 @@ def import_tweets(tweet_list, user_id=1)
               friends_count: t.user.friends_count,
               listed_count: t.user.listed_count,
               statuses_count: t.user.statuses_count,
-              profile_photo: download_file(worker_connection.user(t.user.screen_name).profile_image_url_https.to_s)
+              profile_photo: download_file(client.user(t.user.screen_name).profile_image_url_https.to_s)
             },
             created_at: Time.current.getlocal("+00:00"),
             updated_at: Time.current.getlocal("+00:00")
