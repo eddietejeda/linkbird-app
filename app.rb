@@ -331,7 +331,7 @@ class App < Sinatra::Base
   
 
 
-  post '/view/update' do 
+  post '/history/update' do 
     content_type 'application/json'
     @current_user = authenticate!
   
