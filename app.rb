@@ -1,4 +1,3 @@
-# encoding: utf-8
 PAGE_LIMIT=20.freeze
 
 class App < Sinatra::Base
@@ -7,7 +6,6 @@ class App < Sinatra::Base
   enable :sessions
   helpers Sinatra::Cookies
   register Sinatra::ActiveRecordExtension
-  # register Sinatra::Cache
       
   include Pagy::Backend
 
@@ -21,7 +19,6 @@ class App < Sinatra::Base
     set :sessions, same_site: :lax, secure: false, path: '/'
   end
 
-  #https://stackoverflow.com/questions/39303353/how-to-set-a-cookie-in-sinatra
   configure :staging do
     set :sessions, same_site: :lax, secure: true, path: '/'
   end
@@ -69,11 +66,9 @@ class App < Sinatra::Base
     @page_limit = PAGE_LIMIT
     @pagy, @tweets = pagy(@current_user.get_history, items: PAGE_LIMIT )
 
-
     if @tweets.count == 0
       @alert = render_partial("history_instruction")
     end
-
 
     erb :history
   end
@@ -237,44 +232,58 @@ class App < Sinatra::Base
   
   # Twitter Auth
   get '/auth/twitter/callback' do
+
+    # When Twitter responds with user data, it's stored in env. 
+    # Since we are logged on as this user, we are going to save the Twitter UID in a cookie
+    # And then generate a random key for a cookie that we'll cross reference later
     cookies[:uid] = env['omniauth.auth']['uid']
     cookies[:cookie_key] = SecureRandom.uuid
 
+
+    # We need ACCESS_TOKES from the user so we can download their data. 
+    # We save this data in hash. Later we'll encrypt and save this data.
     user_secrets = {}
     user_secrets['access_token'] = env['omniauth.auth']['credentials']['token']
     user_secrets['access_token_secret'] = env['omniauth.auth']['credentials']['secret']
 
+    # If the user exists, then we already have this data saved.
     user = User.find_by(uid: cookies[:uid])
-
     if user.nil?
+      # If not, we create new user
       user = User.create(uid: cookies[:uid], secret_key: "")
     end
-    # byebug
+
+    # And save a random key 
     if user.secret_key.blank?
-      secret_key = SecureRandom.uuid
-      user.secret_key = secret_key
+      user.secret_key = SecureRandom.uuid
     end
 
+    # We check the email address from Twitter every login just to make sure
+    # They've not updated or changed their email
     user_email = env['omniauth.auth']['extra']['raw_info']['email']
-    
     if user.email != user_email
       user.email = user_email
     end
 
-    # check screen_name after every login
-    client = get_twitter_user_connection user_secrets['access_token'], user_secrets['access_token_secret']
+    # We use thet user tokens to make a connection with Twitter
+    client = get_twitter_user_connection(user_secrets['access_token'], user_secrets['access_token_secret'])
+
+    # We also check screen_name after every login
     user.screen_name = client.user.screen_name
 
+    # We generate unique keys to keep track of logins
+    # But anti-fingerprinting fuctionality in browsers 
+    # Make this implementation clumsy.
     new_cookie = { 
       browser_id: browser_fingerprint,
       cookie_key: cookies[:cookie_key], 
       last_login: DateTime.now, 
       browser: request.env['HTTP_USER_AGENT']
     }
-    
     user.cookie_keys = add_or_update_active_cookies(user.cookie_keys, new_cookie)
-    user.encrypted_data = encrypt_data(user.secret_key, user_secrets.to_h.to_json.to_s)
 
+    # We encrypt the data with `encrypt_data` method which uses a private key stored in server
+    user.encrypted_data = encrypt_data(user.secret_key, user_secrets.to_h.to_json.to_s)
     user.save!
     user.refresh_account_settings!
 
@@ -306,7 +315,7 @@ class App < Sinatra::Base
   
   get '/security' do
     @current_user = authenticate!    
-    @login_history = current_user.cookie_keys #.sort_by{|k, v| puts k["last_login"]}.reverse    
+    @login_history = current_user.cookie_keys 
     erb :security
   end
   
@@ -320,7 +329,6 @@ class App < Sinatra::Base
     { status: "success" }.to_json    
   end
   
-
   post '/bookmark/update' do 
     content_type 'application/json'
     @current_user = authenticate!
@@ -328,8 +336,6 @@ class App < Sinatra::Base
     data = JSON.parse(request.body.read)    
     { status: @current_user.set_bookmark( data['tweet_id'] )}.to_json    
   end
-  
-
 
   post '/history/update' do 
     content_type 'application/json'
@@ -344,11 +350,13 @@ class App < Sinatra::Base
   # Static Pages
   ####################
   get '/(about|privacy|install|terms-of-service)' do
+
+    # I trust @filepath because Sinatra is gating the options. 
+    # Could use clean up though.
     @filepath = request.env['REQUEST_PATH'].match(/\/([a-zA-Z\-]+)/)[1]
     @content = Kramdown::Document.new(File.read("views/static/#{@filepath}.md")).to_html
     erb :static
   end
-
 
   not_found do
     status 404
@@ -356,14 +364,12 @@ class App < Sinatra::Base
     erb :error
   end
 
-  
   ####################
   # Private Methods
   ####################
   private
   
     def authenticate!
-      
       if !current_user
         redirect '/'
       end
@@ -382,6 +388,4 @@ class App < Sinatra::Base
         items: vars[:items] || PAGE_LIMIT
       }
     end
-
-
 end
