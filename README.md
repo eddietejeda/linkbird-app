@@ -1,10 +1,13 @@
 ## What is LinkBird?
 
-LinkBird is a toy app to play with different technologies. It allows you to interesting articles without having to go to Twitter.
+Linkbird allows you to interesting articles without having to go to Twitter.
+LinkBird is a toy app used for playing with different technologies. 
 
 - [LinkBird Infrastructure - Terraform](https://github.com/eddietejeda/linkbird-infrastructure/)
 - Backend written in Ruby, Sinatra,
 - Front-end will ES66 Vanilla JS compiled with Webpack
+- Implements Twitter API and Stripe API
+- Supports multiple environments: Docker, Docker Compose, Heroku, AWS ECS
 
 
 ## How does LinkBird work?
@@ -47,7 +50,7 @@ Over time, we'll be adding features that will make it easy for you to slice and 
 
 
 
-# Deploy to AWS
+# Deploy to AWS ECS
 
 ```
     git clone git@github.com:eddietejeda/linkbird-application.git
