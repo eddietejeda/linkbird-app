@@ -2,7 +2,7 @@
 
 LinkBird is a toy app to play with different technologies. It allows you to interesting articles without having to go to Twitter.
 
-- [Infrastructure - Terraform](https://github.com/eddietejeda/linkbird-infrastructure/)
+- [LinkBird Infrastructure - Terraform](https://github.com/eddietejeda/linkbird-infrastructure/)
 - Backend written in Ruby, Sinatra,
 - Front-end will ES66 Vanilla JS compiled with Webpack
 
