@@ -1,6 +1,11 @@
 ## What is LinkBird?
 
-LinkBird was created to solve a simple problem: finding interesting articles shared on Twitter without scrolling through <i>a lot</i> of chatter. Sometimes it's fun to follow Twitter discussions. Other times, it's not. 
+LinkBird is a toy app to play with different technologies. It allows you to interesting articles without having to go to Twitter.
+
+- [Infrastructure - Terraform](https://github.com/eddietejeda/linkbird-infrastructure/)
+- Backend written in Ruby, Sinatra,
+- Front-end will ES66 Vanilla JS compiled with Webpack
+
 
 ## How does LinkBird work?
 
@@ -10,7 +15,7 @@ When you first create an account, you will only see a couple links, but after a 
 
 Over time, we'll be adding features that will make it easy for you to slice and dice your links in creative ways.  If you have any feedback or suggestions, please contact suggestions@linkbird.app.
 
-<img src="https://raw.githubusercontent.com/eddietejeda/linkbirdapp/master/public/images/phone-view.png?token=AAFDSJASYLORNG42XWNLZLLAU4EO2" width=200px>
+<img src="https://raw.githubusercontent.com/eddietejeda/linkbird-application/master/public/images/phone-view.png?token=AAFDSJASYLORNG42XWNLZLLAU4EO2" width=200px>
 
 
 
