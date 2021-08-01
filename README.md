@@ -18,7 +18,7 @@ When you first create an account, you will only see a couple links, but after a 
 
 Over time, we'll be adding features that will make it easy for you to slice and dice your links in creative ways.  If you have any feedback or suggestions, please contact suggestions@linkbird.app.
 
-<img src="https://raw.githubusercontent.com/eddietejeda/linkbird-application/master/public/images/phone-view.png?token=AAFDSJASYLORNG42XWNLZLLAU4EO2" width=200px>
+<img src="https://raw.githubusercontent.com/eddietejeda/linkbird-app/master/public/images/phone-view.png?token=AAFDSJASYLORNG42XWNLZLLAU4EO2" width=200px>
 
 
 
@@ -35,9 +35,11 @@ Over time, we'll be adding features that will make it easy for you to slice and 
 ```
     bundle install;
     bundle exec rake db:create;
-    bundle exec rake db:seed;    # Optional
     npm install
     npm run build
+    ./entrypoints/app-entrypoint.sh      # <--- This will run the web app
+    ./entrypoints/worker-entrypoint.sh   # <--- This runs the worker that downloads tweets
+
 ```
 
 
